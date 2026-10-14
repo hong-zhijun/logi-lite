@@ -70,7 +70,7 @@ src/
 
 当前可运行应用仍为 Windows 版；macOS 菜单栏、输入和设备通信尚未实现。配置和协议已有共享边界，快捷键解析目前保留 Windows 键名 / 内部键码约定；macOS 输入实现需要转换为本机键码。`windows-sys` 只在 Windows 目标启用。
 
-`windows` 分支保留首版提交；目录整理和后续适配在 `mac` 分支进行。构建结果位于 `target/`，便携包位于 `dist/`，调查材料位于 `analysis/`，这些生成目录均由 Git 忽略。
+Windows 与 macOS 在 `main` 分支共同维护，系统差异放在各自的平台目录；Windows 首版由 `windows-v0.1.0` 标签保留。构建结果位于 `target/`，便携包位于 `dist/`，调查材料位于 `analysis/`，这些生成目录均由 Git 忽略。
 
 ### Windows 构建
 
