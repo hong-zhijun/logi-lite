@@ -1,0 +1,6 @@
+{
+  "identifier": "main-window",
+  "description": "Local settings window; no filesystem, shell or remote page access.",
+  "windows": ["main"],
+  "permissions": ["core:default", "core:window:allow-start-dragging"]
+}

@@ -42,6 +42,22 @@ pub struct ScrollStatus {
     pub mode: ScrollMode,
     /// Raw hardware disengagement threshold; 255 means locked ratchet.
     pub threshold: u8,
+    /// Options+ percentage, derived from the quantized hardware threshold.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sensitivity: Option<u8>,
+}
+
+/// Options+ SmartShift scale, verified against the installed arm64 agent.
+/// Integer arithmetic reproduces its round-to-nearest, ties-away conversion.
+pub fn smartshift_threshold(sensitivity: u8) -> Result<u8, String> {
+    if sensitivity > 100 {
+        return Err("SmartShift 灵敏度必须为 0～100%".into());
+    }
+    Ok(50 - ((46 * u16::from(sensitivity) + 50) / 100) as u8)
+}
+
+fn smartshift_sensitivity(threshold: u8) -> u8 {
+    ((50 - u16::from(threshold.clamp(4, 50))) * 100 / 46) as u8
 }
 
 #[derive(Clone, Debug, Default, Serialize)]
@@ -74,6 +90,7 @@ pub struct Client<T> {
     dpi_feature: Option<u8>,
     scroll_feature: Option<(u8, bool, bool)>, // index, enhanced, torque supported
     next_software_id: u8,
+    probe_marker: u8,
     poisoned: bool,
 }
 
@@ -94,8 +111,17 @@ impl<T: Transport> Client<T> {
             dpi_feature: None,
             scroll_feature: None,
             next_software_id: 0x0a,
+            probe_marker: 0x73,
             poisoned: false,
         }
+    }
+
+    /// Vary a freshly opened native session's correlation IDs so a late reply
+    /// from a previously closed/failed session cannot trivially satisfy its ping.
+    pub fn with_session_nonce(mut self, nonce: u64) -> Self {
+        self.next_software_id = (nonce % 15 + 1) as u8;
+        self.probe_marker = ((nonce / 15) % 255 + 1) as u8;
+        self
     }
 
     fn request(
@@ -177,8 +203,9 @@ impl<T: Transport> Client<T> {
         self.dpi_choices.clear();
         self.poisoned = false;
         // ROOT.GetProtocolVersion: third parameter is an echoed probe marker.
-        let ping = self.request(0, 1, &[0, 0, 0x73], 3)?;
-        if ping[2] != 0x73 || ping[0] < 2 {
+        let marker = self.probe_marker;
+        let ping = self.request(0, 1, &[0, 0, marker], 3)?;
+        if ping[2] != marker || ping[0] < 2 {
             return Err("Device did not confirm HID++ 2.0 or later".into());
         }
         let mut status = DeviceStatus {
@@ -377,10 +404,8 @@ impl<T: Transport> Client<T> {
         let (index, enhanced, torque) = self
             .scroll_feature
             .ok_or("Scroll settings are unavailable; probe the device first")?;
-        if mode == ScrollMode::SmartShift && !(1..=49).contains(&threshold) {
-            return Err(
-                "SmartShift threshold must be 1–49; 50 and higher lock ratchet mode".into(),
-            );
+        if mode == ScrollMode::SmartShift && !(1..=50).contains(&threshold) {
+            return Err("SmartShift raw threshold must be 1–50".into());
         }
         // Read immediately before changing settings; preserve Enhanced torque
         // rather than overwriting it with a hardcoded default.
@@ -434,13 +459,14 @@ fn decode_scroll(data: &[u8]) -> Result<ScrollStatus, String> {
     }
     let mode = match data[0] {
         1 => ScrollMode::Free,
-        2 if data[1] >= 50 => ScrollMode::Ratchet,
+        2 if data[1] == 255 => ScrollMode::Ratchet,
         2 => ScrollMode::SmartShift,
         _ => return Err("Unknown SmartShift wheel mode".into()),
     };
     Ok(ScrollStatus {
         mode,
         threshold: data[1],
+        sensitivity: (mode == ScrollMode::SmartShift).then(|| smartshift_sensitivity(data[1])),
     })
 }
 
@@ -530,6 +556,26 @@ fn parse_dpi_list(data: &[u8]) -> Result<(Vec<u16>, Vec<DpiRange>), String> {
 mod tests {
     use super::*;
     use std::collections::VecDeque;
+
+    #[test]
+    fn new_session_rejects_a_previous_ping_marker() {
+        struct StalePing;
+        impl Transport for StalePing {
+            fn exchange(&mut self, request: &[u8]) -> Result<Vec<u8>, String> {
+                assert_ne!(request[3] & 15, 0);
+                assert_ne!(request[6], 0x73);
+                let mut reply = request.to_vec();
+                reply[4..7].copy_from_slice(&[4, 5, 0x73]);
+                Ok(reply)
+            }
+        }
+        assert!(
+            Client::new(StalePing, 255)
+                .with_session_nonce(0)
+                .probe()
+                .is_err()
+        );
+    }
 
     struct Mock {
         transactions: VecDeque<(Vec<u8>, Vec<u8>)>,
@@ -678,7 +724,39 @@ mod tests {
         let mut client = Client::new(Mock::new(transactions), 255);
         client.scroll_feature = Some((9, true, true));
         client.set_scroll(ScrollMode::SmartShift, 15).unwrap();
-        assert!(client.set_scroll(ScrollMode::SmartShift, 50).is_err());
+        assert!(client.set_scroll(ScrollMode::SmartShift, 51).is_err());
+        assert!(client.transport.transactions.is_empty());
+    }
+    #[test]
+    fn options_smartshift_scale_and_zero_endpoint() {
+        // Independent native-agent observations include rounding and quantization.
+        for (percent, raw, readback) in [
+            (0, 50, 0),
+            (1, 50, 0),
+            (5, 48, 4),
+            (25, 38, 26),
+            (50, 27, 50),
+            (75, 15, 76),
+            (100, 4, 100),
+        ] {
+            assert_eq!(smartshift_threshold(percent).unwrap(), raw);
+            let status = decode_scroll(&[2, raw]).unwrap();
+            assert_eq!(status.mode, ScrollMode::SmartShift);
+            assert_eq!(status.sensitivity, Some(readback));
+        }
+        assert!(smartshift_threshold(101).is_err());
+        assert_eq!(decode_scroll(&[2, 255]).unwrap().mode, ScrollMode::Ratchet);
+        assert_eq!(decode_scroll(&[1, 50]).unwrap().mode, ScrollMode::Free);
+        let transactions = VecDeque::from([
+            pair(9, 1, &[], &[2, 27, 45]),
+            pair(9, 2, &[2, 50, 45], &[]),
+            pair(9, 1, &[], &[2, 50, 45]),
+        ]);
+        let mut client = Client::new(Mock::new(transactions), 255);
+        client.scroll_feature = Some((9, true, true));
+        client
+            .set_scroll(ScrollMode::SmartShift, smartshift_threshold(0).unwrap())
+            .unwrap();
         assert!(client.transport.transactions.is_empty());
     }
     #[test]

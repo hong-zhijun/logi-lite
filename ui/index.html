@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logi Lite</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+</head>
+<body>
+<svg class="svg-library" aria-hidden="true"><defs>
+  <symbol id="i-mouse" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 2v8M9 10h6"/></symbol>
+  <symbol id="i-buttons" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="6"/><path d="M12 2v6M6 10h12"/><rect x="10.5" y="5" width="3" height="4" rx="1.5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8m4 0h4M4 17h4m4 0h8"/><circle cx="14" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.67 4.14a2.34 2.34 0 0 1 4.66 0 2.34 2.34 0 0 0 3.32 1.92 2.34 2.34 0 0 1 2.33 4.03 2.34 2.34 0 0 0 0 3.82 2.34 2.34 0 0 1-2.33 4.03 2.34 2.34 0 0 0-3.32 1.92 2.34 2.34 0 0 1-4.66 0 2.34 2.34 0 0 0-3.32-1.92 2.34 2.34 0 0 1-2.33-4.03 2.34 2.34 0 0 0 0-3.82 2.34 2.34 0 0 1 2.33-4.03 2.34 2.34 0 0 0 3.32-1.92"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m10 5-7 7 7 7M3 12h18"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M6 9h1m3 0h1m3 0h1m3 0h1M6 13h1m3 0h1m3 0h1m3 0h1M8 16h8"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+  <symbol id="i-windows" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M3 8h18"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5-8 11-8 11S4 16 4 11V5zM8 11l3 3 5-6"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8M21 3v5h-5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 17h.01"/></symbol>
+</defs></svg>
+<div class="app-shell">
+  <div class="titlebar" data-tauri-drag-region aria-hidden="true"></div>
+  <header class="device-header" data-tauri-drag-region>
+    <div class="device-icon"><img src="assets/logo.png" alt="Logi Lite" draggable="false"></div>
+    <h1>MX Anywhere 3</h1>
+    <div class="connection" role="group" aria-label="设备与映射状态">
+      <span class="connection-item"><span id="connection-dot" class="status-dot pending"></span><span id="connection-text">正在连接…</span></span>
+      <span class="separator" aria-hidden="true">·</span><button id="mapping-settings" class="mapping-state" aria-label="查看映射设置"><span id="mapping-dot" class="status-dot pending"></span><span id="mapping-status">映射已暂停</span></button>
+      <span class="separator" aria-hidden="true">·</span><span id="battery">电量 —</span>
+    </div>
+    <button id="refresh-hardware" class="header-button" aria-label="重新读取状态" title="重新读取状态" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"/></svg></button>
+    <button id="settings-toggle" class="header-button settings-toggle" aria-label="打开设置" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-settings"/></svg></button>
+  </header>
+  <main class="workspace">
+    <div id="device-content" class="device-content">
+    <section id="page-buttons" class="page device-page no-selection" aria-label="鼠标配置">
+      <div class="visual-area">
+        <div class="mouse-stage"><div class="mouse-picture side">
+          <img src="assets/mouse-side.png" alt="MX Anywhere 3 斜侧面图" draggable="false">
+          <button class="hotspot" data-button="back" aria-label="配置后退侧键" aria-pressed="false"><span class="hotspot-ring"></span><span class="hotspot-label">后退</span></button>
+          <button class="hotspot" data-button="forward" aria-label="配置前进侧键" aria-pressed="false"><span class="hotspot-ring"></span><span class="hotspot-label">前进</span></button>
+          <button class="hotspot right" data-button="middle" aria-label="配置中键（鼠标滚轮）" aria-pressed="false"><span class="hotspot-ring"></span><span class="hotspot-label">中键（鼠标滚轮）</span></button>
+          <button id="wheel-hotspot" class="hotspot wheel-callout" aria-label="配置指针与滚轮" aria-describedby="actual-hardware" aria-pressed="false"><svg class="wheel-leader" viewBox="0 0 96 20" aria-hidden="true"><path d="M0 0H60L96 20"/></svg><span class="hotspot-ring"></span><span class="hotspot-label"><span>指针与滚轮</span><span id="actual-hardware" class="actual-hardware"><span id="actual-dpi">DPI —</span><span id="actual-scroll">滚轮状态未知</span></span></span></button>
+        </div></div>
+      </div>
+      <aside id="button-editor" class="editor-card" aria-hidden="true" inert>
+        <div class="editor-heading"><h2 id="selected-title">按键配置</h2><button id="close-editor" class="close-editor" aria-label="关闭按键配置"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <div class="field-label">选择动作</div>
+        <div class="action-grid">
+          <button class="action-option" data-action="默认"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span>默认</span></button>
+          <button class="action-option" data-action="禁用"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ban"/></svg><span>禁用</span></button>
+          <button class="action-option" data-action="打开 App"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>打开 App</span></button>
+          <button class="action-option" data-action="调度中心"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-windows"/></svg><span>调度中心</span></button>
+          <button class="action-option wide" data-action="shortcut"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg><span>键盘快捷键</span><span class="option-trailing">⌘</span></button>
+        </div>
+        <div id="shortcut-editor" hidden><label class="field-label" for="shortcut">快捷键</label><div class="shortcut-row"><input id="shortcut" placeholder="例如 Cmd+Shift+S" spellcheck="false" autocomplete="off"><button id="record-shortcut" class="small-button">录制</button></div></div>
+        <div class="card-bottom"><button id="save-mapping" class="primary-button commit-button" data-state="saved" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span class="commit-label" aria-live="polite">已保存</span></button></div>
+      </aside>
+      <aside id="hardware-editor" class="editor-card hardware-card" aria-hidden="true" inert><div class="editor-heading"><h2>指针与滚轮</h2><button id="close-hardware" class="close-editor" aria-label="关闭指针与滚轮设置"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <fieldset id="dpi-controls" disabled><div class="field-heading"><label for="dpi-range">DPI</label><output id="dpi-value" for="dpi-range">1000</output></div><input id="dpi-range" type="range" min="200" max="4000" step="50" value="1000"><div class="range-labels"><span id="dpi-min">—</span><span id="dpi-max">—</span></div></fieldset>
+        <fieldset id="scroll-controls" disabled><label class="field-label">滚轮模式</label><div class="segmented"><button data-mode="ratchet">段落</button><button data-mode="free">自由</button><button data-mode="smart_shift">SmartShift</button></div></fieldset>
+        <fieldset id="sensitivity-controls" disabled hidden><div class="field-heading"><label for="sensitivity">SmartShift 灵敏度</label><output id="sensitivity-value">50%</output></div><input id="sensitivity" type="range" min="0" max="100" step="1" value="50"><div class="range-labels"><span>更稳</span><span>更易自由滚动</span></div></fieldset>
+        <div class="card-bottom"><button id="apply-hardware" class="primary-button commit-button" data-state="unavailable" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-alert"/></svg><span class="commit-label" aria-live="polite">设备暂不可用</span></button></div>
+      </aside>
+    </section>
+    <section id="page-settings" class="page settings-page" aria-label="设置" hidden>
+      <div id="mapping-preferences" class="settings-card compact"><div class="settings-card-title"><h3>鼠标映射</h3><button id="permission-link" class="permission-link" hidden>完成授权</button><label class="switch-label"><span id="switch-label">启用映射</span><input id="mapping-toggle" type="checkbox" role="switch"><span class="switch-track"></span></label></div></div>
+      <div class="settings-card"><div class="settings-card-title"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg><h3>输入权限</h3></div><div class="permission-row"><span>辅助功能</span><span id="accessibility-status">—</span><button id="open-accessibility" class="small-button" hidden>去授权</button></div><div class="permission-row"><span>输入监控</span><span id="input-status">—</span><button id="open-input" class="small-button" hidden>去授权</button></div><p class="help">授权后若仍不可用，请退出并重新打开 Logi Lite。</p></div>
+      <div class="settings-card compact"><h3>在后台继续运行</h3><p>关闭窗口后，按键映射继续工作。可从菜单栏重新打开、暂停或退出。</p><div class="shortcut-tip"><span>紧急暂停</span><kbd>⌘</kbd><kbd>⌃</kbd><kbd>⇧</kbd><kbd>F12</kbd></div></div>
+      <div class="settings-card compact"><div class="settings-card-title"><h3>设备与诊断</h3><button id="refresh-device" class="small-button">刷新设备</button><button id="export-diagnostics" class="small-button">导出诊断</button></div><p id="diagnostic-summary">读取设备状态后可查看连接与能力信息。</p><details><summary>查看技术信息</summary><pre id="diagnostic-json">{}</pre></details></div>
+    </section>
+    <section id="permission-gate" class="permission-gate" aria-labelledby="gate-title">
+      <div class="permission-gate-card">
+        <div class="onboarding-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></div>
+        <h2 id="gate-title">请先进行必要功能授权</h2>
+        <div class="gate-permissions"><span id="gate-accessibility">辅助功能 · 检查中</span><span id="gate-input">输入监控 · 检查中</span></div>
+        <button id="gate-authorize" class="primary-button" disabled>去授权</button>
+        <button id="gate-settings" class="text-button">查看权限设置</button>
+      </div>
+    </section>
+    </div>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+</body></html>

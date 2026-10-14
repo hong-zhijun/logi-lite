@@ -1,0 +1,163 @@
+1009c7084:	ff 43 02 d1	sub	sp, sp, #0x90
+1009c7088:	fa 67 04 a9	stp	x26, x25, [sp, #0x40]
+1009c708c:	f8 5f 05 a9	stp	x24, x23, [sp, #0x50]
+1009c7090:	f6 57 06 a9	stp	x22, x21, [sp, #0x60]
+1009c7094:	f4 4f 07 a9	stp	x20, x19, [sp, #0x70]
+1009c7098:	fd 7b 08 a9	stp	x29, x30, [sp, #0x80]
+1009c709c:	fd 03 02 91	add	x29, sp, #0x80
+1009c70a0:	5f 00 00 39	strb	wzr, [x2]
+1009c70a4:	a1 0b 00 b4	cbz	x1, 0x1009c7218
+1009c70a8:	f3 03 02 aa	mov	x19, x2
+1009c70ac:	f4 03 00 aa	mov	x20, x0
+1009c70b0:	08 18 40 b9	ldr	w8, [x0, #0x18]
+1009c70b4:	e8 3f 00 b9	str	w8, [sp, #0x3c]
+1009c70b8:	09 50 40 39	ldrb	w9, [x0, #0x14]
+1009c70bc:	89 02 00 34	cbz	w9, 0x1009c710c
+1009c70c0:	89 12 40 b9	ldr	w9, [x20, #0x10]
+1009c70c4:	8a 0c 80 52	mov	w10, #0x64
+1009c70c8:	3f 91 01 71	cmp	w9, #0x64
+1009c70cc:	29 b1 8a 1a	csel	w9, w9, w10, lt
+1009c70d0:	3f 01 00 71	cmp	w9, #0x0
+1009c70d4:	29 c1 9f 1a	csel	w9, w9, wzr, gt
+1009c70d8:	20 01 62 1e	scvtf	d0, w9
+1009c70dc:	e9 08 f8 d2	mov	x9, #-0x3fb9000000000000
+1009c70e0:	21 01 67 9e	fmov	d1, x9
+1009c70e4:	00 08 61 1e	fmul	d0, d0, d1
+1009c70e8:	29 0b e8 d2	mov	x9, #0x4059000000000000
+1009c70ec:	21 01 67 9e	fmov	d1, x9
+1009c70f0:	00 18 61 1e	fdiv	d0, d0, d1
+1009c70f4:	00 40 66 1e	frinta	d0, d0
+1009c70f8:	29 09 e8 d2	mov	x9, #0x4049000000000000
+1009c70fc:	21 01 67 9e	fmov	d1, x9
+1009c7100:	00 28 61 1e	fadd	d0, d0, d1
+1009c7104:	09 00 78 1e	fcvtzs	w9, d0
+1009c7108:	02 00 00 14	b	0x1009c7110
+1009c710c:	e9 1f 80 52	mov	w9, #0xff
+1009c7110:	e9 e3 00 39	strb	w9, [sp, #0x38]
+1009c7114:	8a 72 40 39	ldrb	w10, [x20, #0x1c]
+1009c7118:	95 0c 80 52	mov	w21, #0x64
+1009c711c:	5f 91 01 71	cmp	w10, #0x64
+1009c7120:	4a b1 95 1a	csel	w10, w10, w21, lt
+1009c7124:	5f 05 00 71	cmp	w10, #0x1
+1009c7128:	43 c5 9f 1a	csinc	w3, w10, wzr, gt
+1009c712c:	e3 c3 00 39	strb	w3, [sp, #0x30]
+1009c7130:	e2 03 09 2a	mov	w2, w9
+1009c7134:	29 00 40 f9	ldr	x9, [x1]
+1009c7138:	29 11 40 f9	ldr	x9, [x9, #0x20]
+1009c713c:	e4 f3 00 91	add	x4, sp, #0x3c
+1009c7140:	e5 e3 00 91	add	x5, sp, #0x38
+1009c7144:	e6 c3 00 91	add	x6, sp, #0x30
+1009c7148:	e0 03 01 aa	mov	x0, x1
+1009c714c:	e1 03 08 aa	mov	x1, x8
+1009c7150:	20 01 3f d6	blr	x9
+1009c7154:	20 06 00 36	tbz	w0, #0x0, 0x1009c7218
+1009c7158:	f6 3f 40 b9	ldr	w22, [sp, #0x3c]
+1009c715c:	97 56 40 39	ldrb	w23, [x20, #0x15]
+1009c7160:	f8 e3 40 39	ldrb	w24, [sp, #0x38]
+1009c7164:	f9 c3 40 39	ldrb	w25, [sp, #0x30]
+1009c7168:	e0 23 00 91	add	x0, sp, #0x8
+1009c716c:	01 00 80 d2	mov	x1, #0x0
+1009c7170:	55 0c 6f 94	bl	__ZN4logi8protocol5mouse18SmartShiftSettingsC1EPN6google8protobuf5ArenaE
+1009c7174:	df 0a 00 71	cmp	w22, #0x2
+1009c7178:	e8 1f 80 52	mov	w8, #0xff
+1009c717c:	04 03 48 7a	ccmp	w24, w8, #0x4, eq
+1009c7180:	e8 07 9f 1a	cset	w8, ne
+1009c7184:	e8 73 00 39	strb	w8, [sp, #0x1c]
+1009c7188:	49 06 80 52	mov	w9, #0x32
+1009c718c:	1f cb 00 71	cmp	w24, #0x32
+1009c7190:	09 33 89 1a	csel	w9, w24, w9, lo
+1009c7194:	8a 00 80 52	mov	w10, #0x4
+1009c7198:	3f 11 00 71	cmp	w9, #0x4
+1009c719c:	29 81 8a 1a	csel	w9, w9, w10, hi
+1009c71a0:	29 c9 00 51	sub	w9, w9, #0x32
+1009c71a4:	20 01 62 1e	scvtf	d0, w9
+1009c71a8:	29 0b e8 d2	mov	x9, #0x4059000000000000
+1009c71ac:	21 01 67 9e	fmov	d1, x9
+1009c71b0:	00 08 61 1e	fmul	d0, d0, d1
+1009c71b4:	e9 08 f8 d2	mov	x9, #-0x3fb9000000000000
+1009c71b8:	21 01 67 9e	fmov	d1, x9
+1009c71bc:	00 18 61 1e	fdiv	d0, d0, d1
+1009c71c0:	09 00 79 1e	fcvtzu	w9, d0
+1009c71c4:	e9 1b 00 b9	str	w9, [sp, #0x18]
+1009c71c8:	f6 67 04 29	stp	w22, w25, [sp, #0x20]
+1009c71cc:	f7 77 00 39	strb	w23, [sp, #0x1d]
+1009c71d0:	3f 93 01 71	cmp	w25, #0x64
+1009c71d4:	2a b3 95 1a	csel	w10, w25, w21, lt
+1009c71d8:	5f 05 00 71	cmp	w10, #0x1
+1009c71dc:	4a c5 9f 1a	csinc	w10, w10, wzr, gt
+1009c71e0:	8b 72 40 39	ldrb	w11, [x20, #0x1c]
+1009c71e4:	7f 91 01 71	cmp	w11, #0x64
+1009c71e8:	6b b1 95 1a	csel	w11, w11, w21, lt
+1009c71ec:	7f 05 00 71	cmp	w11, #0x1
+1009c71f0:	6b c5 9f 1a	csinc	w11, w11, wzr, gt
+1009c71f4:	5f 01 0b 6b	cmp	w10, w11
+1009c71f8:	c1 00 00 54	b.ne	0x1009c7210
+1009c71fc:	8a 52 40 39	ldrb	w10, [x20, #0x14]
+1009c7200:	5f 01 00 71	cmp	w10, #0x0
+1009c7204:	eb 07 9f 1a	cset	w11, ne
+1009c7208:	0b 01 0b 4a	eor	w11, w8, w11
+1009c720c:	ab 00 00 36	tbz	w11, #0x0, 0x1009c7220
+1009c7210:	08 00 80 52	mov	w8, #0x0
+1009c7214:	34 00 00 14	b	0x1009c72e4
+1009c7218:	00 00 80 52	mov	w0, #0x0
+1009c721c:	36 00 00 14	b	0x1009c72f4
+1009c7220:	8b 1a 40 b9	ldr	w11, [x20, #0x18]
+1009c7224:	e8 04 00 34	cbz	w8, 0x1009c72c0
+1009c7228:	7f 05 00 71	cmp	w11, #0x1
+1009c722c:	a0 04 00 54	b.eq	0x1009c72c0
+1009c7230:	8b 0c 80 52	mov	w11, #0x64
+1009c7234:	3f 91 01 71	cmp	w9, #0x64
+1009c7238:	28 b1 8b 1a	csel	w8, w9, w11, lt
+1009c723c:	1f 01 00 71	cmp	w8, #0x0
+1009c7240:	08 c1 9f 1a	csel	w8, w8, wzr, gt
+1009c7244:	00 01 62 1e	scvtf	d0, w8
+1009c7248:	e8 08 f8 d2	mov	x8, #-0x3fb9000000000000
+1009c724c:	01 01 67 9e	fmov	d1, x8
+1009c7250:	00 08 61 1e	fmul	d0, d0, d1
+1009c7254:	28 0b e8 d2	mov	x8, #0x4059000000000000
+1009c7258:	01 01 67 9e	fmov	d1, x8
+1009c725c:	00 18 61 1e	fdiv	d0, d0, d1
+1009c7260:	00 40 66 1e	frinta	d0, d0
+1009c7264:	28 09 e8 d2	mov	x8, #0x4049000000000000
+1009c7268:	01 01 67 9e	fmov	d1, x8
+1009c726c:	00 28 61 1e	fadd	d0, d0, d1
+1009c7270:	08 00 78 1e	fcvtzs	w8, d0
+1009c7274:	ea 02 00 34	cbz	w10, 0x1009c72d0
+1009c7278:	89 12 40 b9	ldr	w9, [x20, #0x10]
+1009c727c:	3f 91 01 71	cmp	w9, #0x64
+1009c7280:	29 b1 8b 1a	csel	w9, w9, w11, lt
+1009c7284:	3f 01 00 71	cmp	w9, #0x0
+1009c7288:	29 c1 9f 1a	csel	w9, w9, wzr, gt
+1009c728c:	20 01 62 1e	scvtf	d0, w9
+1009c7290:	e9 08 f8 d2	mov	x9, #-0x3fb9000000000000
+1009c7294:	21 01 67 9e	fmov	d1, x9
+1009c7298:	00 08 61 1e	fmul	d0, d0, d1
+1009c729c:	29 0b e8 d2	mov	x9, #0x4059000000000000
+1009c72a0:	21 01 67 9e	fmov	d1, x9
+1009c72a4:	00 18 61 1e	fdiv	d0, d0, d1
+1009c72a8:	00 40 66 1e	frinta	d0, d0
+1009c72ac:	29 09 e8 d2	mov	x9, #0x4049000000000000
+1009c72b0:	21 01 67 9e	fmov	d1, x9
+1009c72b4:	00 28 61 1e	fadd	d0, d0, d1
+1009c72b8:	09 00 78 1e	fcvtzs	w9, d0
+1009c72bc:	06 00 00 14	b	0x1009c72d4
+1009c72c0:	16 01 00 34	cbz	w22, 0x1009c72e0
+1009c72c4:	7f 01 00 71	cmp	w11, #0x0
+1009c72c8:	c4 12 4b 7a	ccmp	w22, w11, #0x4, ne
+1009c72cc:	03 00 00 14	b	0x1009c72d8
+1009c72d0:	e9 1f 80 52	mov	w9, #0xff
+1009c72d4:	3f 01 08 6b	cmp	w9, w8
+1009c72d8:	e8 17 9f 1a	cset	w8, eq
+1009c72dc:	02 00 00 14	b	0x1009c72e4
+1009c72e0:	28 00 80 52	mov	w8, #0x1
+1009c72e4:	68 02 00 39	strb	w8, [x19]
+1009c72e8:	e0 23 00 91	add	x0, sp, #0x8
+1009c72ec:	3b 0c 6f 94	bl	__ZN4logi8protocol5mouse18SmartShiftSettingsD1Ev
+1009c72f0:	20 00 80 52	mov	w0, #0x1
+1009c72f4:	fd 7b 48 a9	ldp	x29, x30, [sp, #0x80]
+1009c72f8:	f4 4f 47 a9	ldp	x20, x19, [sp, #0x70]
+1009c72fc:	f6 57 46 a9	ldp	x22, x21, [sp, #0x60]
+1009c7300:	f8 5f 45 a9	ldp	x24, x23, [sp, #0x50]
+1009c7304:	fa 67 44 a9	ldp	x26, x25, [sp, #0x40]
+1009c7308:	ff 43 02 91	add	sp, sp, #0x90
+1009c730c:	c0 03 5f d6	ret

@@ -9,6 +9,21 @@ pub struct Config {
     pub back: String,
     pub forward: String,
     pub middle: String,
+    // Accept and discard the retired field when reading experiment-era files.
+    #[cfg(target_os = "macos")]
+    #[serde(
+        default,
+        rename = "gestures",
+        skip_serializing,
+        deserialize_with = "discard_retired_gestures"
+    )]
+    pub retired_gestures: (),
+}
+
+#[cfg(target_os = "macos")]
+fn discard_retired_gestures<'de, D: serde::Deserializer<'de>>(decoder: D) -> Result<(), D::Error> {
+    serde::de::IgnoredAny::deserialize(decoder)?;
+    Ok(())
 }
 
 impl Default for Config {
@@ -19,6 +34,8 @@ impl Default for Config {
             back: "默认".into(),
             forward: "默认".into(),
             middle: "默认".into(),
+            #[cfg(target_os = "macos")]
+            retired_gestures: (),
         }
     }
 }
@@ -28,6 +45,8 @@ pub(crate) enum Action {
     Default,
     Disabled,
     Shortcut(Chord),
+    #[cfg(target_os = "macos")]
+    System,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -44,14 +63,24 @@ pub(crate) fn parse_action(text: &str) -> Result<Action, String> {
     if text == "禁用" {
         return Ok(Action::Disabled);
     }
+    #[cfg(target_os = "macos")]
+    if matches!(text, "打开 App" | "调度中心") {
+        return Ok(Action::System);
+    }
     let parts: Vec<_> = text.split('+').map(str::trim).collect();
     let mut modifiers = Vec::new();
     for part in &parts[..parts.len().saturating_sub(1)] {
         let key = match part.to_ascii_uppercase().as_str() {
             "CTRL" => 0x11,
+            #[cfg(target_os = "macos")]
+            "CONTROL" => 0x11,
             "ALT" => 0x12,
+            #[cfg(target_os = "macos")]
+            "OPTION" => 0x12,
             "SHIFT" => 0x10,
             "WIN" => 0x5B,
+            #[cfg(target_os = "macos")]
+            "CMD" | "COMMAND" => 0x5B,
             _ => return Err(format!("未知修饰键：{part}；支持 Ctrl、Alt、Shift、Win")),
         };
         if modifiers.contains(&key) {
@@ -83,6 +112,10 @@ pub(crate) fn parse_action(text: &str) -> Result<Action, String> {
                 .map_err(|_| "功能键必须是 F1～F24".to_string())?;
             if !(1..=24).contains(&number) {
                 return Err("功能键必须是 F1～F24".into());
+            }
+            #[cfg(target_os = "macos")]
+            if number > 20 {
+                return Err("macOS 支持 F1～F20".into());
             }
             0x70 + number - 1
         }
@@ -119,8 +152,16 @@ fn load_path(path: &Path) -> Result<Config, String> {
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(Config::default()),
         Err(error) => return Err(format!("无法读取配置 {}：{error}", path.display())),
     };
-    let config: Config = serde_json::from_slice(&bytes)
+    #[allow(unused_mut)]
+    let mut config: Config = serde_json::from_slice(&bytes)
         .map_err(|error| format!("配置格式错误，原文件已保留 {}：{error}", path.display()))?;
+    #[cfg(target_os = "macos")]
+    for value in [&mut config.back, &mut config.forward, &mut config.middle] {
+        if value.trim() == "手势按钮" {
+            *value = "默认".into();
+            config.enabled = false;
+        }
+    }
     validate(&config)?;
     Ok(config)
 }
@@ -172,12 +213,29 @@ mod tests {
             "ctrl + shift + C",
             "Alt+Left",
             "Win+Tab",
-            "F24",
+            "F20",
             "Space",
             "Ctrl+0",
             "Ctrl+PageDown",
         ] {
             assert!(parse_action(value).is_ok(), "{value}");
+        }
+    }
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn mac_modifiers_match_native_input() {
+        for value in [
+            "Cmd+C",
+            "Command+Option+Left",
+            "Control+Shift+F20",
+            "Win+Tab",
+            "打开 App",
+            "调度中心",
+        ] {
+            assert!(parse_action(value).is_ok(), "{value}");
+        }
+        for value in ["Cmd+Win+C", "Alt+Option+Left", "F21", "F24"] {
+            assert!(parse_action(value).is_err(), "{value}");
         }
     }
     #[test]
@@ -204,6 +262,36 @@ mod tests {
         assert_eq!(parse_action(&config.back).unwrap(), Action::Default);
         config.version = 2;
         assert!(validate(&config).is_err());
+    }
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn retired_gestures_load_safely_without_rewriting_the_original() {
+        let path = std::env::temp_dir().join(format!(
+            "logilite-retired-gestures-{}.json",
+            std::process::id()
+        ));
+        let old = r#"{"version":1,"enabled":true,"back":"手势按钮","forward":"打开 App","middle":"Cmd+C","gestures":{"click":"禁用","distance":40}}"#;
+        std::fs::write(&path, old).unwrap();
+        let config = load_path(&path).unwrap();
+        assert_eq!(config.back, "默认");
+        assert_eq!(config.forward, "打开 App");
+        assert_eq!(config.middle, "Cmd+C");
+        assert!(!config.enabled);
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), old);
+        assert!(
+            !serde_json::to_value(&config)
+                .unwrap()
+                .as_object()
+                .unwrap()
+                .contains_key("gestures")
+        );
+        assert!(parse_action("手势按钮").is_err());
+        let regular = old.replace("手势按钮", "调度中心");
+        std::fs::write(&path, regular).unwrap();
+        let config = load_path(&path).unwrap();
+        assert!(config.enabled);
+        assert_eq!(config.back, "调度中心");
+        std::fs::remove_file(path).unwrap();
     }
     #[test]
     fn malformed_file_is_preserved() {

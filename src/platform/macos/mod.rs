@@ -1,2 +1,3 @@
-//! macOS adapter boundary. Native UI, input and HID transport are not implemented yet.
+//! macOS native application bridge and configuration storage.
+pub mod bridge;
 pub(crate) mod storage;

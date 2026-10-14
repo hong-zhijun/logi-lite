@@ -2,8 +2,11 @@
 name = "logi-lite"
 version = "0.1.0"
 edition = "2024"
-description = "A small Windows tray utility for mouse shortcuts and read-only Logitech device discovery"
+description = "A small native Windows and macOS utility for mouse shortcuts and Logitech device settings"
 license = "MIT"
+
+[lib]
+crate-type = ["rlib", "staticlib"]
 
 [dependencies]
 serde = { version = "1.0.229", features = ["derive"] }

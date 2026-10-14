@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>NSBluetoothAlwaysUsageDescription</key><string>读取已连接罗技鼠标的电量、DPI 和滚轮设置。</string>
+  <key>NSHighResolutionCapable</key><true/>
+</dict></plist>

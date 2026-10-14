@@ -1,3 +1,6 @@
 /target/
 /dist/
 /analysis/
+/src-tauri/target/
+.DS_Store
+/src-tauri/gen/schemas/

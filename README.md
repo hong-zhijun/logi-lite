@@ -1,23 +1,23 @@
 # Logi Lite
 
-面向 Logitech MX Anywhere 3 的轻量鼠标增强工具，使用 Rust 和系统原生界面实现。基础鼠标输入由 Windows 自带 HID 驱动处理，Logi Lite 提供快捷键映射与 HID++ 设备设置。
+面向 Logitech MX Anywhere 3 的轻量鼠标增强工具，使用 Rust 共享协议代码。macOS 0.2 使用 Tauri 2 / WKWebView 界面，Swift / AppKit、CGEventTap 和 IOKit 后端；Windows 目前保留 Win32 界面，新界面的 Windows 适配尚未实现。基础鼠标输入由系统驱动处理，Logi Lite 提供快捷键映射与 HID++ 设备设置。
 
-**当前版本为 Windows x64 测试版。macOS 后端尚未完成，真实鼠标通信与物理按键行为仍待实机验证。**
+**当前提供 Windows x64 和 macOS 原生测试版。Mac 蓝牙 MX Anywhere 3 已读取电量和设备能力；用户已验证侧键映射、禁用、窗口关闭后常驻、配置保留、DPI、自由／段落滚动及蓝牙重连。SmartShift 阈值的实际效果尚未确认。**
 
 ## 功能
 
 | 功能 | 当前状态 |
 |---|---|
-| 托盘常驻，关闭设置窗口后继续运行 | 已实现 |
+| Windows 托盘 / Mac 菜单栏，关闭窗口后继续运行 | 已实现 |
 | 两个侧键、中键设为快捷键、默认或禁用 | 已实现，全局模式 |
 | 本地保存配置，启动时恢复快捷键 | 已实现 |
 | 暂停、恢复、退出和紧急暂停热键 | 已实现 |
 | Logitech HID 端点识别与诊断导出 | 已实现 |
 | 电量、硬件 DPI、滚轮设置读取 | 实验性，待真实设备验证 |
 | DPI、自由／棘轮滚动、SmartShift 调节 | 实验性，待真实设备验证 |
-| macOS 菜单栏、输入与设备通信 | 待实现 |
+| macOS 菜单栏、权限引导、输入与蓝牙 HID++ 通信 | 已实现测试版；只读通信已实测 |
 
-快捷键映射首次启动默认关闭。首版使用 Windows 全局鼠标监听，**会影响所有鼠标的对应侧键和中键**；硬件 DPI 和滚轮设置只对识别出的目标设备开放。
+Windows 快捷键映射首次启动默认关闭；macOS 首次完成授权后默认启用，之后保留手动暂停偏好。两平台均使用全局鼠标监听，**会影响所有鼠标的对应侧键和中键**；硬件 DPI 和滚轮设置只对识别出的目标设备开放。
 
 暂不提供顶部模式键重映射、按应用配置、Flow、云同步、复杂宏或开机自启动。
 
@@ -35,6 +35,41 @@ cargo build --release --locked --target-dir target
 首次构建需要下载 Cargo 依赖；依赖缓存后可加 `--offline`。Windows x64 构建配置使用静态 CRT，运行时无需 Python、Qt 或 Electron。
 
 构建产物与本地便携包不纳入 Git，克隆仓库后需自行构建。
+
+## macOS 构建与测试
+
+需要 macOS 13 或更新版本、Rust 1.88+ 和 Xcode Command Line Tools。只需编译时具备这些工具；打包后的应用使用系统框架，不依赖 Options+ 或后台 Python / Electron。
+
+```bash
+./scripts/build-macos.sh
+open "dist/Logi Lite.app"
+```
+
+应用路径为 `dist/Logi Lite.app`。脚本构建当前 Mac 的原生架构，并进行本地 ad-hoc 签名；不是已公证的互联网发行包。先构建应用后，`cargo run --release` 也会启动它。首次构建会下载 Tauri 依赖；界面静态资源直接嵌入应用，运行时不启动本地网页服务器。
+
+1. 测试前自行退出 Options+ 后台代理，避免同时处理按键。仅关闭其设置窗口不等于退出后台。
+2. 权限不足时，设备配置区显示遮罩和“去授权”入口，完成辅助功能和输入监控授权后自动解锁；设置页始终可访问，必要时退出重开。首次授权完成后默认启用映射；之后会记住手动暂停，权限暂时撤销时停止监听，重新授权后恢复原先启用状态。
+3. 程序自动识别直接通过蓝牙连接的 MX Anywhere 3，读取电量、DPI、滚轮模式及支持范围。首次探测、重连和通信恢复均为只读，不自动重写上次硬件设置。连接元数据每 4 秒检查一次；未成功通信时，窗口可见期间最多每 30 秒自动重试一次。
+4. 鼠标首页点击图中的后退、前进、中键标记；选择默认、禁用、打开 App、调度中心或键盘快捷键，点击“保存并应用”。快捷键支持手输或录制。设置页开关可以启用／暂停已保存的映射。映射作用于所有鼠标。
+5. 点击同一鼠标图中的“指针与滚轮”标记，调整 DPI、自由／段落／SmartShift 模式及灵敏度，点击“应用到鼠标”；后端重新验证目标和范围、仅写入修改项，再回读实际结果。后台读取不会覆盖尚未提交的编辑。断开或读取失败时禁用写入，重连后自动读取，也可点击右上角刷新按钮重新读取状态。按钮用橙色提示待应用，绿色勾号表示已保存／已同步。
+6. MX Anywhere 3 的真实 DPI 为 200–4000，步进 50；Options+ 的指针速度百分比是不同刻度。SmartShift 灵敏度为 0–100%，越高越容易进入自由滚动，回读百分比可能因硬件量化略有变化。以设备读取能力为准，证据见 [设置范围](docs/settings-ranges.md)。
+7. 点击右上角圆形设置按钮管理权限、手动刷新和导出诊断。关闭窗口后仍在菜单栏运行，可重新打开、启用／暂停和退出。紧急暂停为 `Cmd+Ctrl+Shift+F12`，部分键盘需要 Fn；手动或紧急暂停会保存关闭映射；退出只停止监听，保留启用偏好供下次打开恢复。
+
+Mac 的按键映射是全局模式，影响所有鼠标的对应侧键和中键；不支持按应用配置或顶部模式键重映射。当前 Mac 硬件后端针对直接连接的蓝牙 MX Anywhere 3 系列，不提供 Unifying / Bolt 接收器槽位选择；多只目标鼠标同时连接时拒绝自动选择写入对象。
+
+Mac 配置路径：`~/Library/Application Support/LogiLite/config.json`。读取或校验失败会保留原文件，显示错误并关闭映射。点击保存或对已启用配置进行安全暂停时会原子替换配置。新界面每个用户仅允许一个实例运行。硬件设置不在启动/重连时自动重写。
+
+```bash
+# 只列端点和权限状态；不发送硬件报告、不申请权限
+"dist/Logi Lite.app/Contents/MacOS/LogiLite" --diagnose diagnostic.json
+# 只读查询真实硬件；不申请权限、不写设置
+"dist/Logi Lite.app/Contents/MacOS/LogiLite" --probe probe.json
+# 窗口/菜单栏自检；不加载或保存配置、不启动映射、不发送硬件报告
+"dist/Logi Lite.app/Contents/MacOS/LogiLite" --smoke-test smoke.json
+./scripts/check-macos.sh
+```
+
+已安装 Options+ 的只读分析及证据见 [Mac 分析记录](docs/options-macos-analysis.md)。Logi Lite 控制逻辑使用独立实现，没有复制官方程序代码或依赖其私有服务。新界面鼠标图取自本机 Options+，素材来源与分发限制见 [UI 记录](docs/tauri-macos-preview.md)。
 
 ## 使用方法
 
@@ -65,7 +100,7 @@ cargo build --release --locked --target-dir target
 | 平台／设备 | 说明 |
 |---|---|
 | Windows x64 | 已构建并完成桌面自检 |
-| macOS | 目前只有配置存储适配边界，没有可用 Mac 应用 |
+| macOS 13+ | 原生应用；已在本机 Apple Silicon / macOS 27.0.1 构建与蓝牙只读通信验证；其他系统/芯片未实测 |
 | MX Anywhere 3 | 首要目标；普通版通常使用 Unifying 或 Bluetooth LE |
 | MX Anywhere 3S／商务版 | 识别逻辑可匹配，通常涉及 Bolt；功能和端点仍需实测 |
 
@@ -131,10 +166,12 @@ src/
    │  └─ storage.rs        Windows 配置路径与文件替换
    └─ macos/
       ├─ mod.rs            macOS 适配入口
-      └─ storage.rs        macOS 配置存储
+      ├─ bridge.rs         Rust / Swift JSON 与 HID++ 回调桥接
+      ├─ storage.rs        macOS 配置存储
+      └─ native/           AppKit 界面、事件监听与 IOHID 蓝牙通信
 ```
 
-两套平台在 `main` 分支共同维护，通过目录和条件编译区分系统实现。共享快捷键解析目前保留 Windows 键名和内部键码约定，Mac 输入后端仍需要适配。Windows 首版保存在 [`windows-v0.1.0`](https://github.com/hong-zhijun/logi-lite/tree/windows-v0.1.0) 标签。
+两套平台在 `main` 分支共同维护，通过目录和条件编译区分系统实现。共享配置校验在 Mac 支持 Cmd / Command、Option / Alt、Ctrl / Control、Shift，Win 为 Cmd 别名；Mac 输入后端独立转换到 macOS 虚拟键码，支持 F1–F20。Windows 首版保存在 [`windows-v0.1.0`](https://github.com/hong-zhijun/logi-lite/tree/windows-v0.1.0) 标签。
 
 `target/`、`dist/` 与本地调查目录 `analysis/` 均被 Git 忽略。
 

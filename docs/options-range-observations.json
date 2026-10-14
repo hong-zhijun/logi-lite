@@ -1,0 +1,45 @@
+{
+  "artifact": "/Applications/logioptionsplus.app/Contents/Resources/app.asar",
+  "asar_sha256": "570132e2682f7ffebd36d5f8d6c062fe2a12c143fa6807b053efac3ae6e34093",
+  "member": "app.min.js",
+  "member_sha256": "17d7f7c9bfee9c987dbaf86ee73dd875b791718de38800b077d2016237fdeca0",
+  "method": "Read-only ASAR extraction with per-member SHA256 verification; inert string-table resolution; no JavaScript or app executed.",
+  "string_table": {
+    "method": "inert string table / checksum rotation only; no JavaScript executed",
+    "entries": 32848,
+    "rotation": 371,
+    "aliases": 30574,
+    "limitations": "alias discovery is syntactic and global, not proof of runtime reachability"
+  },
+  "observations": [
+    {
+      "setting": "SmartShift sensitivity slider",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "percent",
+      "default_from_telemetry_schema": 50,
+      "property": "smartshift.sensitivity",
+      "decoded_character_offset": 5053981
+    },
+    {
+      "setting": "Pointer speed percentage",
+      "internal_min": -1,
+      "internal_max": 1,
+      "internal_mid": 0,
+      "percentage_multiplier": 50,
+      "display_conversion": "round((internal + 1) * 50)",
+      "display_min": 0,
+      "display_max": 100,
+      "unit": "percent",
+      "decoded_character_offset": 1147455
+    },
+    {
+      "setting": "Hardware DPI conversion",
+      "basis": "min/max/default/step obtained from sensor metadata; exponential/logarithmic conversion; not a linear 0..100 mapping",
+      "decoded_character_offset": 1158768
+    }
+  ],
+  "rea_parent": "ev_53b62b2ec2aaf81fc5c05820f78e35306726467df5ba51c2dd34d97d16e09382",
+  "rea_coverage": "Partial: broad ASAR analysis timed out before app.min.js. This record is independent bounded file-text analysis, not REA recovered runtime behavior."
+}

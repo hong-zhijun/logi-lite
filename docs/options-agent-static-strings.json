@@ -1,0 +1,2356 @@
+{
+  "source": "/Library/Application Support/Logitech.localized/LogiOptionsPlus/logioptionsplus_agent.app/Contents/MacOS/logioptionsplus_agent",
+  "sha256": "7d71273c6c3310edaebee729bf8f1f255c541f08651331bd6068dbd7a7ff3fc9",
+  "method": "ASCII printable runs length >= 6; focused regexp; dedup identical universal slice strings",
+  "selected": [
+    {
+      "offset": 2877826,
+      "text": "blehidppH"
+    },
+    {
+      "offset": 52946436,
+      "text": "N5devio32DevioExceptionNonVendorUsagePageE"
+    },
+    {
+      "offset": 53173369,
+      "text": "N5devio23IFeature1B00SpecialKeysE"
+    },
+    {
+      "offset": 53173403,
+      "text": "N5devio24IIFeature1B00SpecialKeysE"
+    },
+    {
+      "offset": 53173438,
+      "text": "N5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 53174594,
+      "text": "NSt3__110__function6__baseIFvPN5devio24IIFeature1B00SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 53174672,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B00SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 53174806,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B00SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 53174916,
+      "text": "NSt3__115binary_functionIPN5devio24IIFeature1B00SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 53175021,
+      "text": "N5devio23IFeature1B03SpecialKeysE"
+    },
+    {
+      "offset": 53175055,
+      "text": "N5devio24IIFeature1B03SpecialKeysE"
+    },
+    {
+      "offset": 53175090,
+      "text": "N5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 53176070,
+      "text": "NSt3__110__function6__funcINS_6__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEJRKNS_12placeholders4__phILi1EEERjSD_RbEEENS_9allocatorISF_EEFvPS5_EEE"
+    },
+    {
+      "offset": 53176230,
+      "text": "NSt3__110__function6__baseIFvPN5devio24IIFeature1B03SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 53176308,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEJRKNS_12placeholders4__phILi1EEERjSB_RbEEE"
+    },
+    {
+      "offset": 53176417,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEEE"
+    },
+    {
+      "offset": 53176675,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 53176809,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 53176919,
+      "text": "NSt3__115binary_functionIPN5devio24IIFeature1B03SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 53177040,
+      "text": "N5devio23IFeature1B04SpecialKeysE"
+    },
+    {
+      "offset": 53177074,
+      "text": "N5devio24IIFeature1B04SpecialKeysE"
+    },
+    {
+      "offset": 53177109,
+      "text": "N5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 53177263,
+      "text": "N5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 53177335,
+      "text": "N5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 53177412,
+      "text": "N5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 53177494,
+      "text": "N5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 53177657,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53177776,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53177908,
+      "text": "N5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 53179186,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53179310,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53179447,
+      "text": "N5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 53179624,
+      "text": "NSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 53179927,
+      "text": "NSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 53180243,
+      "text": "ZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvEUlvE_"
+    },
+    {
+      "offset": 53180518,
+      "text": "ZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_EUlvE_"
+    },
+    {
+      "offset": 53180780,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53180909,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53181051,
+      "text": "N5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 53181238,
+      "text": "NSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 53181551,
+      "text": "NSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 53181877,
+      "text": "ZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvEUlvE_"
+    },
+    {
+      "offset": 53182162,
+      "text": "ZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_EUlvE_"
+    },
+    {
+      "offset": 53183518,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53183644,
+      "text": "NSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 53183783,
+      "text": "N5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 53187129,
+      "text": "NSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 53187207,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvjjbbjEJRKNS_12placeholders4__phILi1EEERjSB_RbSC_SB_EEE"
+    },
+    {
+      "offset": 53187324,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvjjbbjEEE"
+    },
+    {
+      "offset": 53187584,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 53187718,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 53187828,
+      "text": "NSt3__115binary_functionIPN5devio24IIFeature1B04SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 53188693,
+      "text": "NSt3__110__function6__funcINS_6__bindIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEJRKNS_12placeholders4__phILi1EEERiSD_EEENS_9allocatorISE_EEFvPS5_EEE"
+    },
+    {
+      "offset": 53188853,
+      "text": "NSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys11RawXYReportEEEE"
+    },
+    {
+      "offset": 53188934,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEJRKNS_12placeholders4__phILi1EEERiSB_EEE"
+    },
+    {
+      "offset": 53189043,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEEE"
+    },
+    {
+      "offset": 53189309,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EJRKNS_12placeholders4__phILi1EEERS7_SF_EEE"
+    },
+    {
+      "offset": 53189449,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EEE"
+    },
+    {
+      "offset": 53190499,
+      "text": "NSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys14RawWheelReportEEEE"
+    },
+    {
+      "offset": 53190583,
+      "text": "NSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys14RawWheelReportEFvbjiEJRKNS_12placeholders4__phILi1EEERbRjRiEEE"
+    },
+    {
+      "offset": 53190697,
+      "text": "NSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys14RawWheelReportEFvbjiEEE"
+    },
+    {
+      "offset": 53190785,
+      "text": "N5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 53192013,
+      "text": "NSt3__110__function6__baseIFvPN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEEEE"
+    },
+    {
+      "offset": 53192098,
+      "text": "NSt3__16__bindIMN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEFvNS_6vectorItNS_9allocatorItEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 53192239,
+      "text": "NSt3__118__weak_result_typeIMN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEFvNS_6vectorItNS_9allocatorItEEEEEEE"
+    },
+    {
+      "offset": 53192356,
+      "text": "NSt3__115binary_functionIPN5devio34IIFeature1B06SpecialKeysAndButtons6ReportENS_6vectorItNS_9allocatorItEEEEvEE"
+    },
+    {
+      "offset": 53505594,
+      "text": "N5devio24IIFeature1B04SpecialKeys9KeyReportE"
+    },
+    {
+      "offset": 53505646,
+      "text": "N5devio24IIFeature1B04SpecialKeys14RawWheelReportE"
+    },
+    {
+      "offset": 53505746,
+      "text": "N5devio34IIFeature1B06SpecialKeysAndButtons6ReportE"
+    },
+    {
+      "offset": 53530054,
+      "text": "N5devio25IFeature2201AdjustableDPIE"
+    },
+    {
+      "offset": 53604420,
+      "text": "N5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 53604496,
+      "text": "N5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 53604562,
+      "text": "N5devio24IIFeature1B04SpecialKeys11RawXYReportE"
+    },
+    {
+      "offset": 53604610,
+      "text": "N5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 53625760,
+      "text": "N5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 53634848,
+      "text": "N5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 53634908,
+      "text": "N5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 53635572,
+      "text": "N5devio33IFeature1B06SpecialKeysAndButtonsE"
+    },
+    {
+      "offset": 53635616,
+      "text": "N5devio34IIFeature1B06SpecialKeysAndButtonsE"
+    },
+    {
+      "offset": 55397162,
+      "text": "DeviceUsagePage"
+    },
+    {
+      "offset": 55448404,
+      "text": "-- current accessibility state: %s"
+    },
+    {
+      "offset": 55448593,
+      "text": "-- current input monitoring state: %s"
+    },
+    {
+      "offset": 55448632,
+      "text": "-- Accessibility has not been granted, but input monitoring has."
+    },
+    {
+      "offset": 55448698,
+      "text": "-- We are already granted accessibility AND input monitoring. No need for user notifications."
+    },
+    {
+      "offset": 55509079,
+      "text": "NonVendorUsagePage"
+    },
+    {
+      "offset": 55542115,
+      "text": "    UsagePage=0x%04x, Usage=0x%04x"
+    },
+    {
+      "offset": 55542222,
+      "text": "found report id %02x for usage %04x:%04x, output payload size %d"
+    },
+    {
+      "offset": 55542287,
+      "text": "found report id %02x for the single collection, report size %d"
+    },
+    {
+      "offset": 55542375,
+      "text": "report id 0x%02x has payload size %d"
+    },
+    {
+      "offset": 55542471,
+      "text": "found centurion device matching pid and usage, but element data does not contain report ID information"
+    },
+    {
+      "offset": 55542574,
+      "text": "Centurion device pid 0x%04x usage %04x:%04x with report id 0x%02x report size %zu, skip_report_id=%d"
+    },
+    {
+      "offset": 55543129,
+      "text": "report id 0x%02x has usage %04x:%04x with length now %d bytes (%d bits)"
+    },
+    {
+      "offset": 55543307,
+      "text": "  usage %04x:%04x has %zu report ids:"
+    },
+    {
+      "offset": 55543345,
+      "text": "      report id 0x%02x is length %d"
+    },
+    {
+      "offset": 55543479,
+      "text": "report id 0x%02x has interface %s payload size %d"
+    },
+    {
+      "offset": 55551810,
+      "text": "incorrect report id, ignoring"
+    },
+    {
+      "offset": 55561211,
+      "text": "blehidpp"
+    },
+    {
+      "offset": 55605833,
+      "text": "virtual future<IFeature1B04SpecialKeys::GetCountResponse> devio::Feature1B04SpecialKeys::GetCount()"
+    },
+    {
+      "offset": 55606027,
+      "text": "virtual future<IFeature1B04SpecialKeys::GetCtrlIdInfoResponse> devio::Feature1B04SpecialKeys::GetCtrlIdInfo(unsigned int)"
+    },
+    {
+      "offset": 55606253,
+      "text": "virtual future<IFeature1B04SpecialKeys::GetCtrlIdReportingResponse> devio::Feature1B04SpecialKeys::GetCtrlIdReporting(unsigned int)"
+    },
+    {
+      "offset": 55606707,
+      "text": "virtual future<IFeature1B04SpecialKeys::GetCapabilitiesResponse> devio::Feature1B04SpecialKeys::GetCapabilities()"
+    },
+    {
+      "offset": 55822076,
+      "text": "Accessibility NOT GRANTED. Leaving 0x2121 high res scrolling to OOB."
+    },
+    {
+      "offset": 55822394,
+      "text": "-- accessibility granted."
+    },
+    {
+      "offset": 55824566,
+      "text": "Accessibility NOT GRANTED. Leaving 0x2150 thumbwheel to OOB."
+    },
+    {
+      "offset": 55832557,
+      "text": "Accessibility NOT GRANTED. Leaving 0x6501 thumbwheel to OOB."
+    },
+    {
+      "offset": 55833024,
+      "text": "devio_feature_6501_touchpad::devio_feature_6501_touchpad: Accessibility NOT GRANTED. Leaving 0x6501 Scroll2Finger to OOB."
+    },
+    {
+      "offset": 55846053,
+      "text": "devio_feature_x6501_touchpad::start: Accessibility NOT GRANTED. Leaving 0x6501 Scroll2Finger to OOB."
+    },
+    {
+      "offset": 55873167,
+      "text": "Accessibility NOT GRANTED."
+    },
+    {
+      "offset": 55873633,
+      "text": "-- accessibility granted. We can now enable full functionality for 0x1b04."
+    },
+    {
+      "offset": 55876316,
+      "text": "-- accessibility granted. We can now enable full functionality for 0x1b06."
+    },
+    {
+      "offset": 55879701,
+      "text": "-- accessibility granted. We can now enable full functionality for 0x4600."
+    },
+    {
+      "offset": 55881514,
+      "text": "Accessibility NOT GRANTED. Leaving feature to OOB."
+    },
+    {
+      "offset": 55881681,
+      "text": "-- we are already waiting for the user to grant accessibility."
+    },
+    {
+      "offset": 55881745,
+      "text": "-- subscribing to accessibility state change events."
+    },
+    {
+      "offset": 55906957,
+      "text": "-- accessibility granted. We can now enable full functionality for 0x1B06."
+    },
+    {
+      "offset": 56139676,
+      "text": "SimInput: Accessibility NOT GRANTED."
+    },
+    {
+      "offset": 56139714,
+      "text": "-- SimInput: we are already waiting for the user to grant accessibility."
+    },
+    {
+      "offset": 56139788,
+      "text": "-- SimInput: subscribing to accessibility state change events."
+    },
+    {
+      "offset": 56139893,
+      "text": "-- SimInput: accessibility granted."
+    },
+    {
+      "offset": 56289574,
+      "text": "-- we are currently monitoring accessibility permissions."
+    },
+    {
+      "offset": 56290666,
+      "text": "-- requesting to monitor accessibility permissions: %s"
+    },
+    {
+      "offset": 56290764,
+      "text": "-- reading initial accessibility value"
+    },
+    {
+      "offset": 56290918,
+      "text": "-- clearing accessibility state cached value."
+    },
+    {
+      "offset": 56291381,
+      "text": "-- previous accessibility state is invalid."
+    },
+    {
+      "offset": 56497544,
+      "text": "hid_device_impl_osx::create_controls: Unable to load initial value for button: UsagePage:%.4x Usage:%.4x"
+    },
+    {
+      "offset": 56497649,
+      "text": "hid_device_impl_osx::create_controls: Unable to load initial value for axis: UsagePage:%.4x Usage:%.4x"
+    },
+    {
+      "offset": 56500626,
+      "text": "PrimaryUsagePage"
+    },
+    {
+      "offset": 60572801,
+      "text": "_IOHIDElementGetReportID"
+    },
+    {
+      "offset": 60572896,
+      "text": "_IOHIDElementGetUsagePage"
+    },
+    {
+      "offset": 61104826,
+      "text": "primaryUsagePageEv"
+    },
+    {
+      "offset": 68999095,
+      "text": "__ZNK4logi9logi_dext21LogiDextFilterService16primaryUsagePageEv"
+    },
+    {
+      "offset": 68999877,
+      "text": "__ZNK4logi9logi_dext25LogiDextFilterServiceImpl16primaryUsagePageEv"
+    },
+    {
+      "offset": 70695631,
+      "text": "__ZSt18make_exception_ptrB8ue170006IN5devio32DevioExceptionNonVendorUsagePageEESt13exception_ptrT_"
+    },
+    {
+      "offset": 70695730,
+      "text": "__ZN5devio32DevioExceptionNonVendorUsagePageD1Ev"
+    },
+    {
+      "offset": 70707651,
+      "text": "__ZN5devio32DevioExceptionNonVendorUsagePageD0Ev"
+    },
+    {
+      "offset": 71048392,
+      "text": "__ZN5devio21MacOSAbstractionLayer24IOHIDElementGetUsagePageEP14__IOHIDElement"
+    },
+    {
+      "offset": 71048617,
+      "text": "__ZN5devio21MacOSAbstractionLayer23IOHIDElementGetReportIDEP14__IOHIDElement"
+    },
+    {
+      "offset": 71051494,
+      "text": "__ZN25MacOSAbstractionLayerImpl24IOHIDElementGetUsagePageEP14__IOHIDElement"
+    },
+    {
+      "offset": 71051713,
+      "text": "__ZN25MacOSAbstractionLayerImpl23IOHIDElementGetReportIDEP14__IOHIDElement"
+    },
+    {
+      "offset": 72176468,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE7produceENSt3__18functionIFvPS2_EEENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE"
+    },
+    {
+      "offset": 72176976,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE16manual_subscribeEPS2_NS_13safe_executorE"
+    },
+    {
+      "offset": 72177080,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE18manual_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72177167,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE15unsubscribe_allEv"
+    },
+    {
+      "offset": 72177248,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE19subscriptions_totalEv"
+    },
+    {
+      "offset": 72177333,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE12on_subscribeEPS2_"
+    },
+    {
+      "offset": 72177414,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEE14on_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72177591,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEED1Ev"
+    },
+    {
+      "offset": 72177657,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEED0Ev"
+    },
+    {
+      "offset": 72187524,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE7produceENSt3__18functionIFvPS2_EEENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE"
+    },
+    {
+      "offset": 72188134,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE16manual_subscribeEPS2_NS_13safe_executorE"
+    },
+    {
+      "offset": 72188238,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE18manual_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72188325,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE15unsubscribe_allEv"
+    },
+    {
+      "offset": 72188406,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE19subscriptions_totalEv"
+    },
+    {
+      "offset": 72188491,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE12on_subscribeEPS2_"
+    },
+    {
+      "offset": 72188572,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEE14on_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72188749,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEED1Ev"
+    },
+    {
+      "offset": 72188815,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEED0Ev"
+    },
+    {
+      "offset": 72199781,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEED1Ev"
+    },
+    {
+      "offset": 72200097,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEED1Ev"
+    },
+    {
+      "offset": 72200453,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEED1Ev"
+    },
+    {
+      "offset": 72201088,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEED1Ev"
+    },
+    {
+      "offset": 72201617,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE7produceENSt3__18functionIFvPS2_EEENS4_12basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEE"
+    },
+    {
+      "offset": 72202038,
+      "text": "__ZNSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EJRKNS_12placeholders4__phILi1EEERS7_SF_EED1Ev"
+    },
+    {
+      "offset": 72202698,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE16manual_subscribeEPS2_NS_13safe_executorE"
+    },
+    {
+      "offset": 72202802,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE18manual_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72202889,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE15unsubscribe_allEv"
+    },
+    {
+      "offset": 72202970,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE19subscriptions_totalEv"
+    },
+    {
+      "offset": 72203055,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE12on_subscribeEPS2_"
+    },
+    {
+      "offset": 72203136,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEE14on_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72203311,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEE16manual_subscribeEPS2_NS_13safe_executorE"
+    },
+    {
+      "offset": 72203418,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEE18manual_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72203508,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEE15unsubscribe_allEv"
+    },
+    {
+      "offset": 72203592,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEE19subscriptions_totalEv"
+    },
+    {
+      "offset": 72203680,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEE12on_subscribeEPS2_"
+    },
+    {
+      "offset": 72203764,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEE14on_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72203942,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEE16manual_subscribeEPS2_NS_13safe_executorE"
+    },
+    {
+      "offset": 72204052,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEE18manual_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72204145,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEE15unsubscribe_allEv"
+    },
+    {
+      "offset": 72204232,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEE19subscriptions_totalEv"
+    },
+    {
+      "offset": 72204323,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEE12on_subscribeEPS2_"
+    },
+    {
+      "offset": 72204410,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEE14on_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72204593,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEED2Ev"
+    },
+    {
+      "offset": 72204671,
+      "text": "__ZNSt3__110shared_ptrIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72204790,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEE3useEv"
+    },
+    {
+      "offset": 72204870,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEED1Ev"
+    },
+    {
+      "offset": 72204948,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEED0Ev"
+    },
+    {
+      "offset": 72205026,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEED2Ev"
+    },
+    {
+      "offset": 72205109,
+      "text": "__ZNSt3__110shared_ptrIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72205233,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEE3useEv"
+    },
+    {
+      "offset": 72205318,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEED1Ev"
+    },
+    {
+      "offset": 72205401,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEED0Ev"
+    },
+    {
+      "offset": 72205484,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEED2Ev"
+    },
+    {
+      "offset": 72205572,
+      "text": "__ZNSt3__110shared_ptrIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72205701,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEE3useEv"
+    },
+    {
+      "offset": 72205791,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEED1Ev"
+    },
+    {
+      "offset": 72205879,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEED0Ev"
+    },
+    {
+      "offset": 72205967,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEED2Ev"
+    },
+    {
+      "offset": 72206052,
+      "text": "__ZNSt3__110shared_ptrIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72206178,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEE3useEv"
+    },
+    {
+      "offset": 72206265,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEED1Ev"
+    },
+    {
+      "offset": 72206350,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEED0Ev"
+    },
+    {
+      "offset": 72206701,
+      "text": "__ZN5devio23IFeature1B04SpecialKeysD2Ev"
+    },
+    {
+      "offset": 72206741,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEED1Ev"
+    },
+    {
+      "offset": 72206813,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEED0Ev"
+    },
+    {
+      "offset": 72207094,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEED1Ev"
+    },
+    {
+      "offset": 72207163,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEED0Ev"
+    },
+    {
+      "offset": 72207438,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEED1Ev"
+    },
+    {
+      "offset": 72207504,
+      "text": "__ZN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEED0Ev"
+    },
+    {
+      "offset": 72208514,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys16GetCountResponseEE10get_futureEv"
+    },
+    {
+      "offset": 72208856,
+      "text": "__ZNSt3__110shared_ptrIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72208962,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72209087,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72209212,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72209353,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72209499,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys16GetCountResponseEEC2Ev"
+    },
+    {
+      "offset": 72209572,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72209710,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72209848,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72210002,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72210161,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys16GetCountResponseEED2Ev"
+    },
+    {
+      "offset": 72210234,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEEC2ENSt3__110shared_ptrINS_19future_shared_stateIS2_EEEEbb"
+    },
+    {
+      "offset": 72210365,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEE3useEv"
+    },
+    {
+      "offset": 72210439,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEED0Ev"
+    },
+    {
+      "offset": 72217219,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEE10get_futureEv"
+    },
+    {
+      "offset": 72217307,
+      "text": "__ZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENUlvE_D1Ev"
+    },
+    {
+      "offset": 72217577,
+      "text": "__ZNSt3__110shared_ptrIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72217688,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72217818,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72217948,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72218094,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72218245,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEC2Ev"
+    },
+    {
+      "offset": 72218323,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72218466,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72218609,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72218768,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72218932,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEED2Ev"
+    },
+    {
+      "offset": 72219010,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEC2ENSt3__110shared_ptrINS_19future_shared_stateIS2_EEEEbb"
+    },
+    {
+      "offset": 72219146,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEE3useEv"
+    },
+    {
+      "offset": 72219225,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEED0Ev"
+    },
+    {
+      "offset": 72219787,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEED1Ev"
+    },
+    {
+      "offset": 72220096,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEED0Ev"
+    },
+    {
+      "offset": 72220405,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7__cloneEv"
+    },
+    {
+      "offset": 72220721,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7__cloneEPNS0_6__baseISQ_EE"
+    },
+    {
+      "offset": 72221054,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7destroyEv"
+    },
+    {
+      "offset": 72221369,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE18destroy_deallocateEv"
+    },
+    {
+      "offset": 72221696,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEclEv"
+    },
+    {
+      "offset": 72222005,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE6targetERKSt9type_info"
+    },
+    {
+      "offset": 72222333,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE11target_typeEv"
+    },
+    {
+      "offset": 72222654,
+      "text": "__ZNSt3__110__function12__alloc_funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7destroyB8ue170006Ev"
+    },
+    {
+      "offset": 72222986,
+      "text": "__ZZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvENKUlvE_clEv"
+    },
+    {
+      "offset": 72223270,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEED1Ev"
+    },
+    {
+      "offset": 72223592,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEED0Ev"
+    },
+    {
+      "offset": 72223914,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE7__cloneEv"
+    },
+    {
+      "offset": 72224243,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE7__cloneEPNS0_6__baseISR_EE"
+    },
+    {
+      "offset": 72224589,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE7destroyEv"
+    },
+    {
+      "offset": 72224917,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE18destroy_deallocateEv"
+    },
+    {
+      "offset": 72225257,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEclEv"
+    },
+    {
+      "offset": 72225579,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE6targetERKSt9type_info"
+    },
+    {
+      "offset": 72225920,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE11target_typeEv"
+    },
+    {
+      "offset": 72226254,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEE10get_futureEv"
+    },
+    {
+      "offset": 72226347,
+      "text": "__ZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENUlvE_D1Ev"
+    },
+    {
+      "offset": 72226627,
+      "text": "__ZNSt3__110shared_ptrIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72226743,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72226878,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72227013,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72227164,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72227320,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEC2Ev"
+    },
+    {
+      "offset": 72227403,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72227551,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72227699,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72227863,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72228032,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEED2Ev"
+    },
+    {
+      "offset": 72228115,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEC2ENSt3__110shared_ptrINS_19future_shared_stateIS2_EEEEbb"
+    },
+    {
+      "offset": 72228256,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEE3useEv"
+    },
+    {
+      "offset": 72228340,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEED0Ev"
+    },
+    {
+      "offset": 72228927,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEED1Ev"
+    },
+    {
+      "offset": 72229246,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEED0Ev"
+    },
+    {
+      "offset": 72229565,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7__cloneEv"
+    },
+    {
+      "offset": 72229891,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7__cloneEPNS0_6__baseISQ_EE"
+    },
+    {
+      "offset": 72230234,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7destroyEv"
+    },
+    {
+      "offset": 72230559,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE18destroy_deallocateEv"
+    },
+    {
+      "offset": 72230896,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEclEv"
+    },
+    {
+      "offset": 72231215,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE6targetERKSt9type_info"
+    },
+    {
+      "offset": 72231553,
+      "text": "__ZNKSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE11target_typeEv"
+    },
+    {
+      "offset": 72231884,
+      "text": "__ZNSt3__110__function12__alloc_funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEE7destroyB8ue170006Ev"
+    },
+    {
+      "offset": 72232226,
+      "text": "__ZZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvENKUlvE_clEv"
+    },
+    {
+      "offset": 72232520,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEED1Ev"
+    },
+    {
+      "offset": 72232852,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEED0Ev"
+    },
+    {
+      "offset": 72233184,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE7__cloneEv"
+    },
+    {
+      "offset": 72233523,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE7__cloneEPNS0_6__baseISR_EE"
+    },
+    {
+      "offset": 72233879,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE7destroyEv"
+    },
+    {
+      "offset": 72234217,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE18destroy_deallocateEv"
+    },
+    {
+      "offset": 72234567,
+      "text": "__ZNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEclEv"
+    },
+    {
+      "offset": 72234899,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE6targetERKSt9type_info"
+    },
+    {
+      "offset": 72235250,
+      "text": "__ZNKSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEE11target_typeEv"
+    },
+    {
+      "offset": 72241843,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEE10get_futureEv"
+    },
+    {
+      "offset": 72242207,
+      "text": "__ZNSt3__110shared_ptrIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 72242320,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72242452,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72242584,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEE16__on_zero_sharedEv"
+    },
+    {
+      "offset": 72242732,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEE21__on_zero_shared_weakEv"
+    },
+    {
+      "offset": 72242885,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEC2Ev"
+    },
+    {
+      "offset": 72242965,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEED1Ev"
+    },
+    {
+      "offset": 72243110,
+      "text": "__ZNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEED0Ev"
+    },
+    {
+      "offset": 72243582,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEED2Ev"
+    },
+    {
+      "offset": 72243662,
+      "text": "__ZN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEC2ENSt3__110shared_ptrINS_19future_shared_stateIS2_EEEEbb"
+    },
+    {
+      "offset": 72243800,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEE3useEv"
+    },
+    {
+      "offset": 72243881,
+      "text": "__ZN5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEED0Ev"
+    },
+    {
+      "offset": 72284641,
+      "text": "__ZN5devio32Feature1B06SpecialKeysAndButtons15getCapabilitiesERNS_34IIFeature1B06SpecialKeysAndButtons12CapabilitiesE"
+    },
+    {
+      "offset": 72284759,
+      "text": "__ZThn168_N5devio32Feature1B06SpecialKeysAndButtons15getCapabilitiesERNS_34IIFeature1B06SpecialKeysAndButtons12CapabilitiesE"
+    },
+    {
+      "offset": 72284884,
+      "text": "__ZN5devio32Feature1B06SpecialKeysAndButtons15getCIDReportingERNS_34IIFeature1B06SpecialKeysAndButtons12CIDReportingE"
+    },
+    {
+      "offset": 72285002,
+      "text": "__ZThn168_N5devio32Feature1B06SpecialKeysAndButtons15getCIDReportingERNS_34IIFeature1B06SpecialKeysAndButtons12CIDReportingE"
+    },
+    {
+      "offset": 72285127,
+      "text": "__ZN5devio32Feature1B06SpecialKeysAndButtons15setCIDReportingERNS_34IIFeature1B06SpecialKeysAndButtons12CIDReportingE"
+    },
+    {
+      "offset": 72285245,
+      "text": "__ZThn168_N5devio32Feature1B06SpecialKeysAndButtons15setCIDReportingERNS_34IIFeature1B06SpecialKeysAndButtons12CIDReportingE"
+    },
+    {
+      "offset": 72285370,
+      "text": "__ZN5devio32Feature1B06SpecialKeysAndButtons8getRemapERNS_34IIFeature1B06SpecialKeysAndButtons5RemapE"
+    },
+    {
+      "offset": 72285472,
+      "text": "__ZThn168_N5devio32Feature1B06SpecialKeysAndButtons8getRemapERNS_34IIFeature1B06SpecialKeysAndButtons5RemapE"
+    },
+    {
+      "offset": 72285581,
+      "text": "__ZN5devio32Feature1B06SpecialKeysAndButtons8setRemapERNS_34IIFeature1B06SpecialKeysAndButtons5RemapE"
+    },
+    {
+      "offset": 72285683,
+      "text": "__ZThn168_N5devio32Feature1B06SpecialKeysAndButtons8setRemapERNS_34IIFeature1B06SpecialKeysAndButtons5RemapE"
+    },
+    {
+      "offset": 72286499,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE16manual_subscribeEPS2_NS_13safe_executorE"
+    },
+    {
+      "offset": 72286610,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE18manual_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72286704,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE15unsubscribe_allEv"
+    },
+    {
+      "offset": 72286792,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE19subscriptions_totalEv"
+    },
+    {
+      "offset": 72286884,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE12on_subscribeEPS2_"
+    },
+    {
+      "offset": 72286972,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE14on_unsubscribeEPS2_"
+    },
+    {
+      "offset": 72287176,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEED1Ev"
+    },
+    {
+      "offset": 72287249,
+      "text": "__ZN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEED0Ev"
+    },
+    {
+      "offset": 74587744,
+      "text": "__ZN5devio24IIFeature1B04SpecialKeys9KeyReport13OnKeyDivertedEjjbbj"
+    },
+    {
+      "offset": 74587990,
+      "text": "__ZN5devio34IIFeature1B06SpecialKeysAndButtons6Report16fnLayerCIDReportENSt3__16vectorItNS2_9allocatorItEEEE"
+    },
+    {
+      "offset": 74595599,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEE9subscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEERKNS_13safe_executorE"
+    },
+    {
+      "offset": 74595736,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEE11unsubscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEE"
+    },
+    {
+      "offset": 74595855,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEE9subscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEERKNS_13safe_executorE"
+    },
+    {
+      "offset": 74595995,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEE11unsubscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEE"
+    },
+    {
+      "offset": 74596117,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEE9subscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEERKNS_13safe_executorE"
+    },
+    {
+      "offset": 74596260,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEE11unsubscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEE"
+    },
+    {
+      "offset": 74596385,
+      "text": "__ZN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE9subscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEERKNS_13safe_executorE"
+    },
+    {
+      "offset": 74596529,
+      "text": "__ZN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEE11unsubscribeENSt3__110shared_ptrINS_8ProducerIS2_EEEE"
+    },
+    {
+      "offset": 74691594,
+      "text": "__ZN5devio8IIDevice7featureINS_25IFeature2201AdjustableDPIEEENSt3__110shared_ptrIT_EENS_15FeatureProtocolE"
+    },
+    {
+      "offset": 74692095,
+      "text": "__ZNSt3__110shared_ptrIN5devio25IFeature2201AdjustableDPIEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75275406,
+      "text": "__ZN4logi7devices20ctrlid_flags_managerC1ENSt3__110shared_ptrIN5devio23IFeature1B04SpecialKeysEEE"
+    },
+    {
+      "offset": 75275504,
+      "text": "__ZNSt3__110shared_ptrIN5devio23IFeature1B04SpecialKeysEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75276408,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEED2Ev"
+    },
+    {
+      "offset": 75276483,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEED2Ev"
+    },
+    {
+      "offset": 75276555,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEED2Ev"
+    },
+    {
+      "offset": 75277765,
+      "text": "__ZNSt3__110shared_ptrIN5devio8ProducerINS1_24IIFeature1B04SpecialKeys9KeyReportEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75277864,
+      "text": "__ZNSt3__110shared_ptrIN5devio8ProducerINS1_24IIFeature1B04SpecialKeys11RawXYReportEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75277966,
+      "text": "__ZNSt3__110shared_ptrIN5devio8ProducerINS1_24IIFeature1B04SpecialKeys14RawWheelReportEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75281896,
+      "text": "__ZN4logi7devices20ctrlid_flags_managerC2ENSt3__110shared_ptrIN5devio23IFeature1B04SpecialKeysEEE"
+    },
+    {
+      "offset": 75282615,
+      "text": "__ZN5devio24IIFeature1B04SpecialKeys9KeyReport11onKeyChangeENSt3__16vectorIjNS2_9allocatorIjEEEE"
+    },
+    {
+      "offset": 75282712,
+      "text": "__ZN5devio24IIFeature1B04SpecialKeys9KeyReport20onAnalyticsKeyEventsENSt3__16vectorIjNS2_9allocatorIjEEEES6_"
+    },
+    {
+      "offset": 75282821,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEED1Ev"
+    },
+    {
+      "offset": 75282890,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEED0Ev"
+    },
+    {
+      "offset": 75282959,
+      "text": "__ZN5devio24IIFeature1B04SpecialKeys11RawXYReport7onRawXYEii"
+    },
+    {
+      "offset": 75283020,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEED1Ev"
+    },
+    {
+      "offset": 75283092,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEED0Ev"
+    },
+    {
+      "offset": 75283164,
+      "text": "__ZN5devio24IIFeature1B04SpecialKeys14RawWheelReport10onRawWheelEbji"
+    },
+    {
+      "offset": 75283233,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEED1Ev"
+    },
+    {
+      "offset": 75283308,
+      "text": "__ZN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEED0Ev"
+    },
+    {
+      "offset": 75290581,
+      "text": "__ZNSt3__110shared_ptrIN5devio33IFeature1B06SpecialKeysAndButtonsEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75290663,
+      "text": "__ZN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEED2Ev"
+    },
+    {
+      "offset": 75291719,
+      "text": "__ZNSt3__110shared_ptrIN5devio8ProducerINS1_34IIFeature1B06SpecialKeysAndButtons6ReportEEEED1B8ue170006Ev"
+    },
+    {
+      "offset": 75294229,
+      "text": "__ZN5devio34IIFeature1B06SpecialKeysAndButtons6Report12buttonReportENSt3__16vectorItNS2_9allocatorItEEEE"
+    },
+    {
+      "offset": 75294334,
+      "text": "__ZN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEED1Ev"
+    },
+    {
+      "offset": 75294410,
+      "text": "__ZN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEED0Ev"
+    },
+    {
+      "offset": 75397543,
+      "text": "__ZN4logi7devices21ctrlid_xflags_managerC1ENSt3__110shared_ptrIN5devio23IFeature1B04SpecialKeysEEE"
+    },
+    {
+      "offset": 75405350,
+      "text": "__ZN4logi7devices21ctrlid_xflags_managerC2ENSt3__110shared_ptrIN5devio23IFeature1B04SpecialKeysEEE"
+    },
+    {
+      "offset": 75474048,
+      "text": "__ZN5devio8IIDevice7featureINS_23IFeature1B04SpecialKeysEEENSt3__110shared_ptrIT_EENS_15FeatureProtocolE"
+    },
+    {
+      "offset": 75474419,
+      "text": "__ZN5devio8IIDevice7featureINS_33IFeature1B06SpecialKeysAndButtonsEEENSt3__110shared_ptrIT_EENS_15FeatureProtocolE"
+    },
+    {
+      "offset": 85691101,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys16GetCountResponseEE10get_futureEv.cold.1"
+    },
+    {
+      "offset": 85691496,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEE10get_futureEv.cold.1"
+    },
+    {
+      "offset": 85691591,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEclEv.cold.1"
+    },
+    {
+      "offset": 85691907,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEE10get_futureEv.cold.1"
+    },
+    {
+      "offset": 85692007,
+      "text": "__ZNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEclEv.cold.1"
+    },
+    {
+      "offset": 85692598,
+      "text": "__ZN5devio7promiseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEE10get_futureEv.cold.1"
+    },
+    {
+      "offset": 89221386,
+      "text": "__ZTSN5devio32DevioExceptionNonVendorUsagePageE"
+    },
+    {
+      "offset": 89454381,
+      "text": "__ZTSN5devio23IFeature1B00SpecialKeysE"
+    },
+    {
+      "offset": 89454420,
+      "text": "__ZTSN5devio24IIFeature1B00SpecialKeysE"
+    },
+    {
+      "offset": 89454460,
+      "text": "__ZTSN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 89455661,
+      "text": "__ZTSNSt3__110__function6__baseIFvPN5devio24IIFeature1B00SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 89455744,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B00SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 89455883,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B00SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 89455998,
+      "text": "__ZTSNSt3__115binary_functionIPN5devio24IIFeature1B00SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 89456108,
+      "text": "__ZTSN5devio23IFeature1B03SpecialKeysE"
+    },
+    {
+      "offset": 89456147,
+      "text": "__ZTSN5devio24IIFeature1B03SpecialKeysE"
+    },
+    {
+      "offset": 89456187,
+      "text": "__ZTSN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 89457372,
+      "text": "__ZTSNSt3__110__function6__baseIFvPN5devio24IIFeature1B03SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 89457455,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEJRKNS_12placeholders4__phILi1EEERjSB_RbEEE"
+    },
+    {
+      "offset": 89457569,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEEE"
+    },
+    {
+      "offset": 89457837,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 89457976,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 89458091,
+      "text": "__ZTSNSt3__115binary_functionIPN5devio24IIFeature1B03SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 89458201,
+      "text": "__ZTSN5devio23IFeature1B04SpecialKeysE"
+    },
+    {
+      "offset": 89458240,
+      "text": "__ZTSN5devio24IIFeature1B04SpecialKeysE"
+    },
+    {
+      "offset": 89458280,
+      "text": "__ZTSN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 89458449,
+      "text": "__ZTSN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 89458526,
+      "text": "__ZTSN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 89458608,
+      "text": "__ZTSN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 89458695,
+      "text": "__ZTSN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 89458868,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89458992,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89459129,
+      "text": "__ZTSN5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 89460437,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89460566,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89460708,
+      "text": "__ZTSN5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 89460895,
+      "text": "__ZTSNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 89461203,
+      "text": "__ZTSNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 89461524,
+      "text": "__ZTSZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvEUlvE_"
+    },
+    {
+      "offset": 89461804,
+      "text": "__ZTSZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_EUlvE_"
+    },
+    {
+      "offset": 89462071,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89462205,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89462352,
+      "text": "__ZTSN5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 89462549,
+      "text": "__ZTSNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 89462867,
+      "text": "__ZTSNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 89463198,
+      "text": "__ZTSZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvEUlvE_"
+    },
+    {
+      "offset": 89463488,
+      "text": "__ZTSZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_EUlvE_"
+    },
+    {
+      "offset": 89464874,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89465005,
+      "text": "__ZTSNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 89465149,
+      "text": "__ZTSN5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 89468575,
+      "text": "__ZTSNSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 89468658,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvjjbbjEJRKNS_12placeholders4__phILi1EEERjSB_RbSC_SB_EEE"
+    },
+    {
+      "offset": 89468780,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvjjbbjEEE"
+    },
+    {
+      "offset": 89469050,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 89469189,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 89469304,
+      "text": "__ZTSNSt3__115binary_functionIPN5devio24IIFeature1B04SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 89470359,
+      "text": "__ZTSNSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys11RawXYReportEEEE"
+    },
+    {
+      "offset": 89470445,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEJRKNS_12placeholders4__phILi1EEERiSB_EEE"
+    },
+    {
+      "offset": 89470559,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEEE"
+    },
+    {
+      "offset": 89470835,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EJRKNS_12placeholders4__phILi1EEERS7_SF_EEE"
+    },
+    {
+      "offset": 89470980,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EEE"
+    },
+    {
+      "offset": 89472060,
+      "text": "__ZTSNSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys14RawWheelReportEEEE"
+    },
+    {
+      "offset": 89472149,
+      "text": "__ZTSNSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys14RawWheelReportEFvbjiEJRKNS_12placeholders4__phILi1EEERbRjRiEEE"
+    },
+    {
+      "offset": 89472268,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys14RawWheelReportEFvbjiEEE"
+    },
+    {
+      "offset": 89472361,
+      "text": "__ZTSN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 89473634,
+      "text": "__ZTSNSt3__110__function6__baseIFvPN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEEEE"
+    },
+    {
+      "offset": 89473724,
+      "text": "__ZTSNSt3__16__bindIMN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEFvNS_6vectorItNS_9allocatorItEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 89473870,
+      "text": "__ZTSNSt3__118__weak_result_typeIMN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEFvNS_6vectorItNS_9allocatorItEEEEEEE"
+    },
+    {
+      "offset": 89473992,
+      "text": "__ZTSNSt3__115binary_functionIPN5devio34IIFeature1B06SpecialKeysAndButtons6ReportENS_6vectorItNS_9allocatorItEEEEvEE"
+    },
+    {
+      "offset": 89773908,
+      "text": "__ZTSN5devio24IIFeature1B04SpecialKeys9KeyReportE"
+    },
+    {
+      "offset": 89773958,
+      "text": "__ZTSN5devio24IIFeature1B04SpecialKeys14RawWheelReportE"
+    },
+    {
+      "offset": 89774062,
+      "text": "__ZTSN5devio34IIFeature1B06SpecialKeysAndButtons6ReportE"
+    },
+    {
+      "offset": 89795204,
+      "text": "__ZTSN5devio25IFeature2201AdjustableDPIE"
+    },
+    {
+      "offset": 89857439,
+      "text": "__ZTSN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 89857507,
+      "text": "__ZTSN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 89857578,
+      "text": "__ZTSN5devio24IIFeature1B04SpecialKeys11RawXYReportE"
+    },
+    {
+      "offset": 89857631,
+      "text": "__ZTSN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 89875326,
+      "text": "__ZTSN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 89882135,
+      "text": "__ZTSN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 89882200,
+      "text": "__ZTSN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 89882884,
+      "text": "__ZTSN5devio33IFeature1B06SpecialKeysAndButtonsE"
+    },
+    {
+      "offset": 89882933,
+      "text": "__ZTSN5devio34IIFeature1B06SpecialKeysAndButtonsE"
+    },
+    {
+      "offset": 91143662,
+      "text": "__ZTIN5devio32DevioExceptionNonVendorUsagePageE"
+    },
+    {
+      "offset": 91143710,
+      "text": "__ZTVN5devio32DevioExceptionNonVendorUsagePageE"
+    },
+    {
+      "offset": 91520831,
+      "text": "__ZTIN5devio24IIFeature1B00SpecialKeysE"
+    },
+    {
+      "offset": 91520871,
+      "text": "__ZTIN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 91520936,
+      "text": "__ZTIN5devio23IFeature1B00SpecialKeysE"
+    },
+    {
+      "offset": 91521254,
+      "text": "__ZTVN5devio8ProducerINS_24IIFeature1B00SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 91522867,
+      "text": "__ZTINSt3__110__function6__baseIFvPN5devio24IIFeature1B00SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 91523131,
+      "text": "__ZTINSt3__115binary_functionIPN5devio24IIFeature1B00SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 91523241,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B00SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 91523356,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B00SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 91523495,
+      "text": "__ZTIN5devio24IIFeature1B03SpecialKeysE"
+    },
+    {
+      "offset": 91523535,
+      "text": "__ZTIN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 91523600,
+      "text": "__ZTIN5devio23IFeature1B03SpecialKeysE"
+    },
+    {
+      "offset": 91523918,
+      "text": "__ZTVN5devio8ProducerINS_24IIFeature1B03SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 91525515,
+      "text": "__ZTINSt3__110__function6__baseIFvPN5devio24IIFeature1B03SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 91525763,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEEE"
+    },
+    {
+      "offset": 91525850,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvjjbEJRKNS_12placeholders4__phILi1EEERjSB_RbEEE"
+    },
+    {
+      "offset": 91526326,
+      "text": "__ZTINSt3__115binary_functionIPN5devio24IIFeature1B03SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 91526436,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 91526551,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B03SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 91526690,
+      "text": "__ZTIN5devio24IIFeature1B04SpecialKeysE"
+    },
+    {
+      "offset": 91526730,
+      "text": "__ZTIN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 91526795,
+      "text": "__ZTIN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 91526863,
+      "text": "__ZTIN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 91526934,
+      "text": "__ZTIN5devio23IFeature1B04SpecialKeysE"
+    },
+    {
+      "offset": 91527252,
+      "text": "__ZTVN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 91527329,
+      "text": "__ZTIN5devio11future_baseINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 91527406,
+      "text": "__ZTVN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 91527488,
+      "text": "__ZTVN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 91527575,
+      "text": "__ZTIN5devio11future_baseINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 91527662,
+      "text": "__ZTVN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 91527746,
+      "text": "__ZTIN5devio11future_baseINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 91527830,
+      "text": "__ZTVN5devio8ProducerINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 91527901,
+      "text": "__ZTVN5devio8ProducerINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 91527969,
+      "text": "__ZTVN5devio8ProducerINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 91528212,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91528336,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91528460,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91528597,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys16GetCountResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91528734,
+      "text": "__ZTVN5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 91528805,
+      "text": "__ZTIN5devio6futureINS_24IIFeature1B04SpecialKeys16GetCountResponseEEE"
+    },
+    {
+      "offset": 91530825,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91530954,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91531083,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91531225,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91531367,
+      "text": "__ZTVN5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 91531443,
+      "text": "__ZTIN5devio6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 91531741,
+      "text": "__ZTVNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 91532049,
+      "text": "__ZTINSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 91532357,
+      "text": "__ZTVNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 91532678,
+      "text": "__ZTINSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS2_6futureINS2_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 91532999,
+      "text": "__ZTIZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvEUlvE_"
+    },
+    {
+      "offset": 91533279,
+      "text": "__ZTIZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys13GetCtrlIdInfoEjE3$_1NS_6futureINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_EUlvE_"
+    },
+    {
+      "offset": 91533546,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91533680,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91533814,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91533961,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91534108,
+      "text": "__ZTVN5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 91534189,
+      "text": "__ZTIN5devio6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEE"
+    },
+    {
+      "offset": 91534502,
+      "text": "__ZTVNSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 91534820,
+      "text": "__ZTINSt3__110__function6__funcIZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_EUlvE_NS6_ISO_EEFvvEEE"
+    },
+    {
+      "offset": 91535138,
+      "text": "__ZTVNSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 91535469,
+      "text": "__ZTINSt3__110__function6__funcIZZN5devio11future_baseINS_6vectorINS2_4ByteENS_9allocatorIS5_EEEEE9then_implIZNS2_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS2_6futureINS2_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESF_EET0_T_PKcNS_17integral_constantIbLb1EEENSL_IbLb0EEESN_ENKUlvE_clEvEUlvE_NS6_ISP_EEFvvEEE"
+    },
+    {
+      "offset": 91535800,
+      "text": "__ZTIZZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_ENKUlvE_clEvEUlvE_"
+    },
+    {
+      "offset": 91536090,
+      "text": "__ZTIZN5devio11future_baseINSt3__16vectorINS_4ByteENS1_9allocatorIS3_EEEEE9then_implIZNS_22Feature1B04SpecialKeys18GetCtrlIdReportingEjE3$_2NS_6futureINS_24IIFeature1B04SpecialKeys26GetCtrlIdReportingResponseEEESD_EET0_T_PKcNS1_17integral_constantIbLb1EEENSJ_IbLb0EEESL_EUlvE_"
+    },
+    {
+      "offset": 91538138,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91538269,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio7promiseINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91538400,
+      "text": "__ZTVNSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91538544,
+      "text": "__ZTINSt3__120__shared_ptr_emplaceIN5devio19future_shared_stateINS1_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEENS_9allocatorIS5_EEEE"
+    },
+    {
+      "offset": 91538688,
+      "text": "__ZTVN5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 91538766,
+      "text": "__ZTIN5devio6futureINS_24IIFeature1B04SpecialKeys23GetCapabilitiesResponseEEE"
+    },
+    {
+      "offset": 91544018,
+      "text": "__ZTINSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys9KeyReportEEEE"
+    },
+    {
+      "offset": 91544274,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvjjbbjEEE"
+    },
+    {
+      "offset": 91544363,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvjjbbjEJRKNS_12placeholders4__phILi1EEERjSB_RbSC_SB_EEE"
+    },
+    {
+      "offset": 91544847,
+      "text": "__ZTINSt3__115binary_functionIPN5devio24IIFeature1B04SpecialKeys9KeyReportENS_6vectorIjNS_9allocatorIjEEEEvEE"
+    },
+    {
+      "offset": 91544957,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEEE"
+    },
+    {
+      "offset": 91545072,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 91546583,
+      "text": "__ZTINSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys11RawXYReportEEEE"
+    },
+    {
+      "offset": 91546834,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEEE"
+    },
+    {
+      "offset": 91546923,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys11RawXYReportEFviiEJRKNS_12placeholders4__phILi1EEERiSB_EEE"
+    },
+    {
+      "offset": 91547411,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EEE"
+    },
+    {
+      "offset": 91547529,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys9KeyReportEFvNS_6vectorIjNS_9allocatorIjEEEES7_EJRKNS_12placeholders4__phILi1EEERS7_SF_EEE"
+    },
+    {
+      "offset": 91549069,
+      "text": "__ZTINSt3__110__function6__baseIFvPN5devio24IIFeature1B04SpecialKeys14RawWheelReportEEEE"
+    },
+    {
+      "offset": 91549328,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio24IIFeature1B04SpecialKeys14RawWheelReportEFvbjiEEE"
+    },
+    {
+      "offset": 91549421,
+      "text": "__ZTINSt3__16__bindIMN5devio24IIFeature1B04SpecialKeys14RawWheelReportEFvbjiEJRKNS_12placeholders4__phILi1EEERbRjRiEEE"
+    },
+    {
+      "offset": 91549879,
+      "text": "__ZTVN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 91551568,
+      "text": "__ZTINSt3__110__function6__baseIFvPN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEEEE"
+    },
+    {
+      "offset": 91551846,
+      "text": "__ZTINSt3__115binary_functionIPN5devio34IIFeature1B06SpecialKeysAndButtons6ReportENS_6vectorItNS_9allocatorItEEEEvEE"
+    },
+    {
+      "offset": 91551963,
+      "text": "__ZTINSt3__118__weak_result_typeIMN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEFvNS_6vectorItNS_9allocatorItEEEEEEE"
+    },
+    {
+      "offset": 91552085,
+      "text": "__ZTINSt3__16__bindIMN5devio34IIFeature1B06SpecialKeysAndButtons6ReportEFvNS_6vectorItNS_9allocatorItEEEEEJRKNS_12placeholders4__phILi1EEERS7_EEE"
+    },
+    {
+      "offset": 91588193,
+      "text": "__ZTIN5devio25IFeature2201AdjustableDPIE"
+    },
+    {
+      "offset": 92044201,
+      "text": "__ZTIN5devio34IIFeature1B06SpecialKeysAndButtons6ReportE"
+    },
+    {
+      "offset": 92044258,
+      "text": "__ZTIN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 92185620,
+      "text": "__ZTIN5devio11future_baseINS_24IIFeature1B04SpecialKeys21GetCtrlIdInfoResponseEEE"
+    },
+    {
+      "offset": 92185702,
+      "text": "__ZTVN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 92185770,
+      "text": "__ZTVN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 92185841,
+      "text": "__ZTVN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 92187717,
+      "text": "__ZTVN5devio10SubscriberINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 92215620,
+      "text": "__ZTIN5devio24IIFeature1B04SpecialKeys9KeyReportE"
+    },
+    {
+      "offset": 92215670,
+      "text": "__ZTIN5devio10SubscriberINS_24IIFeature1B04SpecialKeys9KeyReportEEE"
+    },
+    {
+      "offset": 92215738,
+      "text": "__ZTIN5devio24IIFeature1B04SpecialKeys11RawXYReportE"
+    },
+    {
+      "offset": 92215791,
+      "text": "__ZTIN5devio10SubscriberINS_24IIFeature1B04SpecialKeys11RawXYReportEEE"
+    },
+    {
+      "offset": 92215862,
+      "text": "__ZTIN5devio24IIFeature1B04SpecialKeys14RawWheelReportE"
+    },
+    {
+      "offset": 92215918,
+      "text": "__ZTIN5devio10SubscriberINS_24IIFeature1B04SpecialKeys14RawWheelReportEEE"
+    },
+    {
+      "offset": 92232878,
+      "text": "__ZTIN5devio34IIFeature1B06SpecialKeysAndButtonsE"
+    },
+    {
+      "offset": 92232928,
+      "text": "__ZTIN5devio8ProducerINS_34IIFeature1B06SpecialKeysAndButtons6ReportEEE"
+    },
+    {
+      "offset": 92233000,
+      "text": "__ZTIN5devio33IFeature1B06SpecialKeysAndButtonsE"
+    },
+    {
+      "offset": 52817296,
+      "text": "N5devio22IFeature0001FeatureSetE"
+    },
+    {
+      "offset": 52837520,
+      "text": "N5devio22IFeature2121HiResWheelE"
+    },
+    {
+      "offset": 52837553,
+      "text": "N5devio23IIFeature2121HiResWheelE"
+    },
+    {
+      "offset": 52875166,
+      "text": "N5devio16IFeature0000RootE"
+    },
+    {
+      "offset": 52999632,
+      "text": "N5devio8MacOSBusE"
+    },
+    {
+      "offset": 53041348,
+      "text": "N5devio15Feature0000RootE"
+    },
+    {
+      "offset": 53046434,
+      "text": "N5devio21Feature0001FeatureSetE"
+    },
+    {
+      "offset": 53099852,
+      "text": "N5devio35Feature1000BatteryUnifiedLeveStatusE"
+    },
+    {
+      "offset": 53101330,
+      "text": "N5devio26IFeature1001BatteryVoltageE"
+    },
+    {
+      "offset": 53101367,
+      "text": "N5devio27IIFeature1001BatteryVoltageE"
+    },
+    {
+      "offset": 53101465,
+      "text": "N5devio25Feature1001BatteryVoltageE"
+    },
+    {
+      "offset": 53102997,
+      "text": "N5devio25Feature1004UnifiedBatteryE"
+    },
+    {
+      "offset": 53177175,
+      "text": "N5devio22Feature1B04SpecialKeysE"
+    },
+    {
+      "offset": 53202550,
+      "text": "N5devio22IFeature2110SmartShiftE"
+    },
+    {
+      "offset": 53202583,
+      "text": "N5devio21Feature2110SmartShiftE"
+    },
+    {
+      "offset": 53202752,
+      "text": "N5devio39IFeature2111SmartShiftWithTunableTorqueE"
+    },
+    {
+      "offset": 53202802,
+      "text": "N5devio38Feature2111SmartShiftWithTunableTorqueE"
+    },
+    {
+      "offset": 53203022,
+      "text": "N5devio21Feature2121HiResWheelE"
+    },
+    {
+      "offset": 53213608,
+      "text": "N5devio24Feature2201AdjustableDPIE"
+    },
+    {
+      "offset": 53333514,
+      "text": "N5devio24Feature0000CenturionRootE"
+    },
+    {
+      "offset": 53333698,
+      "text": "N5devio30Feature0001CenturionFeatureSetE"
+    },
+    {
+      "offset": 53505337,
+      "text": "N5devio27IIFeature1001BatteryVoltage6ReportE"
+    },
+    {
+      "offset": 53519008,
+      "text": "N5devio26IFeature1004UnifiedBatteryE"
+    },
+    {
+      "offset": 53576164,
+      "text": "N5devio23IIFeature2121HiResWheel6ReportE"
+    },
+    {
+      "offset": 53576208,
+      "text": "N5devio23IIFeature2121HiResWheel13SettingChangeE"
+    },
+    {
+      "offset": 53576260,
+      "text": "N5devio23IIFeature2121HiResWheel13RatchetSwitchE"
+    },
+    {
+      "offset": 53584263,
+      "text": "N5devio38IIFeature1000BatteryUnifiedLevelStatus6ReportE"
+    },
+    {
+      "offset": 53585276,
+      "text": "N5devio27IIFeature1004UnifiedBattery13BatteryStatusE"
+    },
+    {
+      "offset": 54313512,
+      "text": "N5devio37IFeature1000BatteryUnifiedLevelStatusE"
+    },
+    {
+      "offset": 54313560,
+      "text": "N5devio38IIFeature1000BatteryUnifiedLevelStatusE"
+    },
+    {
+      "offset": 54321096,
+      "text": "N5devio27IIFeature1004UnifiedBatteryE"
+    }
+  ],
+  "limitation": "String presence proves content, not control flow or runtime behavior."
+}
