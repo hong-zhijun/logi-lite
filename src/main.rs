@@ -1,11 +1,10 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(windows, windows_subsystem = "windows")]
 
 #[cfg(windows)]
-mod app;
-#[cfg(windows)]
-mod worker;
+use logi_lite::platform::windows::app;
 
 fn main() {
+    #[cfg(windows)]
     if let Some(path) = std::env::args().skip_while(|s| s != "--diagnose").nth(1) {
         let result = logi_lite::devices::diagnostic_json()
             .and_then(|data| std::fs::write(&path, data).map_err(|e| e.to_string()));

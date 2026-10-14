@@ -1,5 +1,5 @@
-use crate::worker::{self, Command, HardwareView};
-use logi_lite::{
+use super::worker::{self, Command, HardwareView};
+use crate::{
     config::{self, Config},
     input,
 };

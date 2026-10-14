@@ -1,5 +1,5 @@
 //! Hardware I/O is serialized on a separate worker, never on the input/UI thread.
-use logi_lite::{
+use crate::{
     config,
     devices::{self, DeviceInfo, HidTransport},
     hidpp::{Client, DeviceStatus, ScrollMode},

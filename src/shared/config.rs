@@ -110,10 +110,7 @@ pub fn validate(config: &Config) -> Result<(), String> {
 }
 
 pub fn config_path() -> Result<PathBuf, String> {
-    let root = std::env::var_os("LOCALAPPDATA")
-        .filter(|value| !value.is_empty())
-        .ok_or("无法获取 LOCALAPPDATA 配置目录")?;
-    Ok(PathBuf::from(root).join("LogiLite").join("config.json"))
+    crate::platform::storage::config_path()
 }
 
 fn load_path(path: &Path) -> Result<Config, String> {
@@ -134,11 +131,7 @@ pub fn load() -> Result<Config, String> {
 
 pub fn save(config: &Config) -> Result<(), String> {
     use std::io::Write;
-    use std::os::windows::ffi::OsStrExt;
     use std::sync::atomic::{AtomicU64, Ordering};
-    use windows_sys::Win32::Storage::FileSystem::{
-        MOVEFILE_REPLACE_EXISTING, MOVEFILE_WRITE_THROUGH, MoveFileExW,
-    };
     static SEQUENCE: AtomicU64 = AtomicU64::new(0);
     validate(config)?;
     let path = config_path()?;
@@ -160,20 +153,7 @@ pub fn save(config: &Config) -> Result<(), String> {
         file.write_all(&bytes).map_err(|error| error.to_string())?;
         file.sync_all().map_err(|error| error.to_string())?;
         drop(file);
-        let from: Vec<u16> = temporary.as_os_str().encode_wide().chain(Some(0)).collect();
-        let to: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
-        // Atomic replacement on the same volume; preserve the original on failure.
-        if unsafe {
-            MoveFileExW(
-                from.as_ptr(),
-                to.as_ptr(),
-                MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH,
-            )
-        } == 0
-        {
-            return Err(std::io::Error::last_os_error().to_string());
-        }
-        Ok(())
+        crate::platform::storage::replace_file(&temporary, &path)
     })();
     if result.is_err() {
         let _ = std::fs::remove_file(&temporary);

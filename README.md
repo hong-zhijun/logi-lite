@@ -47,6 +47,33 @@
 
 ## 构建和开发检查
 
+### 目录结构
+
+```text
+src/
+  main.rs                   程序入口，按平台调用后端
+  lib.rs                    共享逻辑与平台模块的导出
+  shared/
+    config.rs               配置模型、校验与保存流程
+    hidpp.rs                不依赖操作系统的 HID++ 协议
+  platform/
+    windows/
+      app.rs                窗口与托盘
+      input.rs              Windows 输入映射
+      devices.rs            Windows HID 枚举与通信
+      worker.rs             Windows 设备工作线程
+      storage.rs            Windows 配置路径与文件替换
+    macos/
+      storage.rs            macOS 配置路径与文件替换
+      mod.rs                后续 macOS 原生适配入口
+```
+
+当前可运行应用仍为 Windows 版；macOS 菜单栏、输入和设备通信尚未实现。配置和协议已有共享边界，快捷键解析目前保留 Windows 键名 / 内部键码约定；macOS 输入实现需要转换为本机键码。`windows-sys` 只在 Windows 目标启用。
+
+`windows` 分支保留首版提交；目录整理和后续适配在 `mac` 分支进行。构建结果位于 `target/`，便携包位于 `dist/`，调查材料位于 `analysis/`，这些生成目录均由 Git 忽略。
+
+### Windows 构建
+
 Windows x64、Rust MSVC 工具链：
 
 ```powershell
