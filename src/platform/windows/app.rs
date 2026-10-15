@@ -599,6 +599,8 @@ impl App {
                 back: control_text(self.shortcuts[0]),
                 forward: control_text(self.shortcuts[1]),
                 middle: control_text(self.shortcuts[2]),
+                top: "默认".into(),
+                horizontal_scroll: config::HorizontalScrollConfig::default(),
             };
             if let Err(error) = config::validate(&next)
                 .and_then(|_| config::save(&next))

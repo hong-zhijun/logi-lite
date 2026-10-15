@@ -29,10 +29,8 @@ async function native(request) {
 const ready = () => Boolean(runtimeState?.permissions?.accessibility && runtimeState?.permissions?.inputMonitoring && runtimeState?.permissions?.postEvents);
 function normalizeConfig(config) {
   const value=clone(config);
-  if(runtimeState?.platform!=='windows'){
-    value.horizontalScroll={back:false,forward:false,...value.horizontalScroll};
-    value.top??='默认';
-  }
+  value.horizontalScroll={back:false,forward:false,...value.horizontalScroll};
+  value.top??='默认';
   return value;
 }
 const mappingDirty = () => draftConfig && savedConfig && (Object.keys(BUTTONS).some(key=>draftConfig[key]!==savedConfig[key])||['back','forward'].some(key=>Boolean(draftConfig.horizontalScroll?.[key])!==Boolean(savedConfig.horizontalScroll?.[key])));
@@ -148,7 +146,6 @@ function renderConnectionGate() {
 }
 function chooseButton(key) {
   if(key&&!ready())return;
-  if(key==='top'&&runtimeState?.platform==='windows')return;
   if(selectedButton!==key)editorMode=null;
   selectedCategory='';
   selectedButton=key;
@@ -181,6 +178,11 @@ function openHardware() {
 function renderAction() {
   renderTopStatus();
   if (!draftConfig || !selectedButton || !ready()) return;
+  const windows=runtimeState?.platform==='windows';
+  for(const action of ['打开 App','调度中心','application','more']){
+    const option=document.querySelector(`[data-action="${action}"]`);
+    if(option)option.hidden=windows;
+  }
   const value=draftConfig[selectedButton];
   document.querySelector('[data-action="默认"] span').textContent=selectedButton==='top'?'切换滚轮模式':'默认';
   document.querySelector('[data-action="默认"] use').setAttribute('href',selectedButton==='top'?'#i-refresh':'#i-arrow');
@@ -191,7 +193,7 @@ function renderAction() {
   $('application-editor').hidden=chosenAction!=='application';
   $('shortcut').value=chosenAction==='shortcut'&&!ACTIONS.has(value)&&!value.startsWith('打开应用:')?value:'';
   renderApplication(value);
-  $('horizontal-scroll-row').hidden=!['back','forward'].includes(selectedButton)||runtimeState?.platform==='windows';
+  $('horizontal-scroll-row').hidden=!['back','forward'].includes(selectedButton);
   $('horizontal-scroll-toggle').checked=Boolean(draftConfig.horizontalScroll?.[selectedButton]);
   if(chosenAction==='more')renderMoreSelectors(value);
   updateDraftLabel();
@@ -357,7 +359,7 @@ function renderHardware() {
   $$('[data-mode="smart_shift"]').forEach(el=>el.disabled=!caps.smart_shift);
   $('sensitivity-controls').hidden=draftHardware?.scroll!=='smart_shift';
   $('sensitivity-controls').disabled=hardwareBusy||!verified||!caps.smart_shift;
-  const forceSupported=caps.scroll_force&&runtimeState?.platform!=='windows';
+  const forceSupported=Boolean(caps.scroll_force);
   $('scroll-force-controls').hidden=!forceSupported;
   $('scroll-force-controls').disabled=hardwareBusy||!verified||!forceSupported;
   if (draftHardware) {
@@ -542,7 +544,7 @@ async function smokeCheck() {
   const middle=document.querySelector('[data-button="middle"] .hotspot-label').getBoundingClientRect();
   const visual=document.querySelector('.visual-area').getBoundingClientRect();
   const wheelCalloutFits=callout.left>=visual.left&&callout.right<=visual.right&&callout.top>=visual.top&&callout.bottom<=visual.bottom&&callout.top<middle.top;
-  updateDeviceStatus({ok:true,target_verified:true,status:{capabilities:{dpi:true,scroll:true,smart_shift:true},dpi:1000,dpi_ranges:[{min:200,max:4000,step:50}],scroll:{mode:'smart_shift',sensitivity:50}}});
+  updateDeviceStatus({ok:true,target_verified:true,status:{capabilities:{dpi:true,scroll:true,smart_shift:true,scroll_force:true},dpi:1000,dpi_ranges:[{min:200,max:4000,step:50}],scroll:{mode:'smart_shift',sensitivity:50,force:45}}});
   const hardwareSavedButton=$('apply-hardware').dataset.state==='saved'&&$('apply-hardware').disabled;
   $('dpi-range').value='1500';$('dpi-range').dispatchEvent(new Event('input'));
   const sliderDraftSeparate=$('dpi-value').textContent==='1500'&&draftHardware.dpi===1500&&$('actual-dpi').textContent==='DPI 1000'&&$('actual-scroll').textContent==='SmartShift'&&!$('apply-hardware').disabled&&$('apply-hardware').dataset.state==='pending'&&!document.querySelector('#dpi-number,#hardware-editor #actual-hardware');
@@ -634,7 +636,7 @@ async function smokeCheck() {
   updateDeviceStatus({ok:true,target_verified:true,status:{capabilities:{dpi:true,scroll:true,smart_shift:true,scroll_force:true},dpi:1000,dpi_ranges:[{min:200,max:4000,step:50}],scroll:{mode:'smart_shift',sensitivity:50,force:45},battery:{percent:80,status:'recharging'}}});
   draftHardware={dpi:1000,scroll:'smart_shift',sensitivity:50,force:45};hardwareDraftEdited=false;renderHardware();
   $('scroll-force').value='60';$('scroll-force').dispatchEvent(new Event('input'));
-  const forceDraftSeparate=isMac?draftHardware.force===60&&actual.scroll.force===45&&hardwareDirty()&&!$('scroll-force-controls').hidden&&$('scroll-force').min==='1':$('scroll-force-controls').hidden;
+  const forceDraftSeparate=draftHardware.force===60&&actual.scroll.force===45&&hardwareDirty()&&!$('scroll-force-controls').hidden&&$('scroll-force').min==='1';
   const chargingVisible=$('battery').textContent==='充电中 80%'&&$('battery').classList.contains('charging');
   renderBattery({percent:100,status:'full'});
   const fullChargeVisible=$('battery').textContent==='已充满 100%'&&!$('battery').classList.contains('charging');

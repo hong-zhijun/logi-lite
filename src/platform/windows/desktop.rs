@@ -6,7 +6,10 @@ use crate::{
     platform::windows::{devices, input},
 };
 use serde_json::{Value, json};
-use std::sync::{Mutex, OnceLock};
+use std::{
+    sync::{Mutex, OnceLock, mpsc},
+    time::Duration,
+};
 
 struct RuntimeState {
     config: config::Config,
@@ -15,6 +18,19 @@ struct RuntimeState {
 }
 
 static STATE: OnceLock<Mutex<RuntimeState>> = OnceLock::new();
+static TOP_TX: OnceLock<mpsc::Sender<TopCommand>> = OnceLock::new();
+
+enum TopCommand {
+    Configure { enabled: bool, action: String },
+    Stop,
+}
+
+struct TopSession {
+    transport: Option<devices::HidTransport>,
+    feature: u8,
+    device_index: u8,
+    pressed: bool,
+}
 
 fn state() -> &'static Mutex<RuntimeState> {
     STATE.get_or_init(|| {
@@ -73,6 +89,146 @@ pub fn request(request: Value, hardware: bool) -> Value {
     })())
 }
 
+fn top_sender() -> &'static mpsc::Sender<TopCommand> {
+    TOP_TX.get_or_init(|| {
+        let (tx, rx) = mpsc::channel::<TopCommand>();
+        std::thread::Builder::new()
+            .name("logi-top-button".into())
+            .spawn(move || top_loop(rx))
+            .expect("cannot start top button worker");
+        tx
+    })
+}
+
+fn configure_top(config: &config::Config, smoke: bool) {
+    if smoke {
+        return;
+    }
+    let enabled = config.enabled && config.top.trim() != "默认";
+    let _ = top_sender().send(TopCommand::Configure {
+        enabled,
+        action: config.top.clone(),
+    });
+}
+
+fn top_loop(rx: mpsc::Receiver<TopCommand>) {
+    let mut session: Option<TopSession> = None;
+    let mut action = String::new();
+    loop {
+        if let Ok(command) = rx.recv_timeout(Duration::from_millis(100)) {
+            match command {
+                TopCommand::Stop => {
+                    restore_top(&mut session);
+                    break;
+                }
+                TopCommand::Configure {
+                    enabled,
+                    action: next,
+                } => {
+                    restore_top(&mut session);
+                    action = next;
+                    if enabled {
+                        session = connect_top();
+                    }
+                }
+            }
+        }
+        let Some(current) = session.as_mut() else {
+            continue;
+        };
+        let report = match current
+            .transport
+            .as_mut()
+            .and_then(|transport| transport.read_report(Duration::from_millis(80)).ok())
+        {
+            Some(value) => value,
+            None => continue,
+        };
+        if top_pressed(&report, current.device_index, current.feature) && !current.pressed {
+            current.pressed = true;
+            let _ = input::trigger_action(&action);
+        } else if !top_pressed(&report, current.device_index, current.feature) {
+            current.pressed = false;
+        }
+    }
+}
+
+fn connect_top() -> Option<TopSession> {
+    let endpoints = devices::discover().ok()?;
+    for endpoint in endpoints
+        .iter()
+        .filter(|item| item.is_hidpp_candidate() && item.output_report_bytes.unwrap_or(0) >= 20)
+    {
+        for device_index in endpoint.candidate_indices() {
+            let transport = devices::HidTransport::open(endpoint).ok()?;
+            let mut client = Client::new(transport, device_index);
+            let status = match client.probe() {
+                Ok(value) => value,
+                Err(_) => continue,
+            };
+            if !is_target(&status) {
+                continue;
+            }
+            let root = client.command(0, 0, &[0x1b, 0x04], 3).ok()?;
+            let feature = *root.first()?;
+            if feature == 0 {
+                continue;
+            }
+            let count = client.command(feature, 0, &[], 1).ok()?.first().copied()?;
+            let mut supported = false;
+            for index in 0..count {
+                let info = client.command(feature, 1, &[index], 5).ok()?;
+                if u16::from_be_bytes([info[0], info[1]]) == 0x00c4 && info[4] & 0x20 != 0 {
+                    supported = true;
+                    break;
+                }
+            }
+            if !supported {
+                continue;
+            }
+            let reporting = client.command(feature, 2, &[0, 0xc4], 5).ok()?;
+            if reporting[2] & 4 != 0 {
+                continue;
+            }
+            if reporting[2] & 1 == 0 {
+                let _ = client.command(feature, 3, &[0, 0xc4, 3, 0, 0], 2).ok()?;
+            }
+            return Some(TopSession {
+                transport: Some(client.into_transport()),
+                feature,
+                device_index,
+                pressed: false,
+            });
+        }
+    }
+    None
+}
+
+fn restore_top(session: &mut Option<TopSession>) {
+    if let Some(mut current) = session.take() {
+        let Some(transport) = current.transport.take() else {
+            return;
+        };
+        let mut client = Client::new(transport, current.device_index);
+        let _ = client.command(current.feature, 3, &[0, 0xc4, 2, 0, 0], 2);
+        // The transport is dropped after best-effort restoration.
+    }
+}
+
+fn top_pressed(report: &[u8], device_index: u8, feature: u8) -> bool {
+    if report.len() < 12
+        || report[0] != 0x11
+        || !(report[1] == device_index || (device_index == 255 && report[1] == 0))
+        || report[2] != feature
+        || report[3] != 0
+    {
+        return false;
+    }
+    (4..12)
+        .step_by(2)
+        .any(|index| u16::from_be_bytes([report[index], report[index + 1]]) == 0x00c4)
+}
+
 fn init(smoke: bool) -> Result<Value, String> {
     let mut runtime = state().lock().map_err(|_| "Windows 后端状态不可用")?;
     if runtime.initialized {
@@ -85,6 +241,7 @@ fn init(smoke: bool) -> Result<Value, String> {
         input::set_config(&runtime.config)?;
         input::install()?;
     }
+    configure_top(&runtime.config, smoke);
     current_state_locked(&runtime)
 }
 
@@ -111,6 +268,7 @@ fn toggle() -> Result<Value, String> {
     runtime.config.enabled = !runtime.config.enabled;
     config::save(&runtime.config)?;
     input::set_config(&runtime.config)?;
+    configure_top(&runtime.config, runtime.smoke);
     current_state_locked(&runtime)
 }
 
@@ -122,6 +280,7 @@ fn save(value: Value) -> Result<Value, String> {
     config::save(&config)?;
     input::set_config(&config)?;
     runtime.config = config;
+    configure_top(&runtime.config, runtime.smoke);
     current_state_locked(&runtime)
 }
 
@@ -210,8 +369,16 @@ fn apply(request: &Value) -> Result<Value, String> {
         .and_then(Value::as_u64)
         .map(|value| u8::try_from(value).map_err(|_| "SmartShift 灵敏度无效".to_string()))
         .transpose()?;
+    let scroll_force = request
+        .get("scroll_force")
+        .and_then(Value::as_u64)
+        .map(|value| u8::try_from(value).map_err(|_| "滚动力度无效".to_string()))
+        .transpose()?;
     if sensitivity.is_some() && scroll != Some(ScrollMode::SmartShift) {
         return Err("灵敏度只适用于 SmartShift".into());
+    }
+    if scroll_force.is_some() && !target.status.capabilities.scroll_force {
+        return Err("设备未确认支持滚动力度设置".into());
     }
     if let Some(value) = dpi {
         target.client.set_dpi(value)?;
@@ -230,6 +397,9 @@ fn apply(request: &Value) -> Result<Value, String> {
             });
         target.client.set_scroll(mode, threshold)?;
     }
+    if let Some(force) = scroll_force {
+        target.client.set_scroll_force(force)?;
+    }
     let status = target.client.probe()?;
     if !is_target(&status) {
         return Err("回读设备身份不匹配".into());
@@ -239,6 +409,11 @@ fn apply(request: &Value) -> Result<Value, String> {
     }
     if scroll.is_some_and(|mode| status.scroll.as_ref().is_none_or(|item| item.mode != mode)) {
         return Err("滚轮模式回读不一致".into());
+    }
+    if scroll_force
+        .is_some_and(|force| status.scroll.as_ref().and_then(|item| item.force) != Some(force))
+    {
+        return Err("滚动力度回读不一致".into());
     }
     Ok(json!({"ok":true,"target_verified":true,"status":status}))
 }
@@ -257,6 +432,7 @@ fn export(hardware: Value) -> Result<Value, String> {
 
 fn shutdown() -> Result<Value, String> {
     input::uninstall()?;
+    let _ = top_sender().send(TopCommand::Stop);
     if let Ok(mut runtime) = state().lock() {
         runtime.initialized = false;
     }

@@ -9,10 +9,8 @@ pub struct Config {
     pub back: String,
     pub forward: String,
     pub middle: String,
-    #[cfg(target_os = "macos")]
     #[serde(default = "default_top_action")]
     pub top: String,
-    #[cfg(target_os = "macos")]
     #[serde(default, rename = "horizontalScroll")]
     pub horizontal_scroll: HorizontalScrollConfig,
     // Accept and discard the retired field when reading experiment-era files.
@@ -26,12 +24,10 @@ pub struct Config {
     pub retired_gestures: (),
 }
 
-#[cfg(target_os = "macos")]
 fn default_top_action() -> String {
     "默认".into()
 }
 
-#[cfg(target_os = "macos")]
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct HorizontalScrollConfig {
@@ -53,9 +49,7 @@ impl Default for Config {
             back: "默认".into(),
             forward: "默认".into(),
             middle: "默认".into(),
-            #[cfg(target_os = "macos")]
             top: default_top_action(),
-            #[cfg(target_os = "macos")]
             horizontal_scroll: HorizontalScrollConfig::default(),
             #[cfg(target_os = "macos")]
             retired_gestures: (),
@@ -183,7 +177,6 @@ pub fn validate(config: &Config) -> Result<(), String> {
     ] {
         parse_action(value).map_err(|error| format!("{name}：{error}"))?;
     }
-    #[cfg(target_os = "macos")]
     parse_action(&config.top).map_err(|error| format!("顶部按钮：{error}"))?;
     Ok(())
 }
@@ -208,7 +201,6 @@ fn load_path(path: &Path) -> Result<Config, String> {
             config.enabled = false;
         }
     }
-    #[cfg(target_os = "macos")]
     {
         for (action, toggle) in [
             (&mut config.back, &mut config.horizontal_scroll.back),
@@ -267,11 +259,10 @@ pub fn save(config: &Config) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[cfg(target_os = "macos")]
     #[test]
     fn top_button_is_backward_compatible_and_validated_independently() {
         let old =
-            r#"{"version":1,"enabled":true,"back":"默认","forward":"Cmd+C","middle":"Cmd+V"}"#;
+            r#"{"version":1,"enabled":true,"back":"默认","forward":"Ctrl+C","middle":"Ctrl+V"}"#;
         let mut config: Config = serde_json::from_str(old).unwrap();
         assert_eq!(config.top, "默认");
         validate(&config).unwrap();
@@ -279,36 +270,29 @@ mod tests {
         let encoded = serde_json::to_string(&config).unwrap();
         let restored: Config = serde_json::from_str(&encoded).unwrap();
         assert_eq!(restored, config);
-        assert_eq!(restored.middle, "Cmd+V");
-        for value in ["禁用", "Cmd+Shift+4", "打开应用:/Applications/Test.app"] {
+        assert_eq!(restored.middle, "Ctrl+V");
+        for value in ["禁用", "Ctrl+Shift+4"] {
             config.top = value.into();
+            validate(&config).unwrap();
+        }
+        #[cfg(target_os = "macos")]
+        {
+            config.top = "打开应用:/Applications/Test.app".into();
             validate(&config).unwrap();
         }
         config.top = "水平滚动".into();
         assert!(validate(&config).unwrap_err().starts_with("顶部按钮："));
     }
 
-    #[cfg(not(target_os = "macos"))]
-    #[test]
-    fn top_button_does_not_change_other_platform_configuration() {
-        assert!(
-            serde_json::to_value(Config::default())
-                .unwrap()
-                .get("top")
-                .is_none()
-        );
-    }
-
-    #[cfg(target_os = "macos")]
     #[test]
     fn horizontal_scroll_is_separate_and_migrates_legacy_actions() {
         let path =
             std::env::temp_dir().join(format!("logilite-horizontal-{}.json", std::process::id()));
-        std::fs::write(&path, r#"{"version":1,"enabled":true,"back":"水平滚动","forward":"Cmd+C","middle":"水平滚动"}"#).unwrap();
+        std::fs::write(&path, r#"{"version":1,"enabled":true,"back":"水平滚动","forward":"Ctrl+C","middle":"水平滚动"}"#).unwrap();
         let config = load_path(&path).unwrap();
         assert!(config.enabled);
         assert_eq!(config.back, "默认");
-        assert_eq!(config.forward, "Cmd+C");
+        assert_eq!(config.forward, "Ctrl+C");
         assert_eq!(config.middle, "默认");
         assert!(config.horizontal_scroll.back);
         assert!(!config.horizontal_scroll.forward);

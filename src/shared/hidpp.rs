@@ -120,6 +120,23 @@ impl<T: Transport> Client<T> {
         }
     }
 
+    /// Execute a validated HID++ function for an extension feature. This is
+    /// intentionally narrow: platform adapters use it for device-specific
+    /// controls while response correlation stays in the shared client.
+    pub fn command(
+        &mut self,
+        index: u8,
+        function: u8,
+        params: &[u8],
+        needed: usize,
+    ) -> Result<Vec<u8>, String> {
+        self.request(index, function, params, needed)
+    }
+
+    pub fn into_transport(self) -> T {
+        self.transport
+    }
+
     /// Vary a freshly opened native session's correlation IDs so a late reply
     /// from a previously closed/failed session cannot trivially satisfy its ping.
     pub fn with_session_nonce(mut self, nonce: u64) -> Self {

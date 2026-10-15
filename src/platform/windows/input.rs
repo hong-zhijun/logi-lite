@@ -15,10 +15,12 @@ static PAUSED: AtomicBool = AtomicBool::new(false);
 static MAPPED: AtomicU64 = AtomicU64::new(0);
 static FAILURES: AtomicU64 = AtomicU64::new(0);
 static PRESSED: [ButtonLatch; 3] = [const { ButtonLatch(AtomicU8::new(0)) }; 3];
+static SIDE_HELD: [AtomicBool; 2] = [const { AtomicBool::new(false) }; 2];
 static STATE: Mutex<State> = Mutex::new(State {
     hook: 0,
     enabled: false,
     actions: [Action::Default, Action::Default, Action::Default],
+    horizontal: [false, false],
     pending_release: Vec::new(),
 });
 
@@ -26,6 +28,7 @@ struct State {
     hook: usize,
     enabled: bool,
     actions: [Action; 3],
+    horizontal: [bool; 2],
     pending_release: Vec<u16>,
 }
 
@@ -61,6 +64,10 @@ pub fn set_config(config: &Config) -> Result<(), String> {
     let mut state = STATE.lock().map_err(|_| "输入引擎状态不可用")?;
     state.enabled = config.enabled;
     state.actions = actions;
+    state.horizontal = [
+        config.horizontal_scroll.back,
+        config.horizontal_scroll.forward,
+    ];
     // Paired UP decisions remain unchanged while the user is holding a button.
     Ok(())
 }
@@ -79,6 +86,23 @@ pub fn stats() -> String {
         FAILURES.load(Ordering::Relaxed),
         if is_paused() { "已暂停" } else { "就绪" }
     )
+}
+
+/// Trigger one configured shortcut from a non-mouse input source such as the
+/// HID++ top wheel-mode button. Default and disabled actions intentionally do
+/// nothing; the caller owns any device diversion state.
+pub fn trigger_action(text: &str) -> Result<(), String> {
+    let action = parse_action(text)?;
+    if let Action::Shortcut(chord) = action {
+        let mut pending = Vec::new();
+        if send_chord(&chord, &mut pending) {
+            Ok(())
+        } else {
+            Err("快捷键发送失败".into())
+        }
+    } else {
+        Ok(())
+    }
 }
 
 pub fn install() -> Result<(), String> {
@@ -144,6 +168,27 @@ fn button_event(message: u32, data: u32) -> Option<(usize, bool)> {
     }
 }
 
+fn horizontal_event(data: u32) -> Option<i32> {
+    (data != 0).then_some((data as i16) as i32)
+}
+
+fn send_horizontal(delta: i32) -> bool {
+    let input = INPUT {
+        r#type: INPUT_MOUSE,
+        Anonymous: INPUT_0 {
+            mi: MOUSEINPUT {
+                dx: 0,
+                dy: 0,
+                mouseData: delta as u32,
+                dwFlags: MOUSEEVENTF_HWHEEL,
+                time: 0,
+                dwExtraInfo: 0x4C4F4749,
+            },
+        },
+    };
+    unsafe { SendInput(1, &input, std::mem::size_of::<INPUT>() as i32) == 1 }
+}
+
 unsafe extern "system" fn mouse_hook(code: i32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
     if code >= 0 && lparam != 0 {
         // Windows guarantees a valid MSLLHOOKSTRUCT for a nonnegative hook code.
@@ -151,6 +196,9 @@ unsafe extern "system" fn mouse_hook(code: i32, wparam: WPARAM, lparam: LPARAM) 
         if event.flags & LLMHF_INJECTED == 0
             && let Some((index, down)) = button_event(wparam as u32, event.mouseData)
         {
+            if index < 2 {
+                SIDE_HELD[index].store(down, Ordering::Relaxed);
+            }
             if !down {
                 if PRESSED[index].finish() {
                     return 1;
@@ -190,6 +238,17 @@ unsafe extern "system" fn mouse_hook(code: i32, wparam: WPARAM, lparam: LPARAM) 
                     return 1;
                 }
             }
+        } else if event.flags & LLMHF_INJECTED == 0
+            && wparam as u32 == WM_MOUSEWHEEL
+            && let Some(delta) = horizontal_event(event.mouseData)
+            && let Ok(state) = STATE.try_lock()
+            && state.enabled
+            && !is_paused()
+            && ((state.horizontal[0] && SIDE_HELD[0].load(Ordering::Relaxed))
+                || (state.horizontal[1] && SIDE_HELD[1].load(Ordering::Relaxed)))
+            && send_horizontal(delta)
+        {
+            return 1;
         }
     }
     unsafe { CallNextHookEx(std::ptr::null_mut(), code, wparam, lparam) }

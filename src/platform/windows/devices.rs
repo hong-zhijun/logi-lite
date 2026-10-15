@@ -356,6 +356,15 @@ impl HidTransport {
             read = PendingIo::read(self.handle.0, self.input_size)?;
         }
     }
+
+    /// Read one report for an already opened endpoint. Unrelated notifications
+    /// are returned to the caller; request/response filtering belongs to HID++.
+    pub fn read_report(&mut self, timeout: Duration) -> Result<Vec<u8>, String> {
+        let deadline = Instant::now() + timeout.min(Duration::from_secs(5));
+        let mut read = PendingIo::read(self.handle.0, self.input_size)?;
+        let count = read.finish(deadline)?;
+        Ok(read.buffer[..count].to_vec())
+    }
 }
 
 impl crate::hidpp::Transport for HidTransport {
