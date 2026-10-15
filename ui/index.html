@@ -67,15 +67,21 @@
           <button class="action-option" data-action="禁用"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ban"/></svg><span>禁用</span></button>
           <button class="action-option" data-action="打开 App"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>打开 App</span></button>
           <button class="action-option" data-action="调度中心"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-windows"/></svg><span>调度中心</span></button>
-          <button class="action-option wide" data-action="shortcut"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg><span>键盘快捷键</span><span class="option-trailing">⌘</span></button>
+          <button class="action-option" data-action="水平滚动" title="按住此按键，再滚动滚轮"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span>水平滚动</span></button>
+          <button class="action-option" data-action="application"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>打开指定 App</span></button>
+          <button class="action-option" data-action="more"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>更多</span></button>
+          <button class="action-option" data-action="shortcut"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg><span>键盘快捷键</span></button>
         </div>
-        <div id="shortcut-editor" hidden><label class="field-label" for="shortcut">快捷键</label><div class="shortcut-row"><input id="shortcut" placeholder="例如 Cmd+Shift+S" spellcheck="false" autocomplete="off"><button id="record-shortcut" class="small-button">录制</button></div></div>
+        <div id="more-editor" hidden><label class="field-label" for="more-category">更多动作</label><div class="more-selects"><select id="more-category" aria-label="动作类别"></select><select id="more-action" aria-label="具体动作"></select></div></div>
+        <div id="application-editor" hidden><div id="application-name" class="application-name">选择要打开的 App</div><button id="choose-application" class="small-button app-picker" type="button">选择应用…</button></div>
+        <div id="shortcut-editor" hidden><label class="field-label" for="shortcut">快捷键</label><div class="shortcut-row"><input id="shortcut" placeholder="点击后按下组合键" spellcheck="false" autocomplete="off" readonly aria-label="快捷键录制输入框"></div></div>
         <div class="card-bottom"><button id="save-mapping" class="primary-button commit-button" data-state="saved" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span class="commit-label" aria-live="polite">已保存</span></button></div>
       </aside>
       <aside id="hardware-editor" class="editor-card hardware-card" aria-hidden="true" inert><div class="editor-heading"><h2>指针与滚轮</h2><button id="close-hardware" class="close-editor" aria-label="关闭指针与滚轮设置"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
         <fieldset id="dpi-controls" disabled><div class="field-heading"><label for="dpi-range">DPI</label><output id="dpi-value" for="dpi-range">1000</output></div><input id="dpi-range" type="range" min="200" max="4000" step="50" value="1000"><div class="range-labels"><span id="dpi-min">—</span><span id="dpi-max">—</span></div></fieldset>
         <fieldset id="scroll-controls" disabled><label class="field-label">滚轮模式</label><div class="segmented"><button data-mode="ratchet">段落</button><button data-mode="free">自由</button><button data-mode="smart_shift">SmartShift</button></div></fieldset>
         <fieldset id="sensitivity-controls" disabled hidden><div class="field-heading"><label for="sensitivity">SmartShift 灵敏度</label><output id="sensitivity-value">50%</output></div><input id="sensitivity" type="range" min="0" max="100" step="1" value="50"><div class="range-labels"><span>更稳</span><span>更易自由滚动</span></div></fieldset>
+        <fieldset id="scroll-force-controls" disabled hidden><div class="field-heading"><label for="scroll-force">滚动力度</label><output id="scroll-force-value">—</output></div><input id="scroll-force" type="range" min="1" max="100" step="1" value="50"><div class="range-labels"><span>更轻</span><span>更重</span></div></fieldset>
         <div class="card-bottom"><button id="apply-hardware" class="primary-button commit-button" data-state="unavailable" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-alert"/></svg><span class="commit-label" aria-live="polite">设备暂不可用</span></button></div>
       </aside>
     </section>

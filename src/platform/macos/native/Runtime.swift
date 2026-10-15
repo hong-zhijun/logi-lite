@@ -1,6 +1,7 @@
 import AppKit
 import ApplicationServices
 import Darwin
+import UniformTypeIdentifiers
 
 @_silgen_name("logilite_load_config")
 private func loadConfigJSON() -> UnsafeMutablePointer<CChar>?
@@ -109,9 +110,30 @@ private final class DesktopRuntime {
     func perform(_ request: [String:Any]) throws -> [String:Any] {
         let action = request["action"] as? String ?? "state"
         if action == "init" { start(smoke:request["smoke"] as? Bool ?? false) }
-        if smoke && !["state", "init", "metadata"].contains(action) { throw InputError.invalid("自检模式不会修改配置或权限") }
+        if smoke && !["state", "init", "metadata", "actionCatalog"].contains(action) { throw InputError.invalid("自检模式不会修改配置或权限") }
         switch action {
         case "init", "state": break
+        case "actionCatalog":
+            return ["ok":true, "categories":ActionCatalog.categories]
+        case "chooseApplication":
+            let panel = NSOpenPanel()
+            panel.allowedContentTypes = [.applicationBundle]
+            panel.allowsMultipleSelection = false
+            panel.canChooseDirectories = false
+            panel.canChooseFiles = true
+            panel.treatsFilePackagesAsDirectories = false
+            panel.message = "选择要绑定到鼠标按键的 App"
+            guard panel.runModal() == .OK, let url = panel.url else {
+                return ["ok":true, "cancelled":true]
+            }
+            guard url.path.hasSuffix(".app"), Bundle(url:url) != nil else {
+                throw InputError.invalid("请选择有效的 .app 应用")
+            }
+            let name = Bundle(url:url)?.object(forInfoDictionaryKey:"CFBundleDisplayName") as? String
+                ?? Bundle(url:url)?.object(forInfoDictionaryKey:"CFBundleName") as? String
+                ?? url.deletingPathExtension().lastPathComponent
+            return ["ok":true, "cancelled":false, "path":url.standardizedFileURL.path,
+                    "name":name, "value":"打开应用:\(url.standardizedFileURL.path)"]
         case "save":
             guard let value = request["config"] else { throw InputError.invalid("缺少配置") }
             var updated = try JSONDecoder().decode(MouseConfig.self, from:JSONSerialization.data(withJSONObject:value))

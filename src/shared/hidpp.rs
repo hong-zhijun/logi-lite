@@ -45,6 +45,9 @@ pub struct ScrollStatus {
     /// Options+ percentage, derived from the quantized hardware threshold.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sensitivity: Option<u8>,
+    /// Options+ scroll-force percentage exposed by SmartShift with Tunable Torque.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub force: Option<u8>,
 }
 
 /// Options+ SmartShift scale, verified against the installed arm64 agent.
@@ -66,6 +69,7 @@ pub struct Capabilities {
     pub dpi: bool,
     pub scroll: bool,
     pub smart_shift: bool,
+    pub scroll_force: bool,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -194,7 +198,9 @@ impl<T: Transport> Client<T> {
         Ok(index)
     }
 
-    pub fn probe(&mut self) -> Result<DeviceStatus, String> {
+    /// Read identity and battery only. This is suitable for periodic charging
+    /// updates and deliberately clears every cached writable feature index.
+    pub fn probe_battery(&mut self) -> Result<DeviceStatus, String> {
         // Invalidate before ping: a failed refresh must not leave old writable
         // feature indices alive. Software IDs continue advancing across probes.
         self.features.clear();
@@ -231,6 +237,11 @@ impl<T: Transport> Client<T> {
             }
             Err(error) => status.warnings.push(format!("Battery: {error}")),
         }
+        Ok(status)
+    }
+
+    pub fn probe(&mut self) -> Result<DeviceStatus, String> {
+        let mut status = self.probe_battery()?;
         match self.read_dpi() {
             Ok(Some(reading)) => {
                 self.dpi_feature = Some(reading.feature_index);
@@ -247,6 +258,8 @@ impl<T: Transport> Client<T> {
             Ok(value) => {
                 status.capabilities.scroll = value.is_some();
                 status.capabilities.smart_shift = value.is_some();
+                status.capabilities.scroll_force =
+                    value.as_ref().and_then(|scroll| scroll.force).is_some();
                 status.scroll = value;
             }
             Err(error) => status.warnings.push(format!("Scroll: {error}")),
@@ -255,6 +268,7 @@ impl<T: Transport> Client<T> {
             status.capabilities.dpi = false;
             status.capabilities.scroll = false;
             status.capabilities.smart_shift = false;
+            status.capabilities.scroll_force = false;
         }
         Ok(status)
     }
@@ -395,7 +409,10 @@ impl<T: Transport> Client<T> {
             &[],
             if torque { 3 } else { 2 },
         )?;
-        let value = decode_scroll(&data)?;
+        let mut value = decode_scroll(&data)?;
+        if !torque {
+            value.force = None;
+        }
         self.scroll_feature = Some((index, is_enhanced, torque));
         Ok(Some(value))
     }
@@ -430,11 +447,45 @@ impl<T: Transport> Client<T> {
             params.push(current[2]);
         }
         self.request(index, if enhanced { 2 } else { 1 }, &params, 0)?;
-        let checked = self.request(index, if enhanced { 1 } else { 0 }, &[], 2)?;
+        let checked = self.request(
+            index,
+            if enhanced { 1 } else { 0 },
+            &[],
+            if torque { 3 } else { 2 },
+        )?;
         let actual = decode_scroll(&checked)?;
-        if actual.mode != mode || (mode == ScrollMode::SmartShift && actual.threshold != threshold)
+        if actual.mode != mode
+            || (mode == ScrollMode::SmartShift && actual.threshold != threshold)
+            || (torque && checked[2] != current[2])
         {
             return Err("Device did not confirm the requested scroll mode".into());
+        }
+        Ok(())
+    }
+
+    /// Set the Enhanced 2111 wheel's ratchet force (Options+ "Scroll force").
+    /// The current mode and SmartShift threshold are preserved and the result
+    /// is read back before returning success.
+    pub fn set_scroll_force(&mut self, force: u8) -> Result<(), String> {
+        if !(1..=100).contains(&force) {
+            return Err("Scroll force must be between 1 and 100".into());
+        }
+        let (index, enhanced, torque) = self
+            .scroll_feature
+            .ok_or("Scroll settings are unavailable; probe the device first")?;
+        if !enhanced || !torque {
+            return Err("This device does not expose tunable scroll force".into());
+        }
+        let current = self.request(index, 1, &[], 3)?;
+        let current_status = decode_scroll(&current)?;
+        self.request(index, 2, &[current[0], current[1], force], 0)?;
+        let checked = self.request(index, 1, &[], 3)?;
+        let actual = decode_scroll(&checked)?;
+        if actual.mode != current_status.mode
+            || actual.threshold != current_status.threshold
+            || actual.force != Some(force)
+        {
+            return Err("Device did not confirm the requested scroll force".into());
         }
         Ok(())
     }
@@ -467,6 +518,10 @@ fn decode_scroll(data: &[u8]) -> Result<ScrollStatus, String> {
         mode,
         threshold: data[1],
         sensitivity: (mode == ScrollMode::SmartShift).then(|| smartshift_sensitivity(data[1])),
+        force: data
+            .get(2)
+            .copied()
+            .filter(|value| (1..=100).contains(value)),
     })
 }
 
@@ -696,9 +751,41 @@ mod tests {
         assert_eq!(status.battery.unwrap().percent, Some(80));
         assert_eq!(status.dpi, Some(1000));
         assert_eq!(status.dpi_choices.len(), 77);
-        assert_eq!(status.scroll.unwrap().mode, ScrollMode::SmartShift);
-        assert!(status.capabilities.dpi && status.capabilities.smart_shift);
+        let scroll = status.scroll.as_ref().unwrap();
+        assert_eq!(scroll.mode, ScrollMode::SmartShift);
+        assert!(
+            status.capabilities.dpi
+                && status.capabilities.smart_shift
+                && status.capabilities.scroll_force
+        );
+        assert_eq!(scroll.force, Some(45));
         assert!(status.warnings.is_empty());
+        assert!(client.transport.transactions.is_empty());
+    }
+
+    #[test]
+    fn battery_only_probe_reads_identity_and_charge_without_dpi_or_scroll() {
+        let name = b"MX Anywhere 3";
+        let transactions = VecDeque::from([
+            pair(0, 1, &[0, 0, 0x73], &[4, 5, 0x73]),
+            pair(0, 0, &[0, 5], &[2, 0, 0]),
+            pair(2, 0, &[], &[name.len() as u8]),
+            pair(2, 1, &[0], name),
+            pair(0, 0, &[0x10, 4], &[3, 0, 0]),
+            pair(3, 1, &[], &[80, 4, 1, 0]),
+        ]);
+        let mut client = Client::new(Mock::new(transactions), 255);
+        client.dpi_feature = Some(7);
+        client.dpi_choices = vec![1000];
+        client.scroll_feature = Some((9, true, true));
+        let status = client.probe_battery().unwrap();
+        assert_eq!(status.name.as_deref(), Some("MX Anywhere 3"));
+        assert_eq!(status.battery.unwrap().status, "recharging");
+        assert!(status.capabilities.battery);
+        assert!(!status.capabilities.dpi && !status.capabilities.scroll);
+        assert!(status.dpi.is_none() && status.scroll.is_none());
+        assert!(client.set_dpi(1000).is_err());
+        assert!(client.set_scroll_force(45).is_err());
         assert!(client.transport.transactions.is_empty());
     }
     #[test]
@@ -725,6 +812,78 @@ mod tests {
         client.scroll_feature = Some((9, true, true));
         client.set_scroll(ScrollMode::SmartShift, 15).unwrap();
         assert!(client.set_scroll(ScrollMode::SmartShift, 51).is_err());
+        assert!(client.transport.transactions.is_empty());
+    }
+    #[test]
+    fn enhanced_scroll_force_writes_third_byte_and_confirms_readback() {
+        let transactions = VecDeque::from([
+            pair(9, 1, &[], &[2, 30, 45]),
+            pair(9, 2, &[2, 30, 72], &[]),
+            pair(9, 1, &[], &[2, 30, 72]),
+        ]);
+        let mut client = Client::new(Mock::new(transactions), 255);
+        client.scroll_feature = Some((9, true, true));
+        client.set_scroll_force(72).unwrap();
+        assert!(client.transport.transactions.is_empty());
+        assert!(client.set_scroll_force(0).is_err());
+        assert!(client.set_scroll_force(101).is_err());
+    }
+
+    #[test]
+    fn unsupported_torque_never_uses_nonzero_report_padding() {
+        for enhanced in [false, true] {
+            let mut transactions = VecDeque::from([pair(
+                0,
+                0,
+                &[0x21, 0x11],
+                &[if enhanced { 9 } else { 0 }, 0, 0],
+            )]);
+            if enhanced {
+                transactions.push_back(pair(9, 0, &[], &[0, 50, 45]));
+            } else {
+                transactions.push_back(pair(0, 0, &[0x21, 0x10], &[9, 0, 0]));
+            }
+            transactions.push_back(pair(9, u8::from(enhanced), &[], &[2, 30, 45]));
+            let mut client = Client::new(Mock::new(transactions), 255);
+            let scroll = client.discover_scroll().unwrap().unwrap();
+            assert_eq!(scroll.force, None);
+            assert!(client.set_scroll_force(72).is_err());
+            assert!(client.transport.transactions.is_empty());
+        }
+    }
+
+    #[test]
+    fn scroll_force_rejects_a_mismatched_readback() {
+        let transactions = VecDeque::from([
+            pair(9, 1, &[], &[2, 30, 45]),
+            pair(9, 2, &[2, 30, 72], &[]),
+            pair(9, 1, &[], &[2, 30, 45]),
+        ]);
+        let mut client = Client::new(Mock::new(transactions), 255);
+        client.scroll_feature = Some((9, true, true));
+        assert!(client.set_scroll_force(72).unwrap_err().contains("confirm"));
+        assert!(client.transport.transactions.is_empty());
+    }
+
+    #[test]
+    fn battery_charge_status_preserves_charging_states() {
+        let states = [
+            (1, "recharging"),
+            (2, "almost_full"),
+            (3, "full"),
+            (4, "slow_recharge"),
+            (0, "discharging"),
+        ];
+        let mut transactions = VecDeque::from([pair(0, 0, &[0x10, 4], &[3, 0, 0])]);
+        for (value, _) in states {
+            transactions.push_back(pair(3, 1, &[], &[80, 4, value, 0]));
+        }
+        let mut client = Client::new(Mock::new(transactions), 255);
+        for (_, expected) in states {
+            let battery = client.read_battery().unwrap().unwrap();
+            assert_eq!(battery.percent, Some(80));
+            assert_eq!(battery.status, expected);
+        }
         assert!(client.transport.transactions.is_empty());
     }
     #[test]

@@ -82,6 +82,7 @@ struct HardwareCommand {
     dpi: Option<u16>,
     scroll: Option<hidpp::ScrollMode>,
     sensitivity: Option<u8>,
+    scroll_force: Option<u8>,
 }
 fn direct_index() -> u8 {
     255
@@ -107,23 +108,31 @@ pub unsafe extern "C" fn logilite_hardware(
 ) -> *mut c_char {
     response((|| {
         let command: HardwareCommand = unsafe { input_json(input) }?;
-        if command.action != "probe" && command.action != "apply" {
+        if !matches!(command.action.as_str(), "probe" | "battery" | "apply") {
             return Err("Unknown hardware command".into());
         }
         if command.device_index != 255 && !(1..=6).contains(&command.device_index) {
             return Err("Invalid HID++ device index".into());
         }
         // Validate every requested value before the first write.
-        if command.action == "probe"
-            && (command.dpi.is_some() || command.scroll.is_some() || command.sensitivity.is_some())
+        if matches!(command.action.as_str(), "probe" | "battery")
+            && (command.dpi.is_some()
+                || command.scroll.is_some()
+                || command.sensitivity.is_some()
+                || command.scroll_force.is_some())
         {
-            return Err("A probe cannot include hardware writes".into());
+            return Err("A read-only request cannot include hardware writes".into());
         }
         if command.sensitivity.is_some() && command.scroll != Some(hidpp::ScrollMode::SmartShift) {
             return Err("Sensitivity requires SmartShift mode".into());
         }
         if let Some(sensitivity) = command.sensitivity {
             hidpp::smartshift_threshold(sensitivity)?;
+        }
+        if let Some(force) = command.scroll_force
+            && !(1..=100).contains(&force)
+        {
+            return Err("滚动力度必须为 1～100%".into());
         }
         static SESSION_SEQUENCE: AtomicU64 = AtomicU64::new(0);
         let nonce = std::time::SystemTime::now()
@@ -139,7 +148,17 @@ pub unsafe extern "C" fn logilite_hardware(
             command.device_index,
         )
         .with_session_nonce(nonce);
-        let status = client.probe()?;
+        let status = if command.action == "battery" {
+            client.probe_battery()?
+        } else {
+            client.probe()?
+        };
+        if command.action == "battery" {
+            if !is_target(&status) {
+                return Err("设备未确认是 MX Anywhere 3 系列，拒绝刷新充电状态".into());
+            }
+            return Ok(json!({"ok":true,"status":status,"target_verified":true}));
+        }
         if command.action == "probe" {
             return Ok(json!({"ok":true,"status":status,"target_verified":is_target(&status)}));
         }
@@ -161,6 +180,9 @@ pub unsafe extern "C" fn logilite_hardware(
         if command.scroll.is_some() && !status.capabilities.scroll {
             return Err("设备未确认支持滚轮设置".into());
         }
+        if command.scroll_force.is_some() && !status.capabilities.scroll_force {
+            return Err("设备未确认支持滚动力度设置".into());
+        }
         let threshold = match command.sensitivity {
             Some(sensitivity) => hidpp::smartshift_threshold(sensitivity)?,
             None => status
@@ -177,6 +199,9 @@ pub unsafe extern "C" fn logilite_hardware(
             if let Some(mode) = command.scroll {
                 client.set_scroll(mode, threshold)?;
             }
+            if let Some(force) = command.scroll_force {
+                client.set_scroll_force(force)?;
+            }
             Ok::<(), String>(())
         })();
         // Always try a fresh read, including after a partial application failure.
@@ -190,6 +215,9 @@ pub unsafe extern "C" fn logilite_hardware(
                                 || (mode == hidpp::ScrollMode::SmartShift
                                     && s.threshold != threshold)
                         })
+                    })
+                    || command.scroll_force.is_some_and(|force| {
+                        status.scroll.as_ref().and_then(|s| s.force) != Some(force)
                     })
                 {
                     Ok(
@@ -235,11 +263,17 @@ mod tests {
     fn invalid_commands_do_not_touch_hardware() {
         for text in [
             r#"{"action":"probe","dpi":400}"#,
+            r#"{"action":"battery","dpi":400}"#,
+            r#"{"action":"battery","scroll":"ratchet"}"#,
+            r#"{"action":"battery","sensitivity":50}"#,
+            r#"{"action":"battery","scroll_force":45}"#,
             r#"{"action":"apply","threshold":20}"#,
             r#"{"action":"apply","scroll":"smart_shift","threshold":0}"#,
             r#"{"action":"apply","scroll":"smart_shift","sensitivity":101}"#,
             r#"{"action":"apply","sensitivity":50}"#,
             r#"{"action":"apply","scroll":"ratchet","sensitivity":50}"#,
+            r#"{"action":"apply","scroll_force":0}"#,
+            r#"{"action":"apply","scroll_force":101}"#,
             r#"{"action":"apply","device_index":0}"#,
         ] {
             let input = CString::new(text).unwrap();

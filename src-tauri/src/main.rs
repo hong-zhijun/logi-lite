@@ -1,8 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use serde_json::{Value, json};
-use std::sync::Mutex;
 #[cfg(target_os = "macos")]
 use std::ffi::{CStr, CString, c_char};
+use std::sync::Mutex;
 use tauri::{
     Manager,
     menu::{Menu, MenuItem},
@@ -48,8 +48,11 @@ fn window_minimize(window: tauri::WebviewWindow) -> Result<(), String> {
 #[tauri::command]
 fn window_toggle_maximize(window: tauri::WebviewWindow) -> Result<bool, String> {
     let maximized = window.is_maximized().map_err(|error| error.to_string())?;
-    if maximized { window.unmaximize().map_err(|error| error.to_string())?; }
-    else { window.maximize().map_err(|error| error.to_string())?; }
+    if maximized {
+        window.unmaximize().map_err(|error| error.to_string())?;
+    } else {
+        window.maximize().map_err(|error| error.to_string())?;
+    }
     Ok(!maximized)
 }
 
@@ -62,7 +65,14 @@ fn window_close(window: tauri::WebviewWindow) -> Result<(), String> {
 #[cfg(windows)]
 fn native(request: Value, hardware: bool) -> Result<Value, String> {
     let result = logi_lite::platform::windows::desktop::request(request, hardware);
-    if result["ok"] == false { Err(result["error"].as_str().unwrap_or("Windows 后端失败").to_string()) } else { Ok(result) }
+    if result["ok"] == false {
+        Err(result["error"]
+            .as_str()
+            .unwrap_or("Windows 后端失败")
+            .to_string())
+    } else {
+        Ok(result)
+    }
 }
 
 #[tauri::command]
@@ -167,11 +177,20 @@ fn main() {
             smoke,
             hardware: Mutex::new(()),
         })
-        .invoke_handler(tauri::generate_handler![runtime, hardware, smoke_report, window_minimize, window_toggle_maximize, window_close])
+        .invoke_handler(tauri::generate_handler![
+            runtime,
+            hardware,
+            smoke_report,
+            window_minimize,
+            window_toggle_maximize,
+            window_close
+        ])
         .setup(move |app| {
             #[cfg(windows)]
             if let Some(window) = app.get_webview_window("main") {
-                window.set_decorations(false).map_err(std::io::Error::other)?;
+                window
+                    .set_decorations(false)
+                    .map_err(std::io::Error::other)?;
             }
             native(json!({"action":"init", "smoke":smoke}), false)
                 .map_err(std::io::Error::other)?;

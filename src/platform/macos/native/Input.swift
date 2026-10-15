@@ -12,16 +12,48 @@ struct MouseConfig: Codable {
 enum MouseAction {
     case original, disabled, shortcut(CGKeyCode, CGEventFlags)
     case system(SystemAction)
+    case openApplication(URL)
+    /// Hold the side button while scrolling to turn vertical wheel motion into horizontal motion.
+    case horizontalScroll
+    case media(MediaAction)
+}
+
+enum MediaAction: String, CaseIterable {
+    case volumeUp = "音量增加", volumeDown = "音量减小", mute = "静音切换"
+    case playPause = "播放或暂停", nextTrack = "下一首", previousTrack = "上一首"
+    case brightnessUp = "亮度增加", brightnessDown = "亮度减小"
+
+    var key: Int {
+        switch self {
+        case .volumeUp:return 0; case .volumeDown:return 1
+        case .brightnessUp:return 2; case .brightnessDown:return 3
+        case .mute:return 7; case .playPause:return 16
+        case .nextTrack:return 17; case .previousTrack:return 18
+        }
+    }
+    func event(down: Bool, marker: Int64) -> CGEvent? {
+        let state = down ? 0xa : 0xb
+        let event = NSEvent.otherEvent(with:.systemDefined, location:.zero,
+            modifierFlags:NSEvent.ModifierFlags(rawValue:UInt(state << 8)),
+            timestamp:0, windowNumber:0, context:nil, subtype:8,
+            data1:(key << 16) | (state << 8), data2:-1)?.cgEvent
+        event?.setIntegerValueField(.eventSourceUserData, value:marker)
+        return event
+    }
 }
 
 enum SystemAction: String, CaseIterable {
     case apps = "打开 App"
     case missionControl = "调度中心"
+    case settings = "系统设置"
+    case calculator = "计算器"
 
     var bundleIdentifiers: [String] {
         switch self {
         case .apps: return ["com.apple.apps.launcher", "com.apple.launchpad.launcher"]
         case .missionControl: return ["com.apple.exposelauncher"]
+        case .settings: return ["com.apple.systempreferences"]
+        case .calculator: return ["com.apple.calculator"]
         }
     }
 
@@ -48,6 +80,47 @@ enum SystemAction: String, CaseIterable {
     }
 }
 
+enum ActionCatalog {
+    static let categories: [[String: Any]] = [
+        ["id":"system", "label":"系统功能", "actions":[
+            ["id":"default", "label":"保留默认行为", "value":"默认"],
+            ["id":"disabled", "label":"禁用按键", "value":"禁用"],
+            ["id":"apps", "label":"打开 App", "value":"打开 App"],
+            ["id":"mission-control", "label":"调度中心", "value":"调度中心"],
+            ["id":"settings", "label":"系统设置", "value":"系统设置"],
+            ["id":"calculator", "label":"计算器", "value":"计算器"],
+            ["id":"lock", "label":"锁定屏幕", "value":"Ctrl+Cmd+Q"],
+            ["id":"horizontal-scroll", "label":"水平滚动（按住侧键）", "value":"水平滚动"]
+        ]],
+        ["id":"editing", "label":"编辑", "actions":[
+            ["id":"copy", "label":"复制", "value":"Cmd+C"], ["id":"paste", "label":"粘贴", "value":"Cmd+V"],
+            ["id":"cut", "label":"剪切", "value":"Cmd+X"], ["id":"undo", "label":"撤销", "value":"Cmd+Z"],
+            ["id":"redo", "label":"重做", "value":"Cmd+Shift+Z"], ["id":"select-all", "label":"全选", "value":"Cmd+A"],
+            ["id":"save", "label":"保存", "value":"Cmd+S"], ["id":"print", "label":"打印", "value":"Cmd+P" ]
+        ]],
+        ["id":"windows", "label":"窗口与桌面", "actions":[
+            ["id":"close", "label":"关闭窗口或标签页", "value":"Cmd+W"], ["id":"minimize", "label":"最小化窗口", "value":"Cmd+M"],
+            ["id":"switch-app", "label":"切换应用", "value":"Cmd+Tab"], ["id":"mission-key", "label":"调度中心快捷键", "value":"Ctrl+Up"],
+            ["id":"app-windows", "label":"当前应用的窗口", "value":"Ctrl+Down"], ["id":"desktop-left", "label":"左侧桌面", "value":"Ctrl+Left"],
+            ["id":"desktop-right", "label":"右侧桌面", "value":"Ctrl+Right"], ["id":"show-desktop", "label":"显示桌面", "value":"F11"]
+        ]],
+        ["id":"browser", "label":"浏览器", "actions":[
+            ["id":"new-tab", "label":"新建标签页", "value":"Cmd+T"], ["id":"close-tab", "label":"关闭标签页", "value":"Cmd+W"],
+            ["id":"restore-tab", "label":"恢复关闭的标签页", "value":"Cmd+Shift+T"], ["id":"next-tab", "label":"下一个标签页", "value":"Ctrl+Tab"],
+            ["id":"previous-tab", "label":"上一个标签页", "value":"Ctrl+Shift+Tab"], ["id":"refresh", "label":"刷新页面", "value":"Cmd+R"]
+        ]],
+        ["id":"media", "label":"媒体与截图", "actions":[
+            ["id":"volume-up", "label":"音量增加", "value":"音量增加"], ["id":"volume-down", "label":"音量减小", "value":"音量减小"],
+            ["id":"mute", "label":"静音切换", "value":"静音切换"], ["id":"play-pause", "label":"播放或暂停", "value":"播放或暂停"],
+            ["id":"next-track", "label":"下一首", "value":"下一首"], ["id":"previous-track", "label":"上一首", "value":"上一首"],
+            ["id":"brightness-up", "label":"亮度增加", "value":"亮度增加"], ["id":"brightness-down", "label":"亮度减小", "value":"亮度减小"],
+            ["id":"fullscreen-shot", "label":"截取全屏", "value":"Cmd+Shift+3"], ["id":"area-shot", "label":"区域截图", "value":"Cmd+Shift+4"],
+            ["id":"screenshot-toolbar", "label":"截屏与录屏工具栏", "value":"Cmd+Shift+5"], ["id":"emoji", "label":"表情与符号", "value":"Ctrl+Cmd+Space"],
+            ["id":"spotlight", "label":"聚焦搜索", "value":"Cmd+Space"]
+        ]]
+    ]
+}
+
 enum ShortcutParser {
     static let keys: [String: CGKeyCode] = [
         "A":0, "S":1, "D":2, "F":3, "H":4, "G":5, "Z":6, "X":7,
@@ -68,6 +141,16 @@ enum ShortcutParser {
         if value == "默认" { return .original }
         if value == "禁用" { return .disabled }
         if let action = SystemAction(rawValue:value) { return .system(action) }
+        if let action = MediaAction(rawValue:value) { return .media(action) }
+        if value == "水平滚动" { return .horizontalScroll }
+        if value.hasPrefix("打开应用:") {
+            let path = String(value.dropFirst("打开应用:".count))
+            guard path.hasPrefix("/"), path.hasSuffix(".app") else {
+                throw InputError.invalid("应用必须是绝对路径的 .app")
+            }
+            let url = URL(fileURLWithPath:path).standardizedFileURL
+            return .openApplication(url)
+        }
         let parts = value.uppercased().components(separatedBy: "+").map {
             $0.trimmingCharacters(in: .whitespacesAndNewlines)
         }
@@ -123,11 +206,30 @@ struct ButtonPairs {
     func drag(button: Int64) -> Bool { swallowed.contains(button) }
 }
 
+/// Change only the axes so pixel/line deltas, phases and momentum remain intact.
+enum HorizontalWheel {
+    static func convert(_ event: CGEvent) {
+        let axes: [(CGEventField, CGEventField)] = [
+            (.scrollWheelEventDeltaAxis1, .scrollWheelEventDeltaAxis2),
+            (.scrollWheelEventPointDeltaAxis1, .scrollWheelEventPointDeltaAxis2),
+            (.scrollWheelEventFixedPtDeltaAxis1, .scrollWheelEventFixedPtDeltaAxis2)
+        ]
+        // Point delta setters also update fixed-point deltas. Snapshot first and
+        // write fixed-point last to retain sub-pixel wheel motion.
+        let values = axes.map { event.getDoubleValueField($0.1) + event.getDoubleValueField($0.0) }
+        for ((vertical, horizontal), delta) in zip(axes, values) {
+            event.setDoubleValueField(horizontal, value:delta)
+            event.setDoubleValueField(vertical, value:0)
+        }
+    }
+}
+
 final class MouseInput {
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
     private var actions: [Int64: MouseAction] = [:]
     private var pairs = ButtonPairs()
+    private var horizontalButtons = Set<Int64>()
     private var revision = 0
     private(set) var active = false
     private(set) var status = "按键映射未启用"
@@ -140,6 +242,7 @@ final class MouseInput {
                           Int64(4):ShortcutParser.parse(config.forward),
                           Int64(2):ShortcutParser.parse(config.middle)]
         revision += 1
+        horizontalButtons.removeAll()
         actions = parsed
         guard config.enabled else { pause("按键映射已暂停"); return }
         guard InputPermissions().ready else {
@@ -155,6 +258,7 @@ final class MouseInput {
 
     func pause(_ reason: String = "按键映射已暂停") {
         revision += 1
+        horizontalButtons.removeAll()
         active = false
         status = reason
         // Keep the tap until existing swallowed downs receive their matching ups.
@@ -162,7 +266,7 @@ final class MouseInput {
     }
 
     private func install() throws {
-        let types: [CGEventType] = [.otherMouseDown,.otherMouseUp,.otherMouseDragged,.keyDown]
+        let types: [CGEventType] = [.otherMouseDown,.otherMouseUp,.otherMouseDragged,.scrollWheel,.keyDown]
         let mask = types.reduce(CGEventMask(0)) { $0 | (1 << $1.rawValue) }
         let pointer = Unmanaged.passUnretained(self).toOpaque()
         guard let installed = CGEvent.tapCreate(tap: .cgSessionEventTap,
@@ -198,7 +302,14 @@ final class MouseInput {
         }
         let button = event.getIntegerValueField(.mouseEventButtonNumber)
         switch type {
+        case .scrollWheel:
+            guard active, !horizontalButtons.isEmpty else {
+                return Unmanaged.passUnretained(event)
+            }
+            HorizontalWheel.convert(event)
+            return Unmanaged.passUnretained(event)
         case .otherMouseUp:
+            horizontalButtons.remove(button)
             return pairs.up(button: button) ? nil : Unmanaged.passUnretained(event)
         case .otherMouseDragged:
             return pairs.drag(button: button) ? nil : Unmanaged.passUnretained(event)
@@ -208,6 +319,7 @@ final class MouseInput {
             guard active, let action = actions[button] else { return Unmanaged.passUnretained(event) }
             if case .original = action { return Unmanaged.passUnretained(event) }
             _ = pairs.down(button: button, shouldSuppress: true)
+            if action.isHorizontalScroll { horizontalButtons.insert(button) }
             perform(action)
             return nil
         default: return Unmanaged.passUnretained(event)
@@ -221,6 +333,27 @@ final class MouseInput {
             systemAction.open(shouldOpen:{ [weak self] in
                 self?.active == true && self?.revision == expectedRevision
             }, onFailure:{ [weak self] error in self?.onActionError?(error) })
+        }
+        if case .openApplication(let url) = action {
+            let expectedRevision = revision
+            DispatchQueue.main.async { [weak self] in
+                guard let self, self.active, self.revision == expectedRevision else { return }
+                var isDirectory = ObjCBool(false)
+                guard FileManager.default.fileExists(atPath:url.path, isDirectory:&isDirectory), isDirectory.boolValue,
+                      Bundle(url:url) != nil else { self.onActionError?("找不到有效的应用：\(url.path)"); return }
+                let options = NSWorkspace.OpenConfiguration(); options.activates = true
+                NSWorkspace.shared.openApplication(at:url, configuration:options) { _, error in
+                    if let error { DispatchQueue.main.async { self.onActionError?("无法打开应用：\(error.localizedDescription)") } }
+                }
+            }
+        }
+        if case .media(let media) = action {
+            guard let down = media.event(down:true, marker:marker), let up = media.event(down:false, marker:marker) else {
+                onActionError?("无法发送媒体动作：\(media.rawValue)")
+                return
+            }
+            down.post(tap:.cghidEventTap)
+            up.post(tap:.cghidEventTap)
         }
     }
 
@@ -237,5 +370,12 @@ final class MouseInput {
     deinit {
         if let source { CFRunLoopRemoveSource(CFRunLoopGetMain(), source, .commonModes) }
         if let tap { CFMachPortInvalidate(tap) }
+    }
+}
+
+private extension MouseAction {
+    var isHorizontalScroll: Bool {
+        if case .horizontalScroll = self { return true }
+        return false
     }
 }

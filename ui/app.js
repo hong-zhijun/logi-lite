@@ -3,9 +3,12 @@ const $ = id => document.getElementById(id);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const invoke = window.__TAURI__?.core.invoke;
 const BUTTONS = {back:'后退侧键',forward:'前进侧键',middle:'中键（鼠标滚轮）'};
-const ACTIONS = new Set(['默认','禁用','打开 App','调度中心']);
+const ACTIONS = new Set(['默认','禁用','打开 App','调度中心','水平滚动']);
+let actionCatalog = {categories:[]}, editorMode=null;
+let selectedCategory='';
+let lastRuntimeError='';
 let runtimeState = null, savedConfig = null, draftConfig = null, selectedButton = null, chosenAction = '默认';
-let hardwareResult = {}, actual = null, draftHardware = null, verified = false, hardwareBusy = false;
+let hardwareResult = {}, actual = null, draftHardware = null, verified = false, hardwareBusy = false, batteryBusy=false, lastBatteryProbe=0;
 let hardwareDraftEdited = false;
 let connectionMissing = false;
 let currentPage = 'buttons', selectedPanel = null;
@@ -42,6 +45,8 @@ function renderRuntime(result, initial=false) {
   document.documentElement.dataset.platform=result.platform||(/Windows/i.test(navigator.platform)?'windows':'macos');
   const wasPermitted=ready();
   runtimeState = result;
+  if(result.error&&result.error!==lastRuntimeError)toast(result.error,true);
+  lastRuntimeError=result.error||'';
   if(wasPermitted!==ready()){verified=false;topology=null;}
 
   // Runtime polling can update enabled state; never replace unsaved button edits.
@@ -59,6 +64,7 @@ function renderRuntime(result, initial=false) {
     $(statusId).classList.toggle('permission-granted',granted);
     $(buttonId).hidden=granted;
   }
+  for(const action of ['水平滚动','application','more']){const el=document.querySelector(`[data-action="${action}"]`);el.hidden=result.platform==='windows';}
   renderPermissions();
   updateDraftLabel();
 }
@@ -110,6 +116,8 @@ function renderConnectionGate() {
 }
 function chooseButton(key) {
   if(key&&!ready())return;
+  if(selectedButton!==key)editorMode=null;
+  selectedCategory='';
   selectedButton=key;
   setPanel(key?'button':null);
   stopRecording();
@@ -138,31 +146,78 @@ function openHardware() {
 }
 function renderAction() {
   if (!draftConfig || !selectedButton || !ready()) return;
-  const value = draftConfig[selectedButton];
-  chosenAction = ACTIONS.has(value)?value:'shortcut';
+  const value=draftConfig[selectedButton];
+  chosenAction=editorMode||(ACTIONS.has(value)?value:value?.startsWith('打开应用:')?'application':actionCatalog.categories.some(c=>c.actions?.some(a=>a.value===value))?'more':'shortcut');
   $$('.action-option').forEach(el=>{el.classList.toggle('selected',el.dataset.action===chosenAction);el.setAttribute('aria-pressed',String(el.dataset.action===chosenAction));});
   $('shortcut-editor').hidden=chosenAction!=='shortcut';
-  $('shortcut').value=chosenAction==='shortcut'?value:'';
-  stopRecording();updateDraftLabel();
+  $('more-editor').hidden=chosenAction!=='more';
+  $('application-editor').hidden=chosenAction!=='application';
+  $('shortcut').value=chosenAction==='shortcut'&&!ACTIONS.has(value)&&!value.startsWith('打开应用:')?value:'';
+  const path=value?.startsWith('打开应用:')?value.slice('打开应用:'.length):'';
+  $('application-name').textContent=path?path.split('/').pop().replace(/\.app$/i,''):'选择要打开的 App';
+  $('application-name').title=path;
+  if(chosenAction==='more')renderMoreSelectors(value);
+  updateDraftLabel();
 }
 function chooseAction(value) {
-  if (!draftConfig || !selectedButton || !ready()) return;
-  const previous=draftConfig[selectedButton];
-  draftConfig[selectedButton]=value==='shortcut'?(ACTIONS.has(previous)?'Cmd+C':previous):value;
+  if(!draftConfig||!selectedButton||!ready())return;
+  stopRecording();
+  editorMode=value;
+  if(!['more','application','shortcut'].includes(value))draftConfig[selectedButton]=value;
+  renderAction();
+  if(value==='shortcut')$('shortcut').focus();
+}
+function beginRecording() {
+  if(chosenAction!=='shortcut'||!selectedButton||!ready())return;
+  recording=true;$('shortcut').classList.add('recording');
+  $('shortcut').placeholder='按下组合键';
+}
+function stopRecording() {
+  recording=false;$('shortcut').classList.remove('recording');
+  $('shortcut').placeholder='点击后按下组合键';
+}
+const keyNames={ArrowLeft:'Left',ArrowRight:'Right',ArrowUp:'Up',ArrowDown:'Down',Escape:'Esc',Enter:'Enter',' ':'Space',Delete:'Delete',PageUp:'PageUp',PageDown:'PageDown',Home:'Home',End:'End',Tab:'Tab'};
+function record(event) {
+  if(!recording||event.target!==$('shortcut')||!selectedButton||!ready())return;
+  event.preventDefault();event.stopPropagation();
+  if(event.repeat||['Meta','Control','Alt','Shift'].includes(event.key))return;
+  if(event.key==='Escape'&&!event.metaKey&&!event.ctrlKey&&!event.altKey&&!event.shiftKey){$('shortcut').blur();return;}
+  const key=keyNames[event.key]||(/^Key[A-Z]$/.test(event.code)?event.code.slice(3):/^Digit[0-9]$/.test(event.code)?event.code.slice(5):event.key.toUpperCase());
+  const modifiers=[event.metaKey?(runtimeState?.platform==='windows'?'Win':'Cmd'):null,event.ctrlKey?'Ctrl':null,event.altKey?(runtimeState?.platform==='windows'?'Alt':'Option'):null,event.shiftKey?'Shift':null].filter(Boolean);
+  const maxFunction=runtimeState?.platform==='windows'?24:20;
+  const supported=/^[A-Z0-9]$/.test(key)||(/^F\d+$/.test(key)&&Number(key.slice(1))>=1&&Number(key.slice(1))<=maxFunction)||Object.values(keyNames).includes(key);
+  if(!supported){toast(`这个按键暂不支持，请使用字母、数字、方向键或 F1–F${maxFunction}。`,true);return;}
+  draftConfig[selectedButton]=[...modifiers,key].join('+');
   renderAction();
 }
-function stopRecording() {recording=false;$('record-shortcut').textContent='录制';}
-const keyNames = {ArrowLeft:'Left',ArrowRight:'Right',ArrowUp:'Up',ArrowDown:'Down',Escape:'Esc',Enter:'Enter',' ':'Space',Backspace:'Backspace',Delete:'Delete',PageUp:'PageUp',PageDown:'PageDown',Home:'Home',End:'End',Tab:'Tab'};
-function record(event) {
-  if (!recording) return;
-  event.preventDefault();event.stopPropagation();
-  if (['Meta','Control','Alt','Shift'].includes(event.key)) return;
-  if (event.key==='Escape'&&!event.metaKey&&!event.ctrlKey&&!event.altKey&&!event.shiftKey){stopRecording();return;}
-  const key=keyNames[event.key] || (/^Key[A-Z]$/.test(event.code)?event.code.slice(3):/^Digit[0-9]$/.test(event.code)?event.code.slice(5):event.key.toUpperCase());
-  const modifiers=[event.metaKey?'Cmd':null,event.ctrlKey?'Ctrl':null,event.altKey?'Option':null,event.shiftKey?'Shift':null].filter(Boolean);
-  const supported = /^[A-Z0-9]$/.test(key)||/^F([1-9]|1[0-9]|20)$/.test(key)||Object.values(keyNames).includes(key);
-  if (!supported || key==='Backspace') {toast('这个按键暂不支持，请使用字母、数字、方向键或 F1–F20。',true);return;}
-  draftConfig[selectedButton]=[...modifiers,key].join('+');renderAction();
+function renderMoreSelectors(value=draftConfig?.[selectedButton]) {
+  const category=$('more-category'),action=$('more-action');
+  const current=actionCatalog.categories.find(c=>c.actions.some(a=>a.value===value));
+  if(current&&!selectedCategory)selectedCategory=current.id;
+  if(!actionCatalog.categories.some(c=>c.id===selectedCategory))selectedCategory=actionCatalog.categories[0]?.id||'';
+  category.replaceChildren();
+  for(const c of actionCatalog.categories){const o=new Option(c.label,c.id);category.append(o);}
+  category.value=selectedCategory;
+  const group=actionCatalog.categories.find(c=>c.id===selectedCategory);
+  action.replaceChildren(new Option('选择动作',''));
+  for(const a of group?.actions||[])action.append(new Option(a.label,a.value));
+  action.value=group?.actions.some(a=>a.value===value)?value:'';
+  category.disabled=!actionCatalog.categories.length;action.disabled=category.disabled;
+}
+async function loadActionCatalog() {
+  if(runtimeState?.platform==='windows')return;
+  try{actionCatalog=await native({action:'actionCatalog'});if(selectedButton)renderAction();}
+  catch(error){toast(error.message,true);}
+}
+async function chooseApplication() {
+  if(!selectedButton||!ready())return;
+  const button=selectedButton;
+  $('choose-application').disabled=true;
+  try{
+    const result=await native({action:'chooseApplication'});
+    if(!result.cancelled&&result.value&&selectedButton===button){draftConfig[button]=result.value;editorMode='application';renderAction();}
+  }catch(error){toast(error.message,true);}
+  finally{$('choose-application').disabled=false;}
 }
 async function saveMapping() {
   if (saveBusy||!draftConfig||!ready()||!mappingDirty()) return;
@@ -182,7 +237,7 @@ async function toggleMapping() {
 }
 function hardwareDirty() {
   if (!actual||!draftHardware) return false;
-  return (actual.capabilities.dpi&&draftHardware.dpi!==actual.dpi)||(actual.capabilities.scroll&&draftHardware.scroll!==actual.scroll?.mode)||(draftHardware.scroll==='smart_shift'&&draftHardware.sensitivity!==actual.scroll?.sensitivity);
+  return (actual.capabilities.dpi&&draftHardware.dpi!==actual.dpi)||(actual.capabilities.scroll&&draftHardware.scroll!==actual.scroll?.mode)||(draftHardware.scroll==='smart_shift'&&draftHardware.sensitivity!==actual.scroll?.sensitivity)||(actual.capabilities.scroll_force&&draftHardware.force!==actual.scroll?.force);
 }
 function renderRefreshControls() {
   for(const id of ['refresh-hardware','refresh-device'])$(id).disabled=hardwareBusy||!ready();
@@ -198,14 +253,18 @@ function renderHardware() {
   $$('[data-mode="smart_shift"]').forEach(el=>el.disabled=!caps.smart_shift);
   $('sensitivity-controls').hidden=draftHardware?.scroll!=='smart_shift';
   $('sensitivity-controls').disabled=hardwareBusy||!verified||!caps.smart_shift;
+  const forceSupported=caps.scroll_force&&runtimeState?.platform!=='windows';
+  $('scroll-force-controls').hidden=!forceSupported;
+  $('scroll-force-controls').disabled=hardwareBusy||!verified||!forceSupported;
   if (draftHardware) {
     $('dpi-range').value=draftHardware.dpi??1000;$('dpi-value').textContent=draftHardware.dpi??'—';
     $('sensitivity').value=draftHardware.sensitivity??50;$('sensitivity-value').textContent=`${draftHardware.sensitivity??50}%`;
+    $('scroll-force').value=draftHardware.force??50;$('scroll-force-value').textContent=`${draftHardware.force??'—'}%`;
     $$('[data-mode]').forEach(el=>{el.classList.toggle('selected',el.dataset.mode===draftHardware.scroll);el.setAttribute('aria-pressed',String(el.dataset.mode===draftHardware.scroll));});
   }
   const dirty=Boolean(hardwareDirty());
   const state=hardwareBusy?'busy':!verified||!ready()?'unavailable':dirty?'pending':'saved';
-  const label=hardwareBusy?'同步中…':!ready()?'请先授权':!verified?'设备暂不可用':dirty?'应用到鼠标':'已同步';
+  const label=hardwareBusy?'同步中…':!ready()?'请先授权':!verified?'设备暂不可用':dirty?'应用到鼠标':'已保存';
   commitState('apply-hardware',state,label,hardwareBusy?'refresh':state==='saved'?'check':'alert',hardwareBusy?'正在与鼠标通信':!ready()?'请先完成必要授权':!verified?'请刷新并确认设备状态':dirty?'有尚未应用的修改':'与鼠标当前设置一致');
   $('apply-hardware').disabled=hardwareBusy||!verified||!ready()||!dirty;
   renderRefreshControls();
@@ -236,18 +295,39 @@ function updateDeviceStatus(result) {
       for(const id of ['dpi-range']) {$(id).min=Math.min(...values);$(id).max=Math.max(...values);$(id).step=values.length>1?Math.min(...values.slice(1).map((x,i)=>x-values[i]).filter(x=>x>0)):1;}
       $('dpi-min').textContent=Math.min(...values);$('dpi-max').textContent=Math.max(...values);
     }
-    if (!oldDirty||!draftHardware) draftHardware={dpi:actual.dpi,scroll:actual.scroll?.mode||'ratchet',sensitivity:actual.scroll?.sensitivity??50};
-    const battery=actual.battery;
-    const levels={full:'满电',good:'电量较高',low:'电量偏低',critical:'电量极低',empty:'电量耗尽'};
-    $('battery').textContent=battery?.percent!=null?`电量 ${battery.percent}%`:levels[battery?.level]||'电量未知';
+    if (!oldDirty||!draftHardware) draftHardware={dpi:actual.dpi,scroll:actual.scroll?.mode||'ratchet',sensitivity:actual.scroll?.sensitivity??50,force:actual.scroll?.force??50};
+    renderBattery(actual.battery);
   }
   $('connection-dot').className='status-dot'+(verified?'':' error');
-  $('connection-text').textContent=verified?'蓝牙已连接':'设备暂不可用';
+  $('connection-text').textContent=verified?'已连接':'设备暂不可用';
   renderHardware();
+}
+function renderBattery(battery) {
+    const levels={full:'满电',good:'电量较高',low:'电量偏低',critical:'电量极低',empty:'电量耗尽'};
+    const charging=['recharging','almost_full','slow_recharge'].includes(battery?.status);
+    const amount=battery?.percent!=null?`${battery.percent}%`:levels[battery?.level]||'—';
+    $('battery').textContent=charging?`充电中 ${amount}`:battery?.status==='full'?`已充满 ${amount}`:`电量 ${amount}`;
+    $('battery').classList.toggle('charging',charging);
+    $('battery').title=charging?'充电中':battery?.status==='full'?'已充满':'电池电量';
+    $('battery').setAttribute('aria-label',`${charging?'充电中':'电量'} ${amount}`);
+}
+async function refreshBattery() {
+  if(batteryBusy||hardwareBusy||!verified||!ready()||runtimeState?.smoke||runtimeState?.platform==='windows')return;
+  batteryBusy=true;lastBatteryProbe=Date.now();
+  const generation=deviceGeneration;
+  try{
+    const result=await invoke('hardware',{request:{action:'battery'}});
+    if(generation===deviceGeneration&&ready()&&result.ok&&result.target_verified&&actual){
+      actual.battery=result.status?.battery??null;
+      hardwareResult.status.battery=actual.battery;
+      renderBattery(actual.battery);
+    }
+  }catch(error){/* A failed battery refresh leaves hardware controls and drafts unchanged. */}
+  finally{batteryBusy=false;}
 }
 async function probe(showMessage=false) {
   if (hardwareBusy||runtimeState?.smoke||!invoke||!ready()) return;
-  hardwareBusy=true;lastProbe=Date.now();renderHardware();
+  hardwareBusy=true;lastProbe=Date.now();lastBatteryProbe=lastProbe;renderHardware();
   const generation=deviceGeneration;
   try {
     const result=await invoke('hardware',{request:{action:'probe'}});
@@ -267,13 +347,14 @@ async function applyHardware() {
     request.scroll=submitted.scroll;
     if(submitted.scroll==='smart_shift')request.sensitivity=submitted.sensitivity;
   }
+  if(caps.scroll_force&&submitted.force!==actual.scroll?.force)request.scroll_force=submitted.force;
   hardwareBusy=true;renderHardware();
   const generation=deviceGeneration;
   try {
     const result=await invoke('hardware',{request});
     if(generation!==deviceGeneration){toast('连接已改变，请重新确认设备状态。',true);return;}
     updateDeviceStatus(result);
-    if(result.ok){hardwareDraftEdited=false;draftHardware={dpi:actual.dpi,scroll:actual.scroll?.mode||'ratchet',sensitivity:actual.scroll?.sensitivity??50};toast('已应用，并确认鼠标实际设置');}
+    if(result.ok){hardwareDraftEdited=false;draftHardware={dpi:actual.dpi,scroll:actual.scroll?.mode||'ratchet',sensitivity:actual.scroll?.sensitivity??50,force:actual.scroll?.force??50};toast('已应用，并确认鼠标实际设置');}
     else toast(result.error||'未能确认设置，请重试读取。',true);
   } catch(error){verified=false;toast(String(error),true);}
   finally{hardwareBusy=false;renderHardware();}
@@ -288,9 +369,10 @@ async function poll(force=false) {
     const next=JSON.stringify(targets.map(d=>d.registry_id).sort());
     if(next!==topology||force){
       topology=next;deviceGeneration++;verified=false;lastProbe=0;
-      if(targets.length===0){actual=null;if(!hardwareDraftEdited)draftHardware=null;setConnectionGate(true);$('connection-dot').className='status-dot pending';$('connection-text').textContent='鼠标未连接';$('battery').textContent='电量 —';renderHardware();}
+      if(targets.length===0){actual=null;if(!hardwareDraftEdited)draftHardware=null;setConnectionGate(true);$('connection-dot').className='status-dot pending';$('connection-text').textContent='鼠标未连接';renderBattery(null);renderHardware();}
       else {if(!hardwareBusy)await probe();}
     } else if(targets.length>0&&!verified&&!hardwareBusy&&Date.now()-lastProbe>(connectionMissing?8000:30000)&&!document.hidden){await probe();}
+    else if(verified&&!document.hidden&&Date.now()-lastBatteryProbe>15000){await refreshBattery();}
   } catch(error){if(force)toast('暂时无法检测鼠标，请稍后重试。',true);}
   finally{polling=false;renderRefreshControls();}
 }
@@ -388,6 +470,36 @@ async function smokeCheck() {
   const closeButton=$('close-editor').getBoundingClientRect(),closeGlyph=$('close-editor').querySelector('svg').getBoundingClientRect();
   const closeGlyphCentered=Math.abs(closeButton.x+closeButton.width/2-closeGlyph.x-closeGlyph.width/2)<.5&&Math.abs(closeButton.y+closeButton.height/2-closeGlyph.y-closeGlyph.height/2)<.5;
   const scrollbarHidden=getComputedStyle($('button-editor')).scrollbarWidth==='none';
+  chooseButton('back');
+  const originalBack=draftConfig.back;
+  chooseAction('shortcut');
+  const focusStartsRecording=recording&&$('shortcut').readOnly&&document.activeElement===$('shortcut')&&!$('record-shortcut');
+  const captured=new KeyboardEvent('keydown',{key:'K',code:'KeyK',metaKey:true,shiftKey:true,bubbles:true,cancelable:true});
+  $('shortcut').dispatchEvent(captured);
+  const isMac=runtimeState.platform!=='windows';
+  const shortcutCaptured=draftConfig.back===`${isMac?'Cmd':'Win'}+Shift+K`&&captured.defaultPrevented&&chosenAction==='shortcut';
+  $('shortcut').blur();
+  const blurStopsRecording=!recording;
+  let categoryActionSelected=true,horizontalSelection=true,appPickerAvailable=true;
+  if(isMac){
+  chooseAction('more');
+  $('more-category').value='editing';$('more-category').dispatchEvent(new Event('change'));
+  $('more-action').value='Cmd+C';$('more-action').dispatchEvent(new Event('change'));
+  categoryActionSelected=chosenAction==='more'&&!$('more-editor').hidden&&draftConfig.back==='Cmd+C'&&mappingDirty();
+  chooseAction('水平滚动');
+  horizontalSelection=draftConfig.back==='水平滚动'&&$('save-mapping').dataset.state==='pending';
+  chooseAction('application');
+  appPickerAvailable=!$('application-editor').hidden&&draftConfig.back==='水平滚动';
+  }
+  draftConfig.back=originalBack;editorMode=null;chooseButton(null);
+  updateDeviceStatus({ok:true,target_verified:true,status:{capabilities:{dpi:true,scroll:true,smart_shift:true,scroll_force:true},dpi:1000,dpi_ranges:[{min:200,max:4000,step:50}],scroll:{mode:'smart_shift',sensitivity:50,force:45},battery:{percent:80,status:'recharging'}}});
+  draftHardware={dpi:1000,scroll:'smart_shift',sensitivity:50,force:45};hardwareDraftEdited=false;renderHardware();
+  $('scroll-force').value='60';$('scroll-force').dispatchEvent(new Event('input'));
+  const forceDraftSeparate=isMac?draftHardware.force===60&&actual.scroll.force===45&&hardwareDirty()&&!$('scroll-force-controls').hidden&&$('scroll-force').min==='1':$('scroll-force-controls').hidden;
+  const chargingVisible=$('battery').textContent==='充电中 80%'&&$('battery').classList.contains('charging');
+  renderBattery({percent:100,status:'full'});
+  const fullChargeVisible=$('battery').textContent==='已充满 100%'&&!$('battery').classList.contains('charging');
+
   // Verify the disconnected layer with the actual WebView hit-testing/layout.
   setConnectionGate(true);
   const gate=$('connection-gate'),gateBounds=gate.getBoundingClientRect();
@@ -410,15 +522,18 @@ async function smokeCheck() {
   const connectionRestoresContent=gate.hidden&&!document.querySelector('.device-header').inert&&!document.querySelector('.workspace').inert;
   page('buttons');
   renderRuntime(original);
-  const checks={connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
+  const checks={focusStartsRecording,shortcutCaptured,blurStopsRecording,categoryActionSelected,horizontalSelection,appPickerAvailable,forceDraftSeparate,chargingVisible,fullChargeVisible,connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
   const report={ok:Object.values(checks).every(Boolean),...checks,windowVisible:true,frontendLoaded:true,mappingActive:runtimeState.active,configWritten:false,hardwareWrites:false,permissionRequested:false};
   await invoke('smoke_report',{report});
 }
 $$('[data-page]').forEach(el=>el.addEventListener('click',()=>page(el.dataset.page)));
 $$('[data-button]').forEach(el=>el.addEventListener('click',()=>chooseButton(el.dataset.button)));
 $$('[data-action]').forEach(el=>el.addEventListener('click',()=>chooseAction(el.dataset.action)));
-$('shortcut').addEventListener('input',()=>{draftConfig[selectedButton]=$('shortcut').value;updateDraftLabel();});
-$('record-shortcut').addEventListener('click',()=>{recording=!recording;$('record-shortcut').textContent=recording?'按下组合键…':'录制';if(recording)$('shortcut').focus();});
+$('shortcut').addEventListener('focus',beginRecording);
+$('shortcut').addEventListener('click',beginRecording);
+$('shortcut').addEventListener('blur',stopRecording);
+$('more-category').addEventListener('change',()=>{selectedCategory=$('more-category').value;renderMoreSelectors();});
+$('more-action').addEventListener('change',()=>{if(selectedButton&&$('more-action').value){draftConfig[selectedButton]=$('more-action').value;renderAction();}});
 document.addEventListener('keydown',record,true);
 $('close-editor').addEventListener('click',()=>chooseButton(null));
 $('close-hardware').addEventListener('click',()=>chooseButton(null));
@@ -432,6 +547,8 @@ $('save-mapping').addEventListener('click',saveMapping);$('mapping-toggle').addE
 $('dpi-range').addEventListener('input',()=>{if(!draftHardware)return;draftHardware.dpi=Number($('dpi-range').value);hardwareDraftEdited=hardwareDirty();renderHardware();});
 $$('[data-mode]').forEach(el=>el.addEventListener('click',()=>{if(!draftHardware)return;draftHardware.scroll=el.dataset.mode;hardwareDraftEdited=hardwareDirty();renderHardware();}));
 $('sensitivity').addEventListener('input',()=>{if(!draftHardware)return;draftHardware.sensitivity=Number($('sensitivity').value);hardwareDraftEdited=hardwareDirty();renderHardware();});
+$('scroll-force').addEventListener('input',()=>{if(!draftHardware)return;draftHardware.force=Number($('scroll-force').value);hardwareDraftEdited=hardwareDirty();renderHardware();});
+$('choose-application').addEventListener('click',chooseApplication);
 $('apply-hardware').addEventListener('click',applyHardware);
 for(const id of ['refresh-hardware','refresh-device'])$(id).addEventListener('click',()=>probe(true));
 $('gate-authorize').addEventListener('click',requestPermissions);
@@ -446,7 +563,7 @@ async function start() {
     renderPermissions();
     if(!invoke){throw new Error('这是界面预览。鼠标控制需要在 Logi Lite 应用中运行。');}
     const result=await native({action:'state'});renderRuntime(result,true);renderHardware();
-    if(result.error)toast(result.error,true);
+    await loadActionCatalog();
     if(result.smoke){await smokeCheck();return;}
     await poll();setInterval(poll,4000);
   } catch(error){toast(error.message,true);}

@@ -64,7 +64,29 @@ pub(crate) fn parse_action(text: &str) -> Result<Action, String> {
         return Ok(Action::Disabled);
     }
     #[cfg(target_os = "macos")]
-    if matches!(text, "打开 App" | "调度中心") {
+    if matches!(
+        text,
+        "打开 App"
+            | "调度中心"
+            | "水平滚动"
+            | "系统设置"
+            | "计算器"
+            | "音量增加"
+            | "音量减小"
+            | "静音切换"
+            | "播放或暂停"
+            | "下一首"
+            | "上一首"
+            | "亮度增加"
+            | "亮度减小"
+    ) || text.starts_with("打开应用:")
+    {
+        if text.starts_with("打开应用:") {
+            let path = text.strip_prefix("打开应用:").unwrap();
+            if !path.starts_with('/') || !path.ends_with(".app") {
+                return Err("应用必须是绝对路径的 .app".into());
+            }
+        }
         return Ok(Action::System);
     }
     let parts: Vec<_> = text.split('+').map(str::trim).collect();
@@ -231,10 +253,29 @@ mod tests {
             "Win+Tab",
             "打开 App",
             "调度中心",
+            "水平滚动",
+            "打开应用:/Applications/Test.app",
+            "系统设置",
+            "计算器",
+            "音量增加",
+            "音量减小",
+            "静音切换",
+            "播放或暂停",
+            "下一首",
+            "上一首",
+            "亮度增加",
+            "亮度减小",
         ] {
             assert!(parse_action(value).is_ok(), "{value}");
         }
-        for value in ["Cmd+Win+C", "Alt+Option+Left", "F21", "F24"] {
+        for value in [
+            "Cmd+Win+C",
+            "Alt+Option+Left",
+            "F21",
+            "F24",
+            "打开应用:Test.app",
+            "打开应用:/tmp/test.sh",
+        ] {
             assert!(parse_action(value).is_err(), "{value}");
         }
     }
