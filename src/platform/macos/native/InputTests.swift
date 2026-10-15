@@ -28,6 +28,27 @@ enum InputTests {
         assert(legacy.back == "默认" && legacy.forward == "Cmd+C" && legacy.middle == "默认")
         assert(legacy.horizontalScroll.back && !legacy.horizontalScroll.forward)
         assert(!legacy.horizontalScroll.enabled(for:2))
+        assert(legacy.top == "默认") // old files preserve firmware wheel-mode behavior
+        var topConfig = legacy
+        topConfig.top = "调度中心"
+        let restoredTop = try JSONDecoder().decode(MouseConfig.self, from:JSONEncoder().encode(topConfig))
+        assert(restoredTop.top == "调度中心" && restoredTop.middle == "默认")
+        assert(restoredTop.back == "默认" && restoredTop.horizontalScroll.back)
+        guard case .system(.missionControl) = try ShortcutParser.parse(restoredTop.top) else {
+            fatalError("Top-button actions must use the shared action parser")
+        }
+        // Validate the top action even while disabled, without installing an event tap.
+        let pausedInput = MouseInput()
+        topConfig.enabled = false
+        topConfig.top = "水平滚动"
+        do {
+            try pausedInput.configure(topConfig)
+            fatalError("Top button must reject side-only horizontal scrolling")
+        } catch {}
+        topConfig.top = "Cmd+C"
+        try pausedInput.configure(topConfig)
+        assert(!pausedInput.active)
+        pausedInput.performTopButton() // inactive HID notifications cannot post input
         var hold = HeldSideButtons()
         hold.begin(button:2)
         assert(!hold.scroll(hasVerticalMotion:true))

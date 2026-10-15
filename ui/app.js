@@ -2,7 +2,7 @@
 const $ = id => document.getElementById(id);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const invoke = window.__TAURI__?.core.invoke;
-const BUTTONS = {back:'后退侧键',forward:'前进侧键',middle:'中键（鼠标滚轮）'};
+const BUTTONS = {back:'后退侧键',forward:'前进侧键',middle:'中键（鼠标滚轮）',top:'顶部按钮'};
 const ACTIONS = new Set(['默认','禁用','打开 App','调度中心']);
 let actionCatalog = {categories:[]}, editorMode=null;
 let selectedCategory='',openSelect=null;
@@ -29,10 +29,13 @@ async function native(request) {
 const ready = () => Boolean(runtimeState?.permissions?.accessibility && runtimeState?.permissions?.inputMonitoring && runtimeState?.permissions?.postEvents);
 function normalizeConfig(config) {
   const value=clone(config);
-  if(runtimeState?.platform!=='windows')value.horizontalScroll={back:false,forward:false,...value.horizontalScroll};
+  if(runtimeState?.platform!=='windows'){
+    value.horizontalScroll={back:false,forward:false,...value.horizontalScroll};
+    value.top??='默认';
+  }
   return value;
 }
-const mappingDirty = () => draftConfig && savedConfig && (['back','forward','middle'].some(key=>draftConfig[key]!==savedConfig[key])||['back','forward'].some(key=>Boolean(draftConfig.horizontalScroll?.[key])!==Boolean(savedConfig.horizontalScroll?.[key])));
+const mappingDirty = () => draftConfig && savedConfig && (Object.keys(BUTTONS).some(key=>draftConfig[key]!==savedConfig[key])||['back','forward'].some(key=>Boolean(draftConfig.horizontalScroll?.[key])!==Boolean(savedConfig.horizontalScroll?.[key])));
 function commitState(id,state,label,icon,description) {
   const button=$(id);
   button.dataset.state=state;
@@ -73,7 +76,13 @@ function renderRuntime(result, initial=false) {
   }
   for(const action of ['application','more']){const el=document.querySelector(`[data-action="${action}"]`);el.hidden=result.platform==='windows';}
   renderPermissions();
+  renderTopStatus();
   updateDraftLabel();
+}
+function renderTopStatus() {
+  const message=runtimeState?.topButtonStatus||'';
+  $('top-button-status').textContent=message;
+  $('top-button-status').hidden=selectedButton!=='top'||!message;
 }
 async function windowAction(action) {
   if (!invoke) return;
@@ -139,6 +148,7 @@ function renderConnectionGate() {
 }
 function chooseButton(key) {
   if(key&&!ready())return;
+  if(key==='top'&&runtimeState?.platform==='windows')return;
   if(selectedButton!==key)editorMode=null;
   selectedCategory='';
   selectedButton=key;
@@ -169,8 +179,11 @@ function openHardware() {
   setPanel('hardware');
 }
 function renderAction() {
+  renderTopStatus();
   if (!draftConfig || !selectedButton || !ready()) return;
   const value=draftConfig[selectedButton];
+  document.querySelector('[data-action="默认"] span').textContent=selectedButton==='top'?'切换滚轮模式':'默认';
+  document.querySelector('[data-action="默认"] use').setAttribute('href',selectedButton==='top'?'#i-refresh':'#i-arrow');
   chosenAction=editorMode||(ACTIONS.has(value)?value:value?.startsWith('打开应用:')?'application':actionCatalog.categories.some(c=>c.actions?.some(a=>a.value===value))?'more':'shortcut');
   $$('.action-option').forEach(el=>{el.classList.toggle('selected',el.dataset.action===chosenAction);el.setAttribute('aria-pressed',String(el.dataset.action===chosenAction));});
   $('shortcut-editor').hidden=chosenAction!=='shortcut';
@@ -178,7 +191,7 @@ function renderAction() {
   $('application-editor').hidden=chosenAction!=='application';
   $('shortcut').value=chosenAction==='shortcut'&&!ACTIONS.has(value)&&!value.startsWith('打开应用:')?value:'';
   renderApplication(value);
-  $('horizontal-scroll-row').hidden=selectedButton==='middle'||runtimeState?.platform==='windows';
+  $('horizontal-scroll-row').hidden=!['back','forward'].includes(selectedButton)||runtimeState?.platform==='windows';
   $('horizontal-scroll-toggle').checked=Boolean(draftConfig.horizontalScroll?.[selectedButton]);
   if(chosenAction==='more')renderMoreSelectors(value);
   updateDraftLabel();
@@ -574,7 +587,7 @@ async function smokeCheck() {
   const shortcutCaptured=draftConfig.back===`${isMac?'Cmd':'Win'}+Shift+K`&&captured.defaultPrevented&&chosenAction==='shortcut';
   $('shortcut').blur();
   const blurStopsRecording=!recording;
-  let categoryActionSelected=true,horizontalSelection=true,appPickerAvailable=true,applicationIconVisible=true,middleHasNoHorizontal=true,sideSwitchesIndependent=true,customSelectStyled=true;
+  let categoryActionSelected=true,horizontalSelection=true,appPickerAvailable=true,applicationIconVisible=true,middleHasNoHorizontal=true,sideSwitchesIndependent=true,customSelectStyled=true,topButtonIndependent=true,topDefaultMode=true,topHasNoHorizontal=true,topHotspotAligned=true,topCalloutFits=true,legacyTopDefault=true,topDeviceStatus=true;
   const originalHorizontal=clone(draftConfig.horizontalScroll||{back:false,forward:false});
   if(isMac){
     chooseAction('more');
@@ -590,6 +603,25 @@ async function smokeCheck() {
     chooseButton('forward');
     sideSwitchesIndependent=$('horizontal-scroll-toggle').checked===Boolean(originalHorizontal.forward);
     chooseButton('middle');middleHasNoHorizontal=$('horizontal-scroll-row').hidden;
+    const originalTop=draftConfig.top,originalMiddle=draftConfig.middle;
+    const legacyConfig=clone(draftConfig);delete legacyConfig.top;
+    legacyTopDefault=normalizeConfig(legacyConfig).top==='默认';
+    document.querySelector('[data-button="top"]').click();
+    topHasNoHorizontal=$('horizontal-scroll-row').hidden;
+    chooseAction('默认');
+    topDefaultMode=selectedButton==='top'&&$('selected-title').textContent==='顶部按钮'&&document.querySelector('[data-action="默认"] span').textContent==='切换滚轮模式';
+    chooseAction('禁用');
+    topButtonIndependent=draftConfig.top==='禁用'&&draftConfig.middle===originalMiddle&&mappingDirty()&&draftConfig.horizontalScroll.back===true;
+    const topImage=image.getBoundingClientRect(),top=document.querySelector('[data-button="top"]').getBoundingClientRect(),topLabel=document.querySelector('[data-button="top"] .hotspot-label').getBoundingClientRect();
+    topHotspotAligned=Math.abs((top.x+top.width/2-topImage.x)/topImage.width-.72)<.015&&Math.abs((top.y+top.height/2-topImage.y)/topImage.height-.34)<.015;
+    topCalloutFits=topLabel.left>=visual.left&&topLabel.right<=visual.right&&topLabel.top>middle.bottom&&topLabel.bottom<=visual.bottom;
+    const originalTopStatus=runtimeState.topButtonStatus;
+    runtimeState.topButtonStatus='顶部按钮等待鼠标连接';renderTopStatus();
+    topDeviceStatus=!$('top-button-status').hidden&&$('top-button-status').textContent==='顶部按钮等待鼠标连接';
+    chooseButton('middle');
+    topDeviceStatus=topDeviceStatus&&$('top-button-status').hidden;
+    runtimeState.topButtonStatus=originalTopStatus;
+    draftConfig.top=originalTop;
     chooseButton('back');chooseAction('application');
     appPickerAvailable=!$('application-editor').hidden&&draftConfig.back===previousAction;
     const app=await native({action:'applicationInfo',path:'/System/Applications/Calculator.app'});
@@ -629,7 +661,7 @@ async function smokeCheck() {
   const connectionRestoresContent=gate.hidden&&!document.querySelector('.device-header').inert&&!document.querySelector('.workspace').inert;
   page('buttons');
   renderRuntime(original);
-  const checks={settingsAnimated,rapidPageSwitchSafe,applicationIconVisible,middleHasNoHorizontal,sideSwitchesIndependent,customSelectStyled,focusStartsRecording,shortcutCaptured,blurStopsRecording,categoryActionSelected,horizontalSelection,appPickerAvailable,forceDraftSeparate,chargingVisible,fullChargeVisible,connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
+  const checks={topDeviceStatus,topButtonIndependent,topDefaultMode,topHasNoHorizontal,topHotspotAligned,topCalloutFits,legacyTopDefault,settingsAnimated,rapidPageSwitchSafe,applicationIconVisible,middleHasNoHorizontal,sideSwitchesIndependent,customSelectStyled,focusStartsRecording,shortcutCaptured,blurStopsRecording,categoryActionSelected,horizontalSelection,appPickerAvailable,forceDraftSeparate,chargingVisible,fullChargeVisible,connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
   const report={ok:Object.values(checks).every(Boolean),...checks,windowVisible:true,frontendLoaded:true,mappingActive:runtimeState.active,configWritten:false,hardwareWrites:false,permissionRequested:false};
   await invoke('smoke_report',{report});
 }

@@ -48,6 +48,12 @@ private final class DesktopRuntime {
     var activation = MappingActivationPolicy(defaultPending:false)
     var configLoaded = false
     var shuttingDown = false
+    var topButtonStatus = ""
+    private var topSelection = "默认"
+    private var topGeneration = 0
+    private var permissionTimer: Timer?
+    private var suspended = false
+    private var workspaceObservers: [NSObjectProtocol] = []
     private let mappingChoiceKey = "desktop.mappingChoice.v1"
 
     func start(smoke: Bool) {
@@ -65,12 +71,48 @@ private final class DesktopRuntime {
         activation = MappingActivationPolicy(defaultPending:!UserDefaults.standard.bool(forKey:mappingChoiceKey))
         needsOnboarding = !UserDefaults.standard.bool(forKey:"desktop.permissionOnboarding.v1") && !InputPermissions().ready
         input.onStateChange = { [weak self] in
-            guard let self, !self.input.active, !self.shuttingDown, InputPermissions().ready else { return }
+            guard let self else { return }
+            self.synchronizeTopButton()
+            guard !self.input.active, !self.shuttingDown, InputPermissions().ready else { return }
             DispatchQueue.main.async { [weak self] in self?.persistPause() }
         }
         input.onActionError = { [weak self] in self?.error = $0 }
         if !config.enabled { do { try input.configure(config) } catch { self.error = error.localizedDescription } }
         reconcilePermissions(InputPermissions().ready)
+        synchronizeTopButton()
+        permissionTimer = Timer.scheduledTimer(withTimeInterval:2, repeats:true) { [weak self] _ in
+            guard let self else { return }
+            self.reconcilePermissions(InputPermissions().ready)
+            self.synchronizeTopButton()
+        }
+        for name in [NSWorkspace.willSleepNotification, NSWorkspace.sessionDidResignActiveNotification] {
+            workspaceObservers.append(NSWorkspace.shared.notificationCenter.addObserver(forName:name, object:nil, queue:.main) { [weak self] _ in
+                self?.suspended = true; self?.synchronizeTopButton(wait:true)
+            })
+        }
+        for name in [NSWorkspace.didWakeNotification, NSWorkspace.sessionDidBecomeActiveNotification] {
+            workspaceObservers.append(NSWorkspace.shared.notificationCenter.addObserver(forName:name, object:nil, queue:.main) { [weak self] _ in
+                self?.suspended = false; self?.synchronizeTopButton()
+            })
+        }
+    }
+    func synchronizeTopButton(wait: Bool = false) {
+        guard !smoke else { return }
+        let selection = input.active && !shuttingDown && !suspended && InputPermissions().ready ? config.top.trimmingCharacters(in:.whitespacesAndNewlines) : "默认"
+        guard selection != topSelection || (wait && topGeneration > 0) else { return }
+        topSelection = selection; topGeneration += 1
+        topButtonStatus = selection == "默认" ? "" : "正在连接顶部按钮…"
+        let generation = topGeneration
+        TopButtonHardware.configure(enabled:selection != "默认", onPress: { [weak self] in
+            guard let self, self.topGeneration == generation, self.input.active,
+                  !self.shuttingDown, !self.suspended, InputPermissions().ready else { return }
+            self.input.performTopButton()
+        }, onStatus: { [weak self] message in
+            DispatchQueue.main.async {
+                guard let self, self.topGeneration == generation else { return }
+                self.topButtonStatus = message ?? ""
+            }
+        }, wait:wait)
     }
     func resolveMappingChoice() {
         activation.resolveDefault()
@@ -101,10 +143,11 @@ private final class DesktopRuntime {
     func snapshot() -> [String:Any] {
         let permissions = InputPermissions()
         reconcilePermissions(permissions.ready)
+        synchronizeTopButton()
         let data = try? JSONEncoder().encode(config)
         let configValue = data.flatMap { try? JSONSerialization.jsonObject(with:$0) } ?? [:]
         return ["ok":true, "config":configValue, "active":input.active,
-                "inputStatus":input.status, "permissions":permissions.dictionary,
+                "inputStatus":input.status, "topButtonStatus":topButtonStatus, "permissions":permissions.dictionary,
                 "onboarding":needsOnboarding, "smoke":smoke, "appIconLoaded":appIconLoaded, "error":error ?? ""]
     }
     func perform(_ request: [String:Any]) throws -> [String:Any] {
@@ -136,13 +179,13 @@ private final class DesktopRuntime {
         case "save":
             guard let value = request["config"] else { throw InputError.invalid("缺少配置") }
             var updated = try JSONDecoder().decode(MouseConfig.self, from:JSONSerialization.data(withJSONObject:value))
-            _ = try ShortcutParser.parse(updated.back); _ = try ShortcutParser.parse(updated.forward); _ = try ShortcutParser.parse(updated.middle)
+            _ = try ShortcutParser.parse(updated.back); _ = try ShortcutParser.parse(updated.forward); _ = try ShortcutParser.parse(updated.middle); _ = try ShortcutParser.parse(updated.top)
             if updated.enabled && !InputPermissions().ready { throw InputError.invalid("请先在设置中完成辅助功能和输入监控授权") }
             updated = try DesktopConfigStore.save(updated)
             config = updated
             do { try input.configure(updated) } catch { input.pause(); persistPause(); throw error }
             error = nil
-        case "shutdown": shuttingDown = true; input.pause()
+        case "shutdown": shuttingDown = true; synchronizeTopButton(wait:true); input.pause()
         case "pause": resolveMappingChoice(); input.pause(); persistPause()
         case "toggle":
             if input.active { resolveMappingChoice(); input.pause(); persistPause() }

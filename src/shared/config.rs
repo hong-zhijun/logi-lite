@@ -10,6 +10,9 @@ pub struct Config {
     pub forward: String,
     pub middle: String,
     #[cfg(target_os = "macos")]
+    #[serde(default = "default_top_action")]
+    pub top: String,
+    #[cfg(target_os = "macos")]
     #[serde(default, rename = "horizontalScroll")]
     pub horizontal_scroll: HorizontalScrollConfig,
     // Accept and discard the retired field when reading experiment-era files.
@@ -21,6 +24,11 @@ pub struct Config {
         deserialize_with = "discard_retired_gestures"
     )]
     pub retired_gestures: (),
+}
+
+#[cfg(target_os = "macos")]
+fn default_top_action() -> String {
+    "默认".into()
 }
 
 #[cfg(target_os = "macos")]
@@ -45,6 +53,8 @@ impl Default for Config {
             back: "默认".into(),
             forward: "默认".into(),
             middle: "默认".into(),
+            #[cfg(target_os = "macos")]
+            top: default_top_action(),
             #[cfg(target_os = "macos")]
             horizontal_scroll: HorizontalScrollConfig::default(),
             #[cfg(target_os = "macos")]
@@ -173,6 +183,8 @@ pub fn validate(config: &Config) -> Result<(), String> {
     ] {
         parse_action(value).map_err(|error| format!("{name}：{error}"))?;
     }
+    #[cfg(target_os = "macos")]
+    parse_action(&config.top).map_err(|error| format!("顶部按钮：{error}"))?;
     Ok(())
 }
 
@@ -255,6 +267,38 @@ pub fn save(config: &Config) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn top_button_is_backward_compatible_and_validated_independently() {
+        let old =
+            r#"{"version":1,"enabled":true,"back":"默认","forward":"Cmd+C","middle":"Cmd+V"}"#;
+        let mut config: Config = serde_json::from_str(old).unwrap();
+        assert_eq!(config.top, "默认");
+        validate(&config).unwrap();
+        config.top = "调度中心".into();
+        let encoded = serde_json::to_string(&config).unwrap();
+        let restored: Config = serde_json::from_str(&encoded).unwrap();
+        assert_eq!(restored, config);
+        assert_eq!(restored.middle, "Cmd+V");
+        for value in ["禁用", "Cmd+Shift+4", "打开应用:/Applications/Test.app"] {
+            config.top = value.into();
+            validate(&config).unwrap();
+        }
+        config.top = "水平滚动".into();
+        assert!(validate(&config).unwrap_err().starts_with("顶部按钮："));
+    }
+
+    #[cfg(not(target_os = "macos"))]
+    #[test]
+    fn top_button_does_not_change_other_platform_configuration() {
+        assert!(
+            serde_json::to_value(Config::default())
+                .unwrap()
+                .get("top")
+                .is_none()
+        );
+    }
+
     #[cfg(target_os = "macos")]
     #[test]
     fn horizontal_scroll_is_separate_and_migrates_legacy_actions() {

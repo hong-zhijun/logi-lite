@@ -7,9 +7,10 @@ struct MouseConfig: Codable {
     var back = "默认"
     var forward = "默认"
     var middle = "默认"
+    var top = "默认"
     var horizontalScroll = HorizontalScrollConfig()
 
-    enum CodingKeys: String, CodingKey { case version, enabled, back, forward, middle, horizontalScroll }
+    enum CodingKeys: String, CodingKey { case version, enabled, back, forward, middle, top, horizontalScroll }
     init() {}
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy:CodingKeys.self)
@@ -18,6 +19,7 @@ struct MouseConfig: Codable {
         back = try values.decode(String.self, forKey:.back)
         forward = try values.decode(String.self, forKey:.forward)
         middle = try values.decode(String.self, forKey:.middle)
+        top = try values.decodeIfPresent(String.self, forKey:.top) ?? "默认"
         horizontalScroll = try values.decodeIfPresent(HorizontalScrollConfig.self, forKey:.horizontalScroll) ?? HorizontalScrollConfig()
         if back.trimmingCharacters(in:.whitespacesAndNewlines) == "水平滚动" { back = "默认"; horizontalScroll.back = true }
         if forward.trimmingCharacters(in:.whitespacesAndNewlines) == "水平滚动" { forward = "默认"; horizontalScroll.forward = true }
@@ -305,6 +307,8 @@ final class MouseInput {
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
     private var actions: [Int64: MouseAction] = [:]
+    // The wheel-mode key is delivered by HID++, never a guessed CGEvent button number.
+    private var topAction: MouseAction = .original
     private var pairs = ButtonPairs()
     private var horizontalSettings = HorizontalScrollConfig()
     private var heldSideButtons = HeldSideButtons()
@@ -320,10 +324,12 @@ final class MouseInput {
         let parsed = try [Int64(3):ShortcutParser.parse(config.back),
                           Int64(4):ShortcutParser.parse(config.forward),
                           Int64(2):ShortcutParser.parse(config.middle)]
+        let parsedTop = try ShortcutParser.parse(config.top)
         revision += 1
         heldSideButtons.cancel()
         pendingOriginalClicks.removeAll()
         actions = parsed
+        topAction = parsedTop
         horizontalSettings = config.horizontalScroll
         guard config.enabled else { pause("按键映射已暂停"); return }
         guard InputPermissions().ready else {
@@ -335,6 +341,18 @@ final class MouseInput {
         status = "映射运行中（所有鼠标）"
         if let tap { CGEvent.tapEnable(tap: tap, enable: true) }
         onStateChange?()
+    }
+
+    /// Called on main for a physical HID++ top-button press, after diversion is active.
+    /// A queued press cannot run after pause or after its mapping changes.
+    func performTopButton() {
+        guard active else { return }
+        let expectedRevision = revision
+        let action = topAction
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.active, self.revision == expectedRevision else { return }
+            self.perform(action)
+        }
     }
 
     func pause(_ reason: String = "按键映射已暂停") {
