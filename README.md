@@ -1,6 +1,6 @@
 # Logi Lite
 
-面向 Logitech MX Anywhere 3 的轻量鼠标增强工具，使用 Rust 共享协议代码。macOS 0.2 使用 Tauri 2 / WKWebView 界面，Swift / AppKit、CGEventTap 和 IOKit 后端；Windows 目前保留 Win32 界面，新界面的 Windows 适配尚未实现。基础鼠标输入由系统驱动处理，Logi Lite 提供快捷键映射与 HID++ 设备设置。
+面向 Logitech MX Anywhere 3 的轻量鼠标增强工具，使用 Rust 共享协议代码。Windows 和 macOS 0.2 共用 Tauri 2 / WKWebView 界面，平台后端分别使用 Windows HID/Input 与 Swift / AppKit、CGEventTap、IOKit。基础鼠标输入由系统驱动处理，Logi Lite 提供快捷键映射与 HID++ 设备设置。
 
 **当前提供 Windows x64 和 macOS 原生测试版。Mac 蓝牙 MX Anywhere 3 已读取电量和设备能力；用户已验证侧键映射、禁用、窗口关闭后常驻、配置保留、DPI、自由／段落滚动及蓝牙重连。SmartShift 阈值的实际效果尚未确认。**
 
@@ -9,6 +9,7 @@
 | 功能 | 当前状态 |
 |---|---|
 | Windows 托盘 / Mac 菜单栏，关闭窗口后继续运行 | 已实现 |
+| Windows 自定义标题栏按钮；macOS 保留系统标题栏 | 已实现 |
 | 两个侧键、中键设为快捷键、默认或禁用 | 已实现，全局模式 |
 | 本地保存配置，启动时恢复快捷键 | 已实现 |
 | 暂停、恢复、退出和紧急暂停热键 | 已实现 |

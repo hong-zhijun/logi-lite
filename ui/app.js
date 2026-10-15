@@ -38,6 +38,7 @@ function updateDraftLabel() {
   $('save-mapping').disabled=saveBusy||!ready()||!dirty;
 }
 function renderRuntime(result, initial=false) {
+  document.documentElement.dataset.platform=result.platform||(/Windows/i.test(navigator.platform)?'windows':'macos');
   const wasPermitted=ready();
   runtimeState = result;
   if(wasPermitted!==ready()){verified=false;topology=null;}
@@ -59,6 +60,11 @@ function renderRuntime(result, initial=false) {
   }
   renderPermissions();
   updateDraftLabel();
+}
+async function windowAction(action) {
+  if (!invoke) return;
+  try { await invoke(action); }
+  catch (error) { toast(error.message||String(error),true); }
 }
 function page(name) {
   currentPage=name;
@@ -297,7 +303,7 @@ async function smokeCheck() {
   $('mapping-settings').click();
   const mappingSettingsAccessible=!$('page-settings').hidden&&$('page-settings').contains($('mapping-toggle'));
   page('buttons');
-  const compactLayout=!document.querySelector('.sidebar,.version,.footer,.button-tabs,.nav-label,#page-buttons .visual-heading')&&document.querySelector('.titlebar').textContent.trim()==='';
+  const compactLayout=!document.querySelector('.sidebar,.version,.footer,.button-tabs,.nav-label,#page-buttons .visual-heading')&&(document.documentElement.dataset.platform==='windows'||document.querySelector('.titlebar').textContent.trim()==='');
   const header=document.querySelector('.device-header').getBoundingClientRect();
   const workspace=document.querySelector('.workspace').getBoundingClientRect();
   const capsule=document.querySelector('.connection').getBoundingClientRect();
@@ -375,6 +381,9 @@ $('close-editor').addEventListener('click',()=>chooseButton(null));
 $('close-hardware').addEventListener('click',()=>chooseButton(null));
 $('wheel-hotspot').addEventListener('click',openHardware);
 $('settings-toggle').addEventListener('click',()=>page(currentPage==='settings'?'buttons':'settings'));
+$('window-minimize').addEventListener('click',()=>windowAction('window_minimize'));
+$('window-maximize').addEventListener('click',()=>windowAction('window_toggle_maximize'));
+$('window-close').addEventListener('click',()=>windowAction('window_close'));
 $('save-mapping').addEventListener('click',saveMapping);$('mapping-toggle').addEventListener('change',toggleMapping);
 $('dpi-range').addEventListener('input',()=>{if(!draftHardware)return;draftHardware.dpi=Number($('dpi-range').value);hardwareDraftEdited=hardwareDirty();renderHardware();});
 $$('[data-mode]').forEach(el=>el.addEventListener('click',()=>{if(!draftHardware)return;draftHardware.scroll=el.dataset.mode;hardwareDraftEdited=hardwareDirty();renderHardware();}));

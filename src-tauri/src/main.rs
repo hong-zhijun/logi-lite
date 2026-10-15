@@ -40,6 +40,25 @@ fn native(request: Value, hardware: bool) -> Result<Value, String> {
     }
 }
 
+#[tauri::command]
+fn window_minimize(window: tauri::WebviewWindow) -> Result<(), String> {
+    window.minimize().map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+fn window_toggle_maximize(window: tauri::WebviewWindow) -> Result<bool, String> {
+    let maximized = window.is_maximized().map_err(|error| error.to_string())?;
+    if maximized { window.unmaximize().map_err(|error| error.to_string())?; }
+    else { window.maximize().map_err(|error| error.to_string())?; }
+    Ok(!maximized)
+}
+
+#[tauri::command]
+fn window_close(window: tauri::WebviewWindow) -> Result<(), String> {
+    // Keep the process and input mapping alive; the tray menu can reopen it.
+    window.hide().map_err(|error| error.to_string())
+}
+
 #[cfg(windows)]
 fn native(request: Value, hardware: bool) -> Result<Value, String> {
     let result = logi_lite::platform::windows::desktop::request(request, hardware);
@@ -148,8 +167,12 @@ fn main() {
             smoke,
             hardware: Mutex::new(()),
         })
-        .invoke_handler(tauri::generate_handler![runtime, hardware, smoke_report])
+        .invoke_handler(tauri::generate_handler![runtime, hardware, smoke_report, window_minimize, window_toggle_maximize, window_close])
         .setup(move |app| {
+            #[cfg(windows)]
+            if let Some(window) = app.get_webview_window("main") {
+                window.set_decorations(false).map_err(std::io::Error::other)?;
+            }
             native(json!({"action":"init", "smoke":smoke}), false)
                 .map_err(std::io::Error::other)?;
             let open = MenuItem::with_id(app, "open", "打开 Logi Lite", true, None::<&str>)?;

@@ -22,7 +22,13 @@
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 17h.01"/></symbol>
 </defs></svg>
 <div class="app-shell">
-  <div class="titlebar" data-tauri-drag-region aria-hidden="true"></div>
+  <div class="titlebar" data-tauri-drag-region>
+    <div id="window-controls" class="window-controls" aria-label="窗口控制">
+      <button id="window-minimize" class="window-control" type="button" aria-label="最小化">−</button>
+      <button id="window-maximize" class="window-control" type="button" aria-label="最大化">□</button>
+      <button id="window-close" class="window-control close" type="button" aria-label="关闭窗口">×</button>
+    </div>
+  </div>
   <header class="device-header" data-tauri-drag-region>
     <div class="device-icon"><img src="assets/logo.png" alt="Logi Lite" draggable="false"></div>
     <h1>MX Anywhere 3</h1>

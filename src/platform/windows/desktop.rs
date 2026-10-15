@@ -100,6 +100,7 @@ fn current_state_locked(runtime: &RuntimeState) -> Result<Value, String> {
         "active": runtime.config.enabled && !input::is_paused(),
         "inputStatus": input::stats(),
         "smoke": runtime.smoke,
+        "platform": "windows",
         "appIconLoaded": true,
         "permissions": {"accessibility": true, "inputMonitoring": true, "postEvents": true}
     }))
