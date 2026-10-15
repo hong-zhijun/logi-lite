@@ -29,6 +29,14 @@
       <button id="window-close" class="window-control close" type="button" aria-label="关闭窗口"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m4.5 4.5 9 9M13.5 4.5l-9 9"/></svg></button>
     </div>
   </div>
+  <div id="connection-gate" class="connection-gate" hidden role="region" aria-labelledby="connection-gate-title" aria-live="polite">
+    <div class="connection-gate-card">
+      <div class="connection-gate-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mouse"/></svg></div>
+      <h2 id="connection-gate-title">请先连接鼠标</h2>
+      <p>开启鼠标并完成蓝牙或接收器连接，移动鼠标唤醒后即可继续。</p>
+      <button id="connection-refresh" class="primary-button" type="button">重新检测</button>
+    </div>
+  </div>
   <header class="device-header" data-tauri-drag-region>
     <div class="device-icon"><img src="assets/logo.png" alt="Logi Lite" draggable="false"></div>
     <h1>MX Anywhere 3</h1>

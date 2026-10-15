@@ -7,6 +7,7 @@ const ACTIONS = new Set(['默认','禁用','打开 App','调度中心']);
 let runtimeState = null, savedConfig = null, draftConfig = null, selectedButton = null, chosenAction = '默认';
 let hardwareResult = {}, actual = null, draftHardware = null, verified = false, hardwareBusy = false;
 let hardwareDraftEdited = false;
+let connectionMissing = false;
 let currentPage = 'buttons', selectedPanel = null;
 let topology = null, deviceGeneration = 0, saveBusy = false, recording = false, toastTimer, polling = false, lastProbe = 0;
 const clone = value => JSON.parse(JSON.stringify(value));
@@ -89,6 +90,23 @@ function renderPermissions() {
   }
   if(!permitted){$('connection-text').textContent=runtimeState?'等待授权':'正在检查权限…';$('connection-dot').className='status-dot pending';}
   if(gated)stopRecording();
+  renderConnectionGate();
+}
+function setConnectionGate(disconnected) {
+  connectionMissing=disconnected;
+  renderConnectionGate();
+}
+function renderConnectionGate() {
+  // Permission setup must remain reachable before device access is possible.
+  const blocked=connectionMissing&&ready();
+  const wasHidden=$('connection-gate').hidden;
+  $('connection-gate').hidden=!blocked;
+  document.querySelector('.device-header').inert=blocked;
+  document.querySelector('.workspace').inert=blocked;
+  if(blocked){
+    stopRecording();
+    if(wasHidden)$('connection-refresh').focus({preventScroll:true});
+  }
 }
 function chooseButton(key) {
   if(key&&!ready())return;
@@ -168,6 +186,8 @@ function hardwareDirty() {
 }
 function renderRefreshControls() {
   for(const id of ['refresh-hardware','refresh-device'])$(id).disabled=hardwareBusy||!ready();
+  $('connection-refresh').disabled=hardwareBusy||polling||!ready();
+  $('connection-refresh').textContent=hardwareBusy||polling?'正在检测…':'重新检测';
   $('refresh-hardware').classList.toggle('refreshing',hardwareBusy);
   $('refresh-hardware').setAttribute('aria-busy',String(hardwareBusy));
 }
@@ -233,8 +253,10 @@ async function probe(showMessage=false) {
     const result=await invoke('hardware',{request:{action:'probe'}});
     if (generation!==deviceGeneration) return;
     updateDeviceStatus(result);
+    // A receiver endpoint can remain present while its paired mouse is offline.
+    setConnectionGate(!verified);
     if(showMessage)toast(result.ok?'设备状态已更新':result.error||'读取失败，请唤醒鼠标后重试。',!result.ok);
-  } catch(error){verified=false;if(showMessage)toast(String(error),true);}
+  } catch(error){verified=false;setConnectionGate(true);if(showMessage)toast(String(error),true);}
   finally {hardwareBusy=false;renderHardware();}
 }
 async function applyHardware() {
@@ -256,7 +278,7 @@ async function applyHardware() {
   } catch(error){verified=false;toast(String(error),true);}
   finally{hardwareBusy=false;renderHardware();}
 }
-async function poll() {
+async function poll(force=false) {
   if(polling||!runtimeState||runtimeState.smoke)return;
   polling=true;
   try {
@@ -264,13 +286,13 @@ async function poll() {
     const metadata=await native({action:'metadata'});
     const targets=metadata.devices.filter(d=>d.hidpp_candidate);
     const next=JSON.stringify(targets.map(d=>d.registry_id).sort());
-    if(next!==topology){
+    if(next!==topology||force){
       topology=next;deviceGeneration++;verified=false;lastProbe=0;
-      if(targets.length!==1){actual=null;if(!hardwareDraftEdited)draftHardware=null;$('connection-dot').className='status-dot pending';$('connection-text').textContent=targets.length?'连接了多只目标鼠标':'鼠标未连接';$('battery').textContent='电量 —';renderHardware();}
+      if(targets.length===0){actual=null;if(!hardwareDraftEdited)draftHardware=null;setConnectionGate(true);$('connection-dot').className='status-dot pending';$('connection-text').textContent='鼠标未连接';$('battery').textContent='电量 —';renderHardware();}
       else {if(!hardwareBusy)await probe();}
-    } else if(targets.length===1&&!verified&&!hardwareBusy&&Date.now()-lastProbe>30000&&!document.hidden){await probe();}
-  } catch(error){/* Temporary read failures remain recoverable without recurring dialogs. */}
-  finally{polling=false;}
+    } else if(targets.length>0&&!verified&&!hardwareBusy&&Date.now()-lastProbe>(connectionMissing?8000:30000)&&!document.hidden){await probe();}
+  } catch(error){if(force)toast('暂时无法检测鼠标，请稍后重试。',true);}
+  finally{polling=false;renderRefreshControls();}
 }
 async function requestPermissions() {
   try {renderRuntime(await native({action:'requestPermissions'}));page('settings');toast('请在系统提示或系统设置中完成授权。');}
@@ -366,8 +388,29 @@ async function smokeCheck() {
   const closeButton=$('close-editor').getBoundingClientRect(),closeGlyph=$('close-editor').querySelector('svg').getBoundingClientRect();
   const closeGlyphCentered=Math.abs(closeButton.x+closeButton.width/2-closeGlyph.x-closeGlyph.width/2)<.5&&Math.abs(closeButton.y+closeButton.height/2-closeGlyph.y-closeGlyph.height/2)<.5;
   const scrollbarHidden=getComputedStyle($('button-editor')).scrollbarWidth==='none';
+  // Verify the disconnected layer with the actual WebView hit-testing/layout.
+  setConnectionGate(true);
+  const gate=$('connection-gate'),gateBounds=gate.getBoundingClientRect();
+  const connectionGateCoversContent=!gate.hidden&&Math.abs(gateBounds.top-titlebarHeight)<1&&Math.abs(gateBounds.left)<1&&Math.abs(gateBounds.right-innerWidth)<1&&Math.abs(gateBounds.bottom-innerHeight)<1;
+  const connectionGateBlocksBackground=document.querySelector('.device-header').inert&&document.querySelector('.workspace').inert&&document.activeElement===$('connection-refresh');
+  const gateCapturesPointer=gate.contains(document.elementFromPoint(innerWidth/2,innerHeight-8));
+  const closeControl=$('window-close'),closeRect=closeControl.getBoundingClientRect();
+  const closeControlAccessible=document.documentElement.dataset.platform!=='windows'||closeControl.contains(document.elementFromPoint(closeRect.x+closeRect.width/2,closeRect.y+closeRect.height/2));
+  const originalPlatform=document.documentElement.dataset.platform;
+  document.documentElement.dataset.platform='macos';
+  const macWindowControlsHidden=getComputedStyle($('window-controls')).display==='none';
+  document.documentElement.dataset.platform=originalPlatform;
+  page('settings');
+  const connectionGateBlocksSettings=!gate.hidden&&document.querySelector('.workspace').inert;
+  fixture.permissions={accessibility:false,inputMonitoring:false,postEvents:false};renderRuntime(fixture);
+  const permissionSetupAccessible=gate.hidden&&!document.querySelector('.workspace').inert;
+  fixture.permissions={accessibility:true,inputMonitoring:true,postEvents:true};renderRuntime(fixture);
+  const gateRestoredAfterPermission=!gate.hidden;
+  setConnectionGate(false);
+  const connectionRestoresContent=gate.hidden&&!document.querySelector('.device-header').inert&&!document.querySelector('.workspace').inert;
+  page('buttons');
   renderRuntime(original);
-  const checks={settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
+  const checks={connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
   const report={ok:Object.values(checks).every(Boolean),...checks,windowVisible:true,frontendLoaded:true,mappingActive:runtimeState.active,configWritten:false,hardwareWrites:false,permissionRequested:false};
   await invoke('smoke_report',{report});
 }
@@ -381,6 +424,7 @@ $('close-editor').addEventListener('click',()=>chooseButton(null));
 $('close-hardware').addEventListener('click',()=>chooseButton(null));
 $('wheel-hotspot').addEventListener('click',openHardware);
 $('settings-toggle').addEventListener('click',()=>page(currentPage==='settings'?'buttons':'settings'));
+$('connection-refresh').addEventListener('click',()=>poll(true));
 $('window-minimize').addEventListener('click',()=>windowAction('window_minimize'));
 $('window-maximize').addEventListener('click',()=>windowAction('window_toggle_maximize'));
 $('window-close').addEventListener('click',()=>windowAction('window_close'));
