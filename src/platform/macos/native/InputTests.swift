@@ -5,10 +5,10 @@ import AppKit
 @main
 enum InputTests {
     static func main() throws {
-        for text in ["默认", "禁用", "水平滚动", "Cmd+C", "Command+Shift+Z", "Option+Left", "ctrl + 2", "F20"] {
+        for text in ["默认", "禁用", "Cmd+C", "Command+Shift+Z", "Option+Left", "ctrl + 2", "F20"] {
             _ = try ShortcutParser.parse(text)
         }
-        for text in ["", "Cmd", "Cmd+", "Cmd+Command+C", "Alt+Option+C", "Ctrl+C+V", "F21", "Ctrl++", "手势按钮", "打开应用:NotAnAbsolute.app"] {
+        for text in ["水平滚动", "", "Cmd", "Cmd+", "Cmd+Command+C", "Alt+Option+C", "Ctrl+C+V", "F21", "Ctrl++", "手势按钮", "打开应用:NotAnAbsolute.app"] {
             do {
                 _ = try ShortcutParser.parse(text)
                 fatalError("Parser unexpectedly accepted \(text)")
@@ -21,6 +21,39 @@ enum InputTests {
         guard case .shortcut(let deleteKey, _) = try ShortcutParser.parse("Delete"), deleteKey == 117 else {
             fatalError("Delete must map to forward delete, not backspace")
         }
+        // Older files load with both independent toggles off; retired action
+        // values migrate to side settings and can never enable the middle click.
+        let legacy = try JSONDecoder().decode(MouseConfig.self, from:Data(
+            #"{"version":1,"enabled":true,"back":"水平滚动","forward":"Cmd+C","middle":"水平滚动"}"#.utf8))
+        assert(legacy.back == "默认" && legacy.forward == "Cmd+C" && legacy.middle == "默认")
+        assert(legacy.horizontalScroll.back && !legacy.horizontalScroll.forward)
+        assert(!legacy.horizontalScroll.enabled(for:2))
+        var hold = HeldSideButtons()
+        hold.begin(button:2)
+        assert(!hold.scroll(hasVerticalMotion:true))
+        assert(hold.release(button:2) == nil)
+        hold.begin(button:3)
+        assert(!hold.scroll(hasVerticalMotion:false))
+        assert(hold.release(button:3) == true) // no wheel: keep configured click
+        hold.begin(button:3); hold.begin(button:4)
+        assert(hold.scroll(hasVerticalMotion:true))
+        assert(hold.release(button:3) == false)
+        assert(hold.scroll(hasVerticalMotion:true)) // other held side is still active
+        assert(hold.release(button:4) == false)
+        assert(!hold.scroll(hasVerticalMotion:true))
+        hold.begin(button:3); hold.cancel()
+        assert(hold.release(button:3) == nil) // pause/reconfigure cancels delayed clicks
+        let app = ApplicationMetadata.read(path:"/System/Applications/Calculator.app")
+        assert(app["available"] as? Bool == true)
+        let icon = app["icon"] as! String
+        assert(icon.hasPrefix("data:image/png;base64,"))
+        let bytes = Data(base64Encoded:String(icon.dropFirst("data:image/png;base64,".count)))!
+        let bitmap = NSBitmapImageRep(data:bytes)!
+        assert(bitmap.pixelsWide == 64 && bitmap.pixelsHigh == 64)
+        let absent = ApplicationMetadata.read(path:"/Applications/LogiLiteMissingTest.app")
+        assert(absent["available"] as? Bool == false && absent["name"] as? String == "LogiLiteMissingTest")
+        assert(absent["icon"] as? String == "")
+        assert(ApplicationMetadata.read(path:"/System/Applications/Calculator.app/Contents/Info.plist")["available"] as? Bool == false)
         // Construct events only: no post(), permissions, actions or user config changes.
         let wheel = CGEvent(scrollWheelEvent2Source:nil, units:.pixel, wheelCount:2, wheel1:3, wheel2:2, wheel3:0)!
         wheel.setDoubleValueField(.scrollWheelEventFixedPtDeltaAxis1, value:0.125)

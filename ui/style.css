@@ -78,9 +78,6 @@ h3{font-size:14px;font-weight:600}
 .shortcut-row input{width:100%;cursor:pointer}
 .shortcut-row input.recording{border-color:#b98ae3;background:#fbf7ff;box-shadow:0 0 0 3px #7839cc18}
 #shortcut-editor{margin-top:16px}
-.more-selects{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.more-selects select{min-width:0;border:1px solid #e7e7e7;border-radius:8px;background:#fbfbfb;padding:9px;color:#656565;font-size:13px}
-.app-picker{margin-top:9px;width:100%}
 input[type=text],input:not([type]){border:1px solid #e7e7e7;border-radius:8px;min-width:0;flex:1;background:#fbfbfb;padding:9px;font-size:14px;color:#5a5a5a}
 .small-button,.secondary-button{background:#f5f5f5;border:1px solid #e9e9e9;color:#7f7f7f;border-radius:7px;padding:7px 10px;white-space:nowrap;font-size:13px}
 .small-button:hover,.secondary-button:hover{background:#eeeeee}
@@ -216,12 +213,50 @@ pre{overflow:auto;background:#f9f9f9;border-radius:8px;padding:12px;font-size:12
 .settings-card:last-child{margin-bottom:0}
 @media(prefers-reduced-motion:reduce){.commit-button[data-state=busy] svg{animation:none}}
 
-#more-editor,#application-editor{margin-top:20px}
-.more-selects{display:flex;flex-direction:column;gap:10px}
-.more-selects select{width:100%;min-width:0;max-width:100%;padding:10px 12px;border:1px solid #e8e2ee;border-radius:8px;background:#faf8fc;color:#65586f;font:inherit;font-size:14px}
-.application-name{font-size:14px;color:#706777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:12px}
-.app-picker{width:100%;padding:10px}
+/* Page changes share the mouse panel's restrained motion and spacing. */
+.device-content>.page{position:absolute;inset:0}
+.page[aria-hidden=true]{pointer-events:none;z-index:0}
+.page[aria-hidden=false]{z-index:1}
+.settings-toggle svg{transition:transform 260ms cubic-bezier(.22,1,.36,1)}
+.settings-toggle[aria-expanded=true] svg{transform:rotate(60deg)}
+#button-editor .editor-heading{margin-bottom:20px}
+#button-editor .action-option:not(.wide){min-height:56px;gap:7px}
+#button-editor .action-option.wide{min-height:44px;justify-content:center}
+#more-editor,#application-editor{margin-top:16px}
+.more-selects{display:flex;flex-direction:column;gap:8px}
+.select-caption{display:none}
+.action-select{width:100%;min-width:0;height:40px;display:flex;align-items:center;gap:10px;text-align:left;padding:0 12px;border:1px solid #e9e5ee;border-radius:10px;background:#faf9fc;color:#605568;font-size:14px}
+.action-select:hover:not(:disabled){background:#f5f1f9;border-color:#d6c3e8}
+.action-select[aria-expanded=true]{background:#f5effb;border-color:#c4a4e1;box-shadow:0 0 0 3px #7839cc0a}
+.select-icon{color:#9c85b1;width:17px;height:17px}
+.select-value{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.placeholder .select-value{color:#a69bad}
+.select-chevron{margin-left:auto;width:16px;height:16px;color:#a99ab6;transition:transform .2s}
+.action-select[aria-expanded=true] .select-chevron{transform:rotate(180deg)}
+.select-popover{position:fixed;z-index:30;padding:5px;border:1px solid #e7dfef;border-radius:13px;background:#fffffff7;box-shadow:0 10px 36px #3a25421a,0 2px 6px #3a254208;overflow-y:auto;scrollbar-width:none;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:select-enter 140ms ease-out}
+.select-popover::-webkit-scrollbar{display:none}
+.select-option{width:100%;display:flex;align-items:center;gap:12px;min-height:35px;padding:8px 10px;border-radius:8px;background:transparent;color:#75697e;text-align:left;font-size:14px}
+.select-option span{flex:1}
+.select-option svg{width:15px;height:15px;opacity:0}
+.select-option[aria-selected=true]{color:var(--accent);background:#f5eefa}
+.select-option[aria-selected=true] svg{opacity:1}
+.select-option:hover,.select-option:focus-visible{background:#f3edf8;color:var(--accent);outline:0}
+@keyframes select-enter{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+.application-tile-icon{width:28px;height:28px;display:grid;place-items:center;flex-shrink:0}
+.application-tile-icon img{width:28px;height:28px;object-fit:contain}
+#application-action-label{max-width:100%;padding:0 8px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.application-picker{width:100%;display:flex;align-items:center;gap:12px;padding:12px;text-align:left;border:1px solid #e9e5ee;border-radius:12px;background:#faf9fc}
+.application-picker:hover:not(:disabled){background:#f5f1f9;border-color:#d6c3e8}
+.application-avatar{width:44px;height:44px;display:grid;place-items:center;flex-shrink:0;color:#a28cb6}
+.application-avatar>svg{width:32px;height:32px}
+.application-avatar>img{width:44px;height:44px;object-fit:contain}
+.application-details{min-width:0;display:flex;flex-direction:column;gap:5px;flex:1}
+.application-details strong{font-size:14px;font-weight:550;color:#65566f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.application-details>span{font-size:12px;color:#a492b3}
+.application-chevron{width:16px;height:16px;color:#ad9aba;transform:rotate(-90deg)}
+.horizontal-scroll-row{margin-top:16px;padding-top:14px;border-top:1px solid #f1edf4}
+.horizontal-scroll-row .switch-label{justify-content:space-between;color:#8c8195;font-size:13px}
+.horizontal-scroll-row .switch-label input{right:0}
 #shortcut.recording{border-color:#b48bdf;box-shadow:0 0 0 3px #7839cc12;background:#fcfaff;caret-color:transparent}
 #battery.charging{color:#338565}
-#button-editor .action-option:not(.wide){min-height:56px;gap:7px}
-.action-option[data-action=水平滚动]{position:relative}
+@media(prefers-reduced-motion:reduce){.settings-toggle svg,.select-chevron{transition:none}.select-popover{animation:none}}

@@ -20,6 +20,9 @@
   <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 17h.01"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m8 15 4-7 4 7M9 13h6"/></symbol>
 </defs></svg>
 <div class="app-shell">
   <div class="titlebar" data-tauri-drag-region>
@@ -49,7 +52,7 @@
   </header>
   <main class="workspace">
     <div id="device-content" class="device-content">
-    <section id="page-buttons" class="page device-page no-selection" aria-label="鼠标配置">
+    <section id="page-buttons" aria-hidden="false" class="page device-page no-selection" aria-label="鼠标配置">
       <div class="visual-area">
         <div class="mouse-stage"><div class="mouse-picture side">
           <img src="assets/mouse-side.png" alt="MX Anywhere 3 斜侧面图" draggable="false">
@@ -61,20 +64,20 @@
       </div>
       <aside id="button-editor" class="editor-card" aria-hidden="true" inert>
         <div class="editor-heading"><h2 id="selected-title">按键配置</h2><button id="close-editor" class="close-editor" aria-label="关闭按键配置"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
-        <div class="field-label">选择动作</div>
+
         <div class="action-grid">
           <button class="action-option" data-action="默认"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span>默认</span></button>
           <button class="action-option" data-action="禁用"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ban"/></svg><span>禁用</span></button>
           <button class="action-option" data-action="打开 App"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>打开 App</span></button>
           <button class="action-option" data-action="调度中心"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-windows"/></svg><span>调度中心</span></button>
-          <button class="action-option" data-action="水平滚动" title="按住此按键，再滚动滚轮"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"/></svg><span>水平滚动</span></button>
-          <button class="action-option" data-action="application"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>打开指定 App</span></button>
-          <button class="action-option" data-action="more"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span>更多</span></button>
-          <button class="action-option" data-action="shortcut"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg><span>键盘快捷键</span></button>
+          <button class="action-option" data-action="application"><span class="application-tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-app"/></svg><img id="application-tile-image" alt="" hidden></span><span id="application-action-label">打开指定 App</span></button>
+          <button class="action-option" data-action="more"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-more"/></svg><span>更多</span></button>
+          <button class="action-option wide" data-action="shortcut"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-key"/></svg><span>键盘快捷键</span></button>
         </div>
-        <div id="more-editor" hidden><label class="field-label" for="more-category">更多动作</label><div class="more-selects"><select id="more-category" aria-label="动作类别"></select><select id="more-action" aria-label="具体动作"></select></div></div>
-        <div id="application-editor" hidden><div id="application-name" class="application-name">选择要打开的 App</div><button id="choose-application" class="small-button app-picker" type="button">选择应用…</button></div>
+        <div id="more-editor" hidden><div class="more-selects"><div><span class="select-caption" id="category-caption">类别</span><button id="more-category" class="action-select" type="button" role="combobox" aria-label="动作类别" aria-haspopup="listbox" aria-expanded="false" aria-controls="select-popover"><svg class="select-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-grid"/></svg><span class="select-value">选择类别</span><svg class="select-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button></div><div><span class="select-caption" id="action-caption">动作</span><button id="more-action" class="action-select" type="button" role="combobox" aria-label="具体动作" aria-haspopup="listbox" aria-expanded="false" aria-controls="select-popover"><span class="select-value">选择动作</span><svg class="select-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button></div></div></div>
+        <div id="application-editor" hidden><button id="choose-application" class="application-picker" type="button"><span class="application-avatar"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-app"/></svg><img id="application-image" alt="" hidden></span><span class="application-details"><strong id="application-name">选择要打开的 App</strong><span id="application-picker-label">选择应用…</span></span><svg class="application-chevron" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"/></svg></button></div>
         <div id="shortcut-editor" hidden><label class="field-label" for="shortcut">快捷键</label><div class="shortcut-row"><input id="shortcut" placeholder="点击后按下组合键" spellcheck="false" autocomplete="off" readonly aria-label="快捷键录制输入框"></div></div>
+        <div id="horizontal-scroll-row" class="horizontal-scroll-row" hidden><label class="switch-label"><span>水平滚动</span><input id="horizontal-scroll-toggle" type="checkbox" role="switch" aria-label="水平滚动" title="按住此侧键，再滚动滚轮"><span class="switch-track"></span></label></div>
         <div class="card-bottom"><button id="save-mapping" class="primary-button commit-button" data-state="saved" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span class="commit-label" aria-live="polite">已保存</span></button></div>
       </aside>
       <aside id="hardware-editor" class="editor-card hardware-card" aria-hidden="true" inert><div class="editor-heading"><h2>指针与滚轮</h2><button id="close-hardware" class="close-editor" aria-label="关闭指针与滚轮设置"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
@@ -85,7 +88,7 @@
         <div class="card-bottom"><button id="apply-hardware" class="primary-button commit-button" data-state="unavailable" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-alert"/></svg><span class="commit-label" aria-live="polite">设备暂不可用</span></button></div>
       </aside>
     </section>
-    <section id="page-settings" class="page settings-page" aria-label="设置" hidden>
+    <section id="page-settings" class="page settings-page" aria-label="设置" aria-hidden="true" inert hidden>
       <div id="mapping-preferences" class="settings-card compact"><div class="settings-card-title"><h3>鼠标映射</h3><button id="permission-link" class="permission-link" hidden>完成授权</button><label class="switch-label"><span id="switch-label">启用映射</span><input id="mapping-toggle" type="checkbox" role="switch"><span class="switch-track"></span></label></div></div>
       <div class="settings-card"><div class="settings-card-title"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg><h3>输入权限</h3></div><div class="permission-row"><span>辅助功能</span><span id="accessibility-status">—</span><button id="open-accessibility" class="small-button" hidden>去授权</button></div><div class="permission-row"><span>输入监控</span><span id="input-status">—</span><button id="open-input" class="small-button" hidden>去授权</button></div><p class="help">授权后若仍不可用，请退出并重新打开 Logi Lite。</p></div>
       <div class="settings-card compact"><h3>在后台继续运行</h3><p>关闭窗口后，按键映射继续工作。可从菜单栏重新打开、暂停或退出。</p><div class="shortcut-tip"><span>紧急暂停</span><kbd>⌘</kbd><kbd>⌃</kbd><kbd>⇧</kbd><kbd>F12</kbd></div></div>
@@ -103,5 +106,6 @@
     </div>
   </main>
 </div>
+<div id="select-popover" class="select-popover" role="listbox" hidden></div>
 <div id="toast" class="toast" role="status" hidden></div>
 </body></html>

@@ -3,9 +3,11 @@ const $ = id => document.getElementById(id);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const invoke = window.__TAURI__?.core.invoke;
 const BUTTONS = {back:'后退侧键',forward:'前进侧键',middle:'中键（鼠标滚轮）'};
-const ACTIONS = new Set(['默认','禁用','打开 App','调度中心','水平滚动']);
+const ACTIONS = new Set(['默认','禁用','打开 App','调度中心']);
 let actionCatalog = {categories:[]}, editorMode=null;
-let selectedCategory='';
+let selectedCategory='',openSelect=null;
+const applicationCache=new Map();
+let pageTransition=0;
 let lastRuntimeError='';
 let runtimeState = null, savedConfig = null, draftConfig = null, selectedButton = null, chosenAction = '默认';
 let hardwareResult = {}, actual = null, draftHardware = null, verified = false, hardwareBusy = false, batteryBusy=false, lastBatteryProbe=0;
@@ -25,7 +27,12 @@ async function native(request) {
   return result;
 }
 const ready = () => Boolean(runtimeState?.permissions?.accessibility && runtimeState?.permissions?.inputMonitoring && runtimeState?.permissions?.postEvents);
-const mappingDirty = () => draftConfig && savedConfig && ['back','forward','middle'].some(key=>draftConfig[key]!==savedConfig[key]);
+function normalizeConfig(config) {
+  const value=clone(config);
+  if(runtimeState?.platform!=='windows')value.horizontalScroll={back:false,forward:false,...value.horizontalScroll};
+  return value;
+}
+const mappingDirty = () => draftConfig && savedConfig && (['back','forward','middle'].some(key=>draftConfig[key]!==savedConfig[key])||['back','forward'].some(key=>Boolean(draftConfig.horizontalScroll?.[key])!==Boolean(savedConfig.horizontalScroll?.[key])));
 function commitState(id,state,label,icon,description) {
   const button=$(id);
   button.dataset.state=state;
@@ -50,8 +57,8 @@ function renderRuntime(result, initial=false) {
   if(wasPermitted!==ready()){verified=false;topology=null;}
 
   // Runtime polling can update enabled state; never replace unsaved button edits.
-  if (initial || !draftConfig) {savedConfig=clone(result.config);draftConfig=clone(result.config);renderAction();}
-  else {savedConfig=clone(result.config);}
+  if (initial || !draftConfig) {savedConfig=normalizeConfig(result.config);draftConfig=normalizeConfig(result.config);renderAction();}
+  else {savedConfig=normalizeConfig(result.config);}
   $('mapping-toggle').checked = result.active;
   $('mapping-dot').className = 'status-dot' + (result.active?'':' pending');
   $('mapping-status').textContent = result.active?'映射已启用':'映射已暂停';
@@ -64,7 +71,7 @@ function renderRuntime(result, initial=false) {
     $(statusId).classList.toggle('permission-granted',granted);
     $(buttonId).hidden=granted;
   }
-  for(const action of ['水平滚动','application','more']){const el=document.querySelector(`[data-action="${action}"]`);el.hidden=result.platform==='windows';}
+  for(const action of ['application','more']){const el=document.querySelector(`[data-action="${action}"]`);el.hidden=result.platform==='windows';}
   renderPermissions();
   updateDraftLabel();
 }
@@ -73,9 +80,25 @@ async function windowAction(action) {
   try { await invoke(action); }
   catch (error) { toast(error.message||String(error),true); }
 }
+function pageIsActive(name) {return currentPage===name;}
 function page(name) {
+  closeSelect();
+  const previous=currentPage;
   currentPage=name;
-  $$('.page').forEach(el=>el.hidden=el.id!==`page-${name}`);
+  const generation=++pageTransition;
+  const animated=previous!==name&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for(const el of $$('.page')) {
+    el.getAnimations().forEach(animation=>animation.cancel());
+    const active=el.id===`page-${name}`;
+    el.setAttribute('aria-hidden',String(!active));
+    el.inert=!active;
+    if(active){
+      el.hidden=false;
+      if(animated)el.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'cubic-bezier(.22,1,.36,1)'});
+    } else if(animated&&!el.hidden){
+      el.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-6px)'}],{duration:160,easing:'ease-out',fill:'forwards'}).finished.then(()=>{if(generation===pageTransition){el.hidden=true;el.getAnimations().forEach(animation=>animation.cancel());}}).catch(()=>{});
+    } else el.hidden=true;
+  }
   $('settings-toggle').setAttribute('aria-expanded',String(name==='settings'));
   $('settings-toggle').setAttribute('aria-label',name==='settings'?'返回鼠标':'打开设置');
   renderPermissions();
@@ -86,7 +109,7 @@ function renderPermissions() {
   const gated=!permitted&&currentPage!=='settings';
   $('permission-gate').hidden=!gated;
   $('device-content').classList.toggle('locked',gated);
-  $('page-buttons').inert=!permitted;
+  $('page-buttons').inert=!permitted||currentPage!=='buttons';
   $('mapping-toggle').disabled=!permitted;
   $('gate-authorize').disabled=!runtimeState;
   renderRefreshControls();
@@ -95,7 +118,7 @@ function renderPermissions() {
     $(id).classList.toggle('ready',Boolean(granted));
   }
   if(!permitted){$('connection-text').textContent=runtimeState?'等待授权':'正在检查权限…';$('connection-dot').className='status-dot pending';}
-  if(gated)stopRecording();
+  if(gated){stopRecording();closeSelect();}
   renderConnectionGate();
 }
 function setConnectionGate(disconnected) {
@@ -110,7 +133,7 @@ function renderConnectionGate() {
   document.querySelector('.device-header').inert=blocked;
   document.querySelector('.workspace').inert=blocked;
   if(blocked){
-    stopRecording();
+    closeSelect();stopRecording();
     if(wasHidden)$('connection-refresh').focus({preventScroll:true});
   }
 }
@@ -127,6 +150,7 @@ function chooseButton(key) {
   renderAction();
 }
 function setPanel(panel) {
+  closeSelect();
   selectedPanel=panel;
   for(const [id,name] of [['button-editor','button'],['hardware-editor','hardware']]) {
     const open=panel===name;
@@ -153,13 +177,14 @@ function renderAction() {
   $('more-editor').hidden=chosenAction!=='more';
   $('application-editor').hidden=chosenAction!=='application';
   $('shortcut').value=chosenAction==='shortcut'&&!ACTIONS.has(value)&&!value.startsWith('打开应用:')?value:'';
-  const path=value?.startsWith('打开应用:')?value.slice('打开应用:'.length):'';
-  $('application-name').textContent=path?path.split('/').pop().replace(/\.app$/i,''):'选择要打开的 App';
-  $('application-name').title=path;
+  renderApplication(value);
+  $('horizontal-scroll-row').hidden=selectedButton==='middle'||runtimeState?.platform==='windows';
+  $('horizontal-scroll-toggle').checked=Boolean(draftConfig.horizontalScroll?.[selectedButton]);
   if(chosenAction==='more')renderMoreSelectors(value);
   updateDraftLabel();
 }
 function chooseAction(value) {
+  closeSelect();
   if(!draftConfig||!selectedButton||!ready())return;
   stopRecording();
   editorMode=value;
@@ -190,19 +215,85 @@ function record(event) {
   draftConfig[selectedButton]=[...modifiers,key].join('+');
   renderAction();
 }
+const categoryIcons={system:'grid',editing:'key',windows:'windows',browser:'windows',media:'sliders'};
 function renderMoreSelectors(value=draftConfig?.[selectedButton]) {
-  const category=$('more-category'),action=$('more-action');
   const current=actionCatalog.categories.find(c=>c.actions.some(a=>a.value===value));
   if(current&&!selectedCategory)selectedCategory=current.id;
   if(!actionCatalog.categories.some(c=>c.id===selectedCategory))selectedCategory=actionCatalog.categories[0]?.id||'';
-  category.replaceChildren();
-  for(const c of actionCatalog.categories){const o=new Option(c.label,c.id);category.append(o);}
-  category.value=selectedCategory;
   const group=actionCatalog.categories.find(c=>c.id===selectedCategory);
-  action.replaceChildren(new Option('选择动作',''));
-  for(const a of group?.actions||[])action.append(new Option(a.label,a.value));
-  action.value=group?.actions.some(a=>a.value===value)?value:'';
-  category.disabled=!actionCatalog.categories.length;action.disabled=category.disabled;
+  const action=group?.actions.find(a=>a.value===value);
+  $('more-category').querySelector('.select-value').textContent=group?.label||'选择类别';
+  $('more-category').querySelector('.select-icon use').setAttribute('href',`#i-${categoryIcons[group?.id]||'grid'}`);
+  $('more-action').querySelector('.select-value').textContent=action?.label||'选择动作';
+  $('more-action').classList.toggle('placeholder',!action);
+  $('more-category').disabled=!group;
+  $('more-action').disabled=!group;
+}
+function closeSelect(restoreFocus=false) {
+  const trigger=openSelect?$(openSelect):null;
+  openSelect=null;
+  $('select-popover').hidden=true;
+  for(const id of ['more-category','more-action'])$(id).setAttribute('aria-expanded','false');
+  if(restoreFocus)trigger?.focus({preventScroll:true});
+}
+function openSelectMenu(id,focusLast=false) {
+  if(openSelect===id){closeSelect(true);return;}
+  closeSelect();
+  const trigger=$(id),menu=$('select-popover');
+  if(trigger.disabled||!selectedButton||!ready())return;
+  const category=id==='more-category';
+  const group=actionCatalog.categories.find(c=>c.id===selectedCategory);
+  const options=category?actionCatalog.categories:(group?.actions||[]);
+  const selected=category?selectedCategory:draftConfig[selectedButton];
+  menu.replaceChildren();
+  for(const option of options){
+    const button=document.createElement('button');
+    button.type='button';button.className='select-option';button.setAttribute('role','option');
+    const checked=(category?option.id:option.value)===selected;
+    button.setAttribute('aria-selected',String(checked));
+    const label=document.createElement('span');label.textContent=option.label;button.append(label);
+    const check=document.createElementNS('http://www.w3.org/2000/svg','svg');check.setAttribute('viewBox','0 0 24 24');check.setAttribute('aria-hidden','true');
+    const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','#i-check');check.append(use);button.append(check);
+    button.addEventListener('click',()=>{
+      if(category)selectedCategory=option.id;
+      else draftConfig[selectedButton]=option.value;
+      closeSelect();renderAction();trigger.focus({preventScroll:true});
+    });
+    menu.append(button);
+  }
+  openSelect=id;menu.hidden=false;trigger.setAttribute('aria-expanded','true');
+  menu.setAttribute('aria-label',category?'动作类别':'具体动作');
+  const rect=trigger.getBoundingClientRect(),desired=Math.min(284,menu.scrollHeight),below=innerHeight-rect.bottom-12;
+  const above=below<Math.min(desired,180)&&rect.top>below;
+  const height=Math.min(desired,above?rect.top-12:below);
+  menu.style.width=`${rect.width}px`;menu.style.left=`${rect.left}px`;
+  menu.style.maxHeight=`${height}px`;menu.style.top=`${above?rect.top-height-6:rect.bottom+6}px`;
+  const buttons=[...menu.children];
+  (focusLast?buttons.at(-1):buttons.find(b=>b.getAttribute('aria-selected')==='true')||buttons[0])?.focus({preventScroll:true});
+}
+function renderApplication(value) {
+  const path=value?.startsWith('打开应用:')?value.slice('打开应用:'.length):'';
+  const info=applicationCache.get(path);
+  const metadata=info&&!info.then?info:null;
+  const name=metadata?.name||path.split('/').pop()?.replace(/\.app$/i,'')||'选择要打开的 App';
+  const icon=metadata?.icon?.startsWith('data:image/png;base64,')?metadata.icon:null;
+  $('application-name').textContent=name;
+  $('application-name').title=path;
+  $('application-picker-label').textContent=path?(metadata?.available===false?'应用不可用 · 更换应用':'更换应用'):'选择应用…';
+  $('application-action-label').textContent=path?name:'打开指定 App';
+  const tile=document.querySelector('[data-action="application"]');
+  tile.title=path?`打开 ${name}`:'打开指定 App';
+  tile.setAttribute('aria-label',path?`打开指定 App：${name}`:'打开指定 App');
+  for(const id of ['application-image','application-tile-image']) {
+    const img=$(id);img.hidden=!icon;img.previousElementSibling.toggleAttribute('hidden',Boolean(icon));
+    if(icon)img.src=icon;else img.removeAttribute('src');
+  }
+  if(path&&!info){
+    const request=native({action:'applicationInfo',path});
+    applicationCache.set(path,request);
+    request.then(result=>{applicationCache.set(path,result);if(draftConfig?.[selectedButton]===value)renderApplication(value);})
+      .catch(()=>{applicationCache.set(path,{name,available:false});if(draftConfig?.[selectedButton]===value)renderApplication(value);});
+  }
 }
 async function loadActionCatalog() {
   if(runtimeState?.platform==='windows')return;
@@ -215,7 +306,7 @@ async function chooseApplication() {
   $('choose-application').disabled=true;
   try{
     const result=await native({action:'chooseApplication'});
-    if(!result.cancelled&&result.value&&selectedButton===button){draftConfig[button]=result.value;editorMode='application';renderAction();}
+    if(!result.cancelled&&result.value&&selectedButton===button){applicationCache.set(result.path||result.value.slice('打开应用:'.length),result);draftConfig[button]=result.value;editorMode='application';renderAction();}
   }catch(error){toast(error.message,true);}
   finally{$('choose-application').disabled=false;}
 }
@@ -390,7 +481,7 @@ async function smokeCheck() {
   const permissionGateBlocks=!$('permission-gate').hidden&&$('page-buttons').inert&&$('hardware-editor').inert&&selectedButton===null&&$('mapping-toggle').disabled;
   $('gate-settings').click();
   const settingsFitsWithoutScroll=$('page-settings').scrollHeight<=$('page-settings').clientHeight+1;
-  const settingsAccessible=!$('page-settings').hidden&&!$('page-settings').inert&&$('permission-gate').hidden;
+  const settingsAccessible=pageIsActive('settings')&&!$('page-settings').inert&&$('permission-gate').hidden;
   const settingsScrollbarHidden=getComputedStyle($('page-settings')).scrollbarWidth==='none';
   page('buttons');
   fixture.permissions={accessibility:true,inputMonitoring:false,postEvents:true};renderRuntime(fixture);
@@ -405,7 +496,7 @@ async function smokeCheck() {
   fixture.active=false;renderRuntime(fixture);
   const mappingStatusSynced=activeStatus&&$('mapping-status').textContent==='映射已暂停'&&!$('mapping-toggle').checked;
   $('mapping-settings').click();
-  const mappingSettingsAccessible=!$('page-settings').hidden&&$('page-settings').contains($('mapping-toggle'));
+  const mappingSettingsAccessible=pageIsActive('settings')&&$('page-settings').contains($('mapping-toggle'));
   page('buttons');
   const compactLayout=!document.querySelector('.sidebar,.version,.footer,.button-tabs,.nav-label,#page-buttons .visual-heading')&&(document.documentElement.dataset.platform==='windows'||document.querySelector('.titlebar').textContent.trim()==='');
   const header=document.querySelector('.device-header').getBoundingClientRect();
@@ -431,7 +522,7 @@ async function smokeCheck() {
   const hotspotAligned=Math.abs((h.x+h.width/2-r.x)/r.width-.28)<.015&&Math.abs((h.y+h.height/2-r.y)/r.height-.59)<.015;
   chooseButton('back');
   $('wheel-hotspot').click();
-  const hardwareOpensFromMouse=selectedPanel==='hardware'&&!$('hardware-editor').inert&&$('button-editor').inert&&!$('page-buttons').hidden;
+  const hardwareOpensFromMouse=selectedPanel==='hardware'&&!$('hardware-editor').inert&&$('button-editor').inert&&pageIsActive('buttons');
   const wheel=document.querySelector('#wheel-hotspot').getBoundingClientRect();
   const wheelHotspotAligned=Math.abs((wheel.x+wheel.width/2-r.x)/r.width-.60)<.015&&Math.abs((wheel.y+wheel.height/2-r.y)/r.height-.12)<.015;
   const callout=$('wheel-hotspot').querySelector('.hotspot-label').getBoundingClientRect();
@@ -447,7 +538,10 @@ async function smokeCheck() {
   $('close-hardware').click();
   const hardwareDismissed=selectedPanel===null&&$('hardware-editor').inert;
   $('settings-toggle').click();
-  const navigationWorks=!$('page-settings').hidden&&$('page-buttons').hidden&&$('settings-toggle').getAttribute('aria-expanded')==='true';
+  const navigationWorks=pageIsActive('settings')&&$('page-buttons').inert&&$('settings-toggle').getAttribute('aria-expanded')==='true';
+  const settingsAnimated=!motionAllowed||$('page-settings').getAnimations().length>0;
+  page('buttons');page('settings');
+  const rapidPageSwitchSafe=pageIsActive('settings')&&!$('page-settings').inert&&$('page-buttons').inert;
   const card=$('mapping-preferences').getBoundingClientRect(),baselineHeight=card.height;
   fixture.permissions={accessibility:false,inputMonitoring:false,postEvents:false};renderRuntime(fixture);
   const prompt=$('permission-link').getBoundingClientRect(),title=$('mapping-preferences').querySelector('h3').getBoundingClientRect();
@@ -480,17 +574,30 @@ async function smokeCheck() {
   const shortcutCaptured=draftConfig.back===`${isMac?'Cmd':'Win'}+Shift+K`&&captured.defaultPrevented&&chosenAction==='shortcut';
   $('shortcut').blur();
   const blurStopsRecording=!recording;
-  let categoryActionSelected=true,horizontalSelection=true,appPickerAvailable=true;
+  let categoryActionSelected=true,horizontalSelection=true,appPickerAvailable=true,applicationIconVisible=true,middleHasNoHorizontal=true,sideSwitchesIndependent=true,customSelectStyled=true;
+  const originalHorizontal=clone(draftConfig.horizontalScroll||{back:false,forward:false});
   if(isMac){
-  chooseAction('more');
-  $('more-category').value='editing';$('more-category').dispatchEvent(new Event('change'));
-  $('more-action').value='Cmd+C';$('more-action').dispatchEvent(new Event('change'));
-  categoryActionSelected=chosenAction==='more'&&!$('more-editor').hidden&&draftConfig.back==='Cmd+C'&&mappingDirty();
-  chooseAction('水平滚动');
-  horizontalSelection=draftConfig.back==='水平滚动'&&$('save-mapping').dataset.state==='pending';
-  chooseAction('application');
-  appPickerAvailable=!$('application-editor').hidden&&draftConfig.back==='水平滚动';
+    chooseAction('more');
+    $('more-category').click();
+    const selectOption=label=>[...$('select-popover').children].find(el=>el.textContent===label)?.click();
+    selectOption('编辑');
+    $('more-action').click();selectOption('复制');
+    categoryActionSelected=chosenAction==='more'&&!$('more-editor').hidden&&draftConfig.back==='Cmd+C'&&mappingDirty();
+    customSelectStyled=!document.querySelector('#more-editor select')&&$('more-category').getAttribute('role')==='combobox'&&$('select-popover').hidden;
+    const previousAction=draftConfig.back;
+    $('horizontal-scroll-toggle').checked=true;$('horizontal-scroll-toggle').dispatchEvent(new Event('change'));
+    horizontalSelection=draftConfig.horizontalScroll.back===true&&draftConfig.back===previousAction&&!document.querySelector('[data-action="水平滚动"]');
+    chooseButton('forward');
+    sideSwitchesIndependent=$('horizontal-scroll-toggle').checked===Boolean(originalHorizontal.forward);
+    chooseButton('middle');middleHasNoHorizontal=$('horizontal-scroll-row').hidden;
+    chooseButton('back');chooseAction('application');
+    appPickerAvailable=!$('application-editor').hidden&&draftConfig.back===previousAction;
+    const app=await native({action:'applicationInfo',path:'/System/Applications/Calculator.app'});
+    draftConfig.back=app.value;applicationCache.set(app.path,app);renderAction();
+    await $('application-image').decode();
+    applicationIconVisible=app.available&&app.icon.startsWith('data:image/png;base64,')&&!$('application-image').hidden&&!$('application-tile-image').hidden&&$('application-image').naturalWidth>0;
   }
+  draftConfig.horizontalScroll=originalHorizontal;
   draftConfig.back=originalBack;editorMode=null;chooseButton(null);
   updateDeviceStatus({ok:true,target_verified:true,status:{capabilities:{dpi:true,scroll:true,smart_shift:true,scroll_force:true},dpi:1000,dpi_ranges:[{min:200,max:4000,step:50}],scroll:{mode:'smart_shift',sensitivity:50,force:45},battery:{percent:80,status:'recharging'}}});
   draftHardware={dpi:1000,scroll:'smart_shift',sensitivity:50,force:45};hardwareDraftEdited=false;renderHardware();
@@ -522,7 +629,7 @@ async function smokeCheck() {
   const connectionRestoresContent=gate.hidden&&!document.querySelector('.device-header').inert&&!document.querySelector('.workspace').inert;
   page('buttons');
   renderRuntime(original);
-  const checks={focusStartsRecording,shortcutCaptured,blurStopsRecording,categoryActionSelected,horizontalSelection,appPickerAvailable,forceDraftSeparate,chargingVisible,fullChargeVisible,connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
+  const checks={settingsAnimated,rapidPageSwitchSafe,applicationIconVisible,middleHasNoHorizontal,sideSwitchesIndependent,customSelectStyled,focusStartsRecording,shortcutCaptured,blurStopsRecording,categoryActionSelected,horizontalSelection,appPickerAvailable,forceDraftSeparate,chargingVisible,fullChargeVisible,connectionGateCoversContent,connectionGateBlocksBackground,gateCapturesPointer,closeControlAccessible,macWindowControlsHidden,connectionGateBlocksSettings,permissionSetupAccessible,gateRestoredAfterPermission,connectionRestoresContent,settingsFitsWithoutScroll,permissionGreen,hardwareSavedButton,mappingPendingButton,closeGlyphCentered,partialPermissionActions,grantedPermissionActionsHidden,wheelCalloutFits,sliderDraftSeparate,staleHardwareHidden,mouseCentered,hardwareOpensFromMouse,wheelHotspotAligned,hardwareDismissed,permissionPromptInline,appIconLoaded:runtimeState.appIconLoaded===true,compactLayout,balancedInsets,statusCapsuleFits,mappingStatusSynced,mappingSettingsAccessible,permissionGateBlocks,settingsAccessible,settingsScrollbarHidden,partialPermissionBlocks,permissionUnlocks,revocationBlocks,initialUnselected,selectionWorks,panelAnimated,hotspotAligned,navigationWorks,draftPreserved,editorDismissed,scrollbarHidden,mouseImageLoaded:image.naturalWidth>0};
   const report={ok:Object.values(checks).every(Boolean),...checks,windowVisible:true,frontendLoaded:true,mappingActive:runtimeState.active,configWritten:false,hardwareWrites:false,permissionRequested:false};
   await invoke('smoke_report',{report});
 }
@@ -532,8 +639,28 @@ $$('[data-action]').forEach(el=>el.addEventListener('click',()=>chooseAction(el.
 $('shortcut').addEventListener('focus',beginRecording);
 $('shortcut').addEventListener('click',beginRecording);
 $('shortcut').addEventListener('blur',stopRecording);
-$('more-category').addEventListener('change',()=>{selectedCategory=$('more-category').value;renderMoreSelectors();});
-$('more-action').addEventListener('change',()=>{if(selectedButton&&$('more-action').value){draftConfig[selectedButton]=$('more-action').value;renderAction();}});
+for(const id of ['more-category','more-action']){
+  $(id).addEventListener('click',()=>openSelectMenu(id));
+  $(id).addEventListener('keydown',event=>{if(['ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();openSelectMenu(id,event.key==='ArrowUp');}});
+}
+$('select-popover').addEventListener('keydown',event=>{
+  const buttons=[...$('select-popover').children],index=buttons.indexOf(document.activeElement);
+  if(event.key==='Escape'){event.preventDefault();closeSelect(true);}
+  else if(event.key==='Tab')closeSelect();
+  else if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){
+    event.preventDefault();
+    const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length;
+    buttons[next]?.focus({preventScroll:true});
+  }
+});
+document.addEventListener('pointerdown',event=>{if(openSelect&&!$('select-popover').contains(event.target)&&!$(openSelect).contains(event.target))closeSelect();});
+window.addEventListener('resize',()=>closeSelect());
+$('button-editor').addEventListener('scroll',()=>closeSelect());
+$('horizontal-scroll-toggle').addEventListener('change',()=>{
+  if(!ready()||!['back','forward'].includes(selectedButton))return;
+  draftConfig.horizontalScroll={back:false,forward:false,...draftConfig.horizontalScroll,[selectedButton]:$('horizontal-scroll-toggle').checked};
+  updateDraftLabel();
+});
 document.addEventListener('keydown',record,true);
 $('close-editor').addEventListener('click',()=>chooseButton(null));
 $('close-hardware').addEventListener('click',()=>chooseButton(null));

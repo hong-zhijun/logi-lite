@@ -9,6 +9,9 @@ pub struct Config {
     pub back: String,
     pub forward: String,
     pub middle: String,
+    #[cfg(target_os = "macos")]
+    #[serde(default, rename = "horizontalScroll")]
+    pub horizontal_scroll: HorizontalScrollConfig,
     // Accept and discard the retired field when reading experiment-era files.
     #[cfg(target_os = "macos")]
     #[serde(
@@ -18,6 +21,14 @@ pub struct Config {
         deserialize_with = "discard_retired_gestures"
     )]
     pub retired_gestures: (),
+}
+
+#[cfg(target_os = "macos")]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct HorizontalScrollConfig {
+    pub back: bool,
+    pub forward: bool,
 }
 
 #[cfg(target_os = "macos")]
@@ -34,6 +45,8 @@ impl Default for Config {
             back: "默认".into(),
             forward: "默认".into(),
             middle: "默认".into(),
+            #[cfg(target_os = "macos")]
+            horizontal_scroll: HorizontalScrollConfig::default(),
             #[cfg(target_os = "macos")]
             retired_gestures: (),
         }
@@ -68,7 +81,6 @@ pub(crate) fn parse_action(text: &str) -> Result<Action, String> {
         text,
         "打开 App"
             | "调度中心"
-            | "水平滚动"
             | "系统设置"
             | "计算器"
             | "音量增加"
@@ -184,6 +196,22 @@ fn load_path(path: &Path) -> Result<Config, String> {
             config.enabled = false;
         }
     }
+    #[cfg(target_os = "macos")]
+    {
+        for (action, toggle) in [
+            (&mut config.back, &mut config.horizontal_scroll.back),
+            (&mut config.forward, &mut config.horizontal_scroll.forward),
+        ] {
+            if action.trim() == "水平滚动" {
+                *action = "默认".into();
+                *toggle = true;
+            }
+        }
+        // The wheel click never participates in side-button horizontal scrolling.
+        if config.middle.trim() == "水平滚动" {
+            config.middle = "默认".into();
+        }
+    }
     validate(&config)?;
     Ok(config)
 }
@@ -227,6 +255,28 @@ pub fn save(config: &Config) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn horizontal_scroll_is_separate_and_migrates_legacy_actions() {
+        let path =
+            std::env::temp_dir().join(format!("logilite-horizontal-{}.json", std::process::id()));
+        std::fs::write(&path, r#"{"version":1,"enabled":true,"back":"水平滚动","forward":"Cmd+C","middle":"水平滚动"}"#).unwrap();
+        let config = load_path(&path).unwrap();
+        assert!(config.enabled);
+        assert_eq!(config.back, "默认");
+        assert_eq!(config.forward, "Cmd+C");
+        assert_eq!(config.middle, "默认");
+        assert!(config.horizontal_scroll.back);
+        assert!(!config.horizontal_scroll.forward);
+        let value = serde_json::to_value(&config).unwrap();
+        assert_eq!(
+            value["horizontalScroll"],
+            serde_json::json!({"back":true,"forward":false})
+        );
+        assert!(parse_action("水平滚动").is_err());
+        std::fs::remove_file(path).unwrap();
+    }
+
     #[test]
     fn parser_accepts_supported_chords() {
         for value in [
@@ -253,7 +303,6 @@ mod tests {
             "Win+Tab",
             "打开 App",
             "调度中心",
-            "水平滚动",
             "打开应用:/Applications/Test.app",
             "系统设置",
             "计算器",

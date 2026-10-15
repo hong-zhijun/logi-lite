@@ -7,14 +7,69 @@ struct MouseConfig: Codable {
     var back = "默认"
     var forward = "默认"
     var middle = "默认"
+    var horizontalScroll = HorizontalScrollConfig()
+
+    enum CodingKeys: String, CodingKey { case version, enabled, back, forward, middle, horizontalScroll }
+    init() {}
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy:CodingKeys.self)
+        version = try values.decode(Int.self, forKey:.version)
+        enabled = try values.decode(Bool.self, forKey:.enabled)
+        back = try values.decode(String.self, forKey:.back)
+        forward = try values.decode(String.self, forKey:.forward)
+        middle = try values.decode(String.self, forKey:.middle)
+        horizontalScroll = try values.decodeIfPresent(HorizontalScrollConfig.self, forKey:.horizontalScroll) ?? HorizontalScrollConfig()
+        if back.trimmingCharacters(in:.whitespacesAndNewlines) == "水平滚动" { back = "默认"; horizontalScroll.back = true }
+        if forward.trimmingCharacters(in:.whitespacesAndNewlines) == "水平滚动" { forward = "默认"; horizontalScroll.forward = true }
+        if middle.trimmingCharacters(in:.whitespacesAndNewlines) == "水平滚动" { middle = "默认" }
+    }
+}
+
+struct HorizontalScrollConfig: Codable {
+    var back = false
+    var forward = false
+    func enabled(for button: Int64) -> Bool {
+        switch button { case 3:return back; case 4:return forward; default:return false }
+    }
+}
+
+/// Read-only application details shared by a newly selected app and saved mappings.
+enum ApplicationMetadata {
+    static func read(path: String) -> [String: Any] {
+        let url = URL(fileURLWithPath:path).standardizedFileURL
+        let fallback = url.deletingPathExtension().lastPathComponent
+        var result: [String: Any] = ["ok":true, "path":url.path, "name":fallback,
+            "value":"打开应用:\(url.path)", "icon":"", "available":false]
+        guard path.hasPrefix("/"), url.pathExtension == "app",
+              let bundle = Bundle(url:url), bundle.bundleIdentifier != nil,
+              let executable = bundle.executableURL,
+              FileManager.default.fileExists(atPath:executable.path) else { return result }
+        let name = bundle.object(forInfoDictionaryKey:"CFBundleDisplayName") as? String
+            ?? bundle.object(forInfoDictionaryKey:"CFBundleName") as? String ?? fallback
+        result["name"] = name
+        result["available"] = true
+        let icon = NSWorkspace.shared.icon(forFile:url.path)
+        if let bitmap = NSBitmapImageRep(bitmapDataPlanes:nil, pixelsWide:64, pixelsHigh:64,
+            bitsPerSample:8, samplesPerPixel:4, hasAlpha:true, isPlanar:false,
+            colorSpaceName:.deviceRGB, bytesPerRow:0, bitsPerPixel:0),
+           let context = NSGraphicsContext(bitmapImageRep:bitmap) {
+            NSGraphicsContext.saveGraphicsState()
+            NSGraphicsContext.current = context
+            icon.draw(in:NSRect(x:0,y:0,width:64,height:64), from:.zero, operation:.copy, fraction:1)
+            context.flushGraphics()
+            NSGraphicsContext.restoreGraphicsState()
+            if let png = bitmap.representation(using:.png, properties:[:]) {
+                result["icon"] = "data:image/png;base64," + png.base64EncodedString()
+            }
+        }
+        return result
+    }
 }
 
 enum MouseAction {
     case original, disabled, shortcut(CGKeyCode, CGEventFlags)
     case system(SystemAction)
     case openApplication(URL)
-    /// Hold the side button while scrolling to turn vertical wheel motion into horizontal motion.
-    case horizontalScroll
     case media(MediaAction)
 }
 
@@ -89,8 +144,7 @@ enum ActionCatalog {
             ["id":"mission-control", "label":"调度中心", "value":"调度中心"],
             ["id":"settings", "label":"系统设置", "value":"系统设置"],
             ["id":"calculator", "label":"计算器", "value":"计算器"],
-            ["id":"lock", "label":"锁定屏幕", "value":"Ctrl+Cmd+Q"],
-            ["id":"horizontal-scroll", "label":"水平滚动（按住侧键）", "value":"水平滚动"]
+            ["id":"lock", "label":"锁定屏幕", "value":"Ctrl+Cmd+Q"]
         ]],
         ["id":"editing", "label":"编辑", "actions":[
             ["id":"copy", "label":"复制", "value":"Cmd+C"], ["id":"paste", "label":"粘贴", "value":"Cmd+V"],
@@ -142,7 +196,6 @@ enum ShortcutParser {
         if value == "禁用" { return .disabled }
         if let action = SystemAction(rawValue:value) { return .system(action) }
         if let action = MediaAction(rawValue:value) { return .media(action) }
-        if value == "水平滚动" { return .horizontalScroll }
         if value.hasPrefix("打开应用:") {
             let path = String(value.dropFirst("打开应用:".count))
             guard path.hasPrefix("/"), path.hasSuffix(".app") else {
@@ -206,8 +259,32 @@ struct ButtonPairs {
     func drag(button: Int64) -> Bool { swallowed.contains(button) }
 }
 
+/// A side click is deferred until release; wheel motion consumes it instead.
+/// This state contains no input events and can be verified without posting input.
+struct HeldSideButtons {
+    private var consumed: [Int64: Bool] = [:]
+    mutating func begin(button: Int64) {
+        guard button == 3 || button == 4 else { return }
+        if consumed[button] == nil { consumed[button] = false }
+    }
+    mutating func scroll(hasVerticalMotion: Bool) -> Bool {
+        guard hasVerticalMotion, !consumed.isEmpty else { return false }
+        for button in Array(consumed.keys) { consumed[button] = true }
+        return true
+    }
+    /// nil means this was not a deferred press; true means execute its saved click.
+    mutating func release(button: Int64) -> Bool? {
+        consumed.removeValue(forKey:button).map { !$0 }
+    }
+    mutating func cancel() { consumed.removeAll() }
+}
+
 /// Change only the axes so pixel/line deltas, phases and momentum remain intact.
 enum HorizontalWheel {
+    static func hasVerticalMotion(_ event: CGEvent) -> Bool {
+        [.scrollWheelEventDeltaAxis1, .scrollWheelEventPointDeltaAxis1, .scrollWheelEventFixedPtDeltaAxis1]
+            .contains { event.getDoubleValueField($0) != 0 }
+    }
     static func convert(_ event: CGEvent) {
         let axes: [(CGEventField, CGEventField)] = [
             (.scrollWheelEventDeltaAxis1, .scrollWheelEventDeltaAxis2),
@@ -229,7 +306,9 @@ final class MouseInput {
     private var source: CFRunLoopSource?
     private var actions: [Int64: MouseAction] = [:]
     private var pairs = ButtonPairs()
-    private var horizontalButtons = Set<Int64>()
+    private var horizontalSettings = HorizontalScrollConfig()
+    private var heldSideButtons = HeldSideButtons()
+    private var pendingOriginalClicks: [Int64: CGEvent] = [:]
     private var revision = 0
     private(set) var active = false
     private(set) var status = "按键映射未启用"
@@ -242,8 +321,10 @@ final class MouseInput {
                           Int64(4):ShortcutParser.parse(config.forward),
                           Int64(2):ShortcutParser.parse(config.middle)]
         revision += 1
-        horizontalButtons.removeAll()
+        heldSideButtons.cancel()
+        pendingOriginalClicks.removeAll()
         actions = parsed
+        horizontalSettings = config.horizontalScroll
         guard config.enabled else { pause("按键映射已暂停"); return }
         guard InputPermissions().ready else {
             pause("权限不足：请授权辅助功能与输入监控；授权后可能需要退出重开")
@@ -258,7 +339,8 @@ final class MouseInput {
 
     func pause(_ reason: String = "按键映射已暂停") {
         revision += 1
-        horizontalButtons.removeAll()
+        heldSideButtons.cancel()
+        pendingOriginalClicks.removeAll()
         active = false
         status = reason
         // Keep the tap until existing swallowed downs receive their matching ups.
@@ -303,23 +385,43 @@ final class MouseInput {
         let button = event.getIntegerValueField(.mouseEventButtonNumber)
         switch type {
         case .scrollWheel:
-            guard active, !horizontalButtons.isEmpty else {
+            guard active, heldSideButtons.scroll(hasVerticalMotion:HorizontalWheel.hasVerticalMotion(event)) else {
                 return Unmanaged.passUnretained(event)
             }
             HorizontalWheel.convert(event)
             return Unmanaged.passUnretained(event)
         case .otherMouseUp:
-            horizontalButtons.remove(button)
-            return pairs.up(button: button) ? nil : Unmanaged.passUnretained(event)
+            let shouldClick = heldSideButtons.release(button:button)
+            let originalDown = pendingOriginalClicks.removeValue(forKey:button)
+            let suppress = pairs.up(button:button)
+            if active, shouldClick == true, let action = actions[button] {
+                if case .original = action {
+                    if let down = originalDown, let up = event.copy() {
+                        for click in [down, up] {
+                            click.setIntegerValueField(.eventSourceUserData, value:marker)
+                            click.post(tap:.cghidEventTap)
+                        }
+                    }
+                } else { perform(action) }
+            }
+            return suppress ? nil : Unmanaged.passUnretained(event)
         case .otherMouseDragged:
             return pairs.drag(button: button) ? nil : Unmanaged.passUnretained(event)
         case .otherMouseDown:
             // A repeated down for a swallowed press must remain swallowed even after pause.
             if pairs.drag(button: button) { return nil }
             guard active, let action = actions[button] else { return Unmanaged.passUnretained(event) }
+            if horizontalSettings.enabled(for:button) {
+                if case .original = action {
+                    guard let copy = event.copy() else { return Unmanaged.passUnretained(event) }
+                    pendingOriginalClicks[button] = copy
+                }
+                _ = pairs.down(button:button, shouldSuppress:true)
+                heldSideButtons.begin(button:button)
+                return nil
+            }
             if case .original = action { return Unmanaged.passUnretained(event) }
             _ = pairs.down(button: button, shouldSuppress: true)
-            if action.isHorizontalScroll { horizontalButtons.insert(button) }
             perform(action)
             return nil
         default: return Unmanaged.passUnretained(event)
@@ -370,12 +472,5 @@ final class MouseInput {
     deinit {
         if let source { CFRunLoopRemoveSource(CFRunLoopGetMain(), source, .commonModes) }
         if let tap { CFMachPortInvalidate(tap) }
-    }
-}
-
-private extension MouseAction {
-    var isHorizontalScroll: Bool {
-        if case .horizontalScroll = self { return true }
-        return false
     }
 }

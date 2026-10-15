@@ -12,8 +12,8 @@
 | 禁用按键 | `禁用` | 拦截该按键，不执行动作 |
 | 打开 App 应用列表 | `打开 App` | 直接打开系统应用；旧系统回退到 Launchpad |
 | 打开调度中心 | `调度中心` | 直接打开系统应用，无需设置快捷键 |
-| 水平滚动 | `水平滚动` | 按住绑定按键并滚动滚轮，松开恢复纵向；不记录鼠标轨迹 |
-| 打开指定 App | `打开应用:/Applications/Example.app` | 从原生文件选择器选择 .app；已打开时激活，路径失效时提示错误 |
+| 水平滚动 | `horizontalScroll.back`／`horizontalScroll.forward` 布尔值 | 前进／后退侧键各自独立开关；按住侧键＋滚轮横向滚动，中键无此功能 |
+| 打开指定 App | `打开应用:/Applications/Example.app` | 从原生文件选择器选择 .app，显示真实应用图标和名称；已打开时激活，路径失效时提示错误 |
 | 系统设置 | `系统设置` | 按系统 bundle ID 打开 |
 | 计算器 | `计算器` | 按系统 bundle ID 打开 |
 | 锁定屏幕 | `Ctrl+Cmd+Q` | 使用 macOS 对应快捷键 |
@@ -72,7 +72,8 @@
   "enabled": true,
   "back": "打开 App",
   "forward": "调度中心",
-  "middle": "默认"
+  "middle": "默认",
+  "horizontalScroll": {"back": false, "forward": false}
 }
 ```
 
@@ -109,7 +110,7 @@
 | 勿扰模式 | `DoNotDisturbOn`、`DoNotDisturbOff` | 未实现 |
 | 双击／三击 | `DoubleClick`、`TrippleClick` | 未实现；`TrippleClick` 是资源中的原拼写 |
 | 模拟左／右／中键 | `LeftClick`、`RightClick`、`MiddleClick` | 未实现独立鼠标动作；中键本身可保留默认 |
-| 横向滚动 | `HorizontalScroll`、`ScrollLeft`、`ScrollRight` | 已实现按住绑定键＋滚轮；未提供单击固定向左／右 |
+| 横向滚动 | `HorizontalScroll`、`ScrollLeft`、`ScrollRight` | 已实现前进／后退独立开关，按住侧键＋滚轮；中键不支持 |
 | 智能缩放／缩放 | `SmartZoom`、`ZoomInOut`、`ZoomOut` | 未实现独立动作；部分应用可用快捷键 |
 | 改变指针速度 | `ChangePointerSpeed` | 可在硬件设置中改 DPI，尚不能通过侧键切换 |
 | 切换滚轮模式 | `ShiftWheelMode` | 可在硬件设置中选模式，尚不能通过侧键切换 |
@@ -125,5 +126,7 @@
 - Mac 输入解析、系统动作及按键发送：[Input.swift](../src/platform/macos/native/Input.swift)。
 - Options+ App／调度中心调用链与系统 bundle ID：[options-system-actions-native.md](options-system-actions-native.md)。
 - 其他动作标识来自本机 ASAR 的只读资源分析：`analysis/options-ranges/app.decoded-static.js`，原文件身份和静态解析方法见 [options-range-observations.json](options-range-observations.json)。这些标识仅作为资源存在证据，不表示逐项运行验证。
+
+水平滚动是动作卡片下方的独立开关，不占用侧键的普通点击映射；有滚动时消耗该次侧键点击，没滚动则在松开时执行原动作。旧版 `水平滚动` 动作值会迁移为对应侧键开关＋默认动作，旧中键值恢复默认。Options+ 对照证据见 [水平滚动记录](options-horizontal-scrolling.md)。
 
 本记录不改变用户映射、不配置系统快捷键，也不表示上表所有待实现功能已加入程序。

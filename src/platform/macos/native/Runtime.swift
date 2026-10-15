@@ -110,11 +110,14 @@ private final class DesktopRuntime {
     func perform(_ request: [String:Any]) throws -> [String:Any] {
         let action = request["action"] as? String ?? "state"
         if action == "init" { start(smoke:request["smoke"] as? Bool ?? false) }
-        if smoke && !["state", "init", "metadata", "actionCatalog"].contains(action) { throw InputError.invalid("自检模式不会修改配置或权限") }
+        if smoke && !["state", "init", "metadata", "actionCatalog", "applicationInfo"].contains(action) { throw InputError.invalid("自检模式不会修改配置或权限") }
         switch action {
         case "init", "state": break
         case "actionCatalog":
             return ["ok":true, "categories":ActionCatalog.categories]
+        case "applicationInfo":
+            guard let path = request["path"] as? String else { throw InputError.invalid("缺少应用路径") }
+            return ApplicationMetadata.read(path:path)
         case "chooseApplication":
             let panel = NSOpenPanel()
             panel.allowedContentTypes = [.applicationBundle]
@@ -126,14 +129,10 @@ private final class DesktopRuntime {
             guard panel.runModal() == .OK, let url = panel.url else {
                 return ["ok":true, "cancelled":true]
             }
-            guard url.path.hasSuffix(".app"), Bundle(url:url) != nil else {
-                throw InputError.invalid("请选择有效的 .app 应用")
-            }
-            let name = Bundle(url:url)?.object(forInfoDictionaryKey:"CFBundleDisplayName") as? String
-                ?? Bundle(url:url)?.object(forInfoDictionaryKey:"CFBundleName") as? String
-                ?? url.deletingPathExtension().lastPathComponent
-            return ["ok":true, "cancelled":false, "path":url.standardizedFileURL.path,
-                    "name":name, "value":"打开应用:\(url.standardizedFileURL.path)"]
+            var details = ApplicationMetadata.read(path:url.path)
+            guard details["available"] as? Bool == true else { throw InputError.invalid("请选择有效的 .app 应用") }
+            details["cancelled"] = false
+            return details
         case "save":
             guard let value = request["config"] else { throw InputError.invalid("缺少配置") }
             var updated = try JSONDecoder().decode(MouseConfig.self, from:JSONSerialization.data(withJSONObject:value))
