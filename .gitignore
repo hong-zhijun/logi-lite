@@ -1,4 +1,5 @@
 /target/
+/target-tauri/
 /dist/
 /analysis/
 /src-tauri/target/
