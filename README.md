@@ -36,6 +36,14 @@ cargo build --release --locked --target-dir target
 
 构建产物与本地便携包不纳入 Git，克隆仓库后需自行构建。
 
+桌面版使用 Tauri，Windows 与 macOS 共用 `ui/` 前端。Windows 桌面包从 `src-tauri/` 构建：
+
+```powershell
+cargo build --release --locked --manifest-path src-tauri/Cargo.toml --target-dir target-tauri
+```
+
+Windows 后端位于 `src/platform/windows/desktop.rs`，通过 Tauri 命令接入现有托盘、快捷键和 HID++ 实现；macOS Swift 与 bridge 文件保持独立。当前环境没有可用的 Tauri 依赖缓存时，桌面构建需要联网下载锁定版本的依赖。
+
 ## macOS 构建与测试
 
 需要 macOS 13 或更新版本、Rust 1.88+ 和 Xcode Command Line Tools。只需编译时具备这些工具；打包后的应用使用系统框架，不依赖 Options+ 或后台 Python / Electron。

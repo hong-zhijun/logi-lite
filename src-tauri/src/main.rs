@@ -1,15 +1,15 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use serde_json::{Value, json};
-use std::{
-    ffi::{CStr, CString, c_char},
-    sync::Mutex,
-};
+use std::sync::Mutex;
+#[cfg(target_os = "macos")]
+use std::ffi::{CStr, CString, c_char};
 use tauri::{
     Manager,
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,
 };
 
+#[cfg(target_os = "macos")]
 unsafe extern "C" {
     fn ll_desktop_request(json: *const c_char) -> *mut c_char;
     fn ll_desktop_hardware(json: *const c_char) -> *mut c_char;
@@ -20,6 +20,7 @@ struct RuntimeFlags {
     hardware: Mutex<()>,
 }
 
+#[cfg(target_os = "macos")]
 fn native(request: Value, hardware: bool) -> Result<Value, String> {
     let input = CString::new(request.to_string()).map_err(|e| e.to_string())?;
     // Both functions synchronously borrow the JSON and return a malloc-owned result.
@@ -37,6 +38,12 @@ fn native(request: Value, hardware: bool) -> Result<Value, String> {
         ll_desktop_free(pointer);
         result
     }
+}
+
+#[cfg(windows)]
+fn native(request: Value, hardware: bool) -> Result<Value, String> {
+    let result = logi_lite::platform::windows::desktop::request(request, hardware);
+    if result["ok"] == false { Err(result["error"].as_str().unwrap_or("Windows 后端失败").to_string()) } else { Ok(result) }
 }
 
 #[tauri::command]
@@ -94,11 +101,14 @@ fn smoke_report(app: tauri::AppHandle, mut report: Value) -> Result<(), String> 
 }
 
 fn main() {
+    #[cfg(target_os = "macos")]
     // Keep the Rust C bridge visible to the statically linked Swift adapter.
-    std::hint::black_box(logi_lite::platform::macos::bridge::logilite_hardware as *const ());
-    std::hint::black_box(logi_lite::platform::macos::bridge::logilite_load_config as *const ());
-    std::hint::black_box(logi_lite::platform::macos::bridge::logilite_save_config as *const ());
-    std::hint::black_box(logi_lite::platform::macos::bridge::logilite_free_string as *const ());
+    {
+        std::hint::black_box(logi_lite::platform::macos::bridge::logilite_hardware as *const ());
+        std::hint::black_box(logi_lite::platform::macos::bridge::logilite_load_config as *const ());
+        std::hint::black_box(logi_lite::platform::macos::bridge::logilite_save_config as *const ());
+        std::hint::black_box(logi_lite::platform::macos::bridge::logilite_free_string as *const ());
+    }
     let args: Vec<_> = std::env::args().collect();
     for (flag, hardware) in [("--probe", true), ("--diagnose", false)] {
         if let Some(i) = args.iter().position(|s| s == flag) {
